@@ -14,7 +14,7 @@ export const isStageComplete = (state: CeremonyState, stage: string): boolean =>
   state.completedStages.has(stage as never);
 
 export const isConsentComplete = (state: CeremonyState): boolean =>
-  !!(state.frameAgreement?.consent1 && state.frameAgreement?.consent2);
+  !!(state.frameAgreement?.consent1);
 
 export const isIntakeComplete = (state: CeremonyState): boolean =>
   isConsentComplete(state) && state.completedStages.has('IV');

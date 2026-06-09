@@ -56,13 +56,12 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
           id="jc1"
           checked={store.frameAgreement?.consent1 ?? false}
           onChange={(v) => store.updateConsent('consent1', v)}
-          label="I understand what this evaluation will and will not recognize about my work."
+          label="I've seen what this evaluation will and won't recognize about my work, and I want to proceed on these terms."
         />
         <ConsentCheck
           id="jc2"
           checked={store.frameAgreement?.consent2 ?? false}
           onChange={(v) => store.updateConsent('consent2', v)}
-          label="I consent to have my work evaluated on these terms."
         />
       </div>
 
