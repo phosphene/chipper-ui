@@ -52,10 +52,10 @@ export function Processing({ onReveal, autoStart = true }: Props) {
       </div>
 
       <h2 className="text-[1.2rem] font-light text-white/55 mb-2">
-        The work is being read.
+        Case is under assessment.
       </h2>
       <p className="text-[0.82rem] italic text-white/25 mb-8">
-        Nine dimensions are being assessed. The scale has not yet settled.
+        Nine dimensions are being examined.
       </p>
 
       {/* Nine dimension dots */}
