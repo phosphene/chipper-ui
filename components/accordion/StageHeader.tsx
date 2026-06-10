@@ -10,8 +10,6 @@ import React from 'react';
  * All open/closed/locked/done decisions made by parent via selectors.
  */
 
-'use client';
-import React from 'react';
 
 interface Props {
   stepNum: string;
