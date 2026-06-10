@@ -1,11 +1,14 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
-  output: "export",        // static HTML export for GitHub Pages
-  trailingSlash: true,     // required for Pages routing
-  images: {
-    unoptimized: true,     // Pages doesn't run the Next.js image server
-  },
+  output: "export",
+  trailingSlash: true,
+  images: { unoptimized: true },
+  // GitHub Pages serves from /chipper-ui/ subdirectory
+  basePath: isProd ? "/chipper-ui" : "",
+  assetPrefix: isProd ? "/chipper-ui/" : "",
 };
 
 export default nextConfig;
