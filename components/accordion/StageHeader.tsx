@@ -1,3 +1,5 @@
+'use client';
+import React from 'react';
 /**
  * StageHeader — T-267
  *
@@ -9,11 +11,12 @@
  */
 
 'use client';
+import React from 'react';
 
 interface Props {
   stepNum: string;
   stageLabel: string;
-  title: string;
+  title: React.ReactNode;
   chips: string[];
   isActive: boolean;
   isDone: boolean;
