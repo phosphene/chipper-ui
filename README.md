@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# chipper-ui
 
-## Getting Started
+React frontend for the Woodchipper / WCI platform — the ceremony-driven interface for work classification and scoring.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16** (App Router)
+- **React 19** / TypeScript
+- **Tailwind CSS 4**
+- **Zustand 5** (state management)
+- **Vitest** + Testing Library (tests)
+
+## Architecture
+
+The UI is organized around the WCI ceremony — a multi-stage flow that guides a work through classification, threshold consent, processing, and pronouncement.
+
+### Ceremony store
+
+All business logic lives in `store/ceremony.ts` (Zustand). The store is pure TypeScript with no React imports, making it independently testable. Invariants throw rather than silently no-op. Types and selectors are split into `ceremony.types.ts` and `ceremony.selectors.ts`.
+
+### Component tree
+
+```
+components/
+├── entry/           # Entry gate — DOI/URL input, detection, confirmation
+│   ├── EntryGate    # Primary entry point
+│   ├── SimpleEntry  # Minimal input variant
+│   ├── DetectionConfirm
+│   └── PartsBar
+├── ceremony/        # Ceremony flow stages
+│   ├── CeremonyFlow # Orchestrator — renders current stage
+│   ├── stages/      # StageI–StageV (maker declaration → pronouncement)
+│   ├── Threshold    # Consent gate before scoring
+│   ├── Processing   # Scoring animation
+│   ├── Pronouncement # Final score reveal
+│   ├── ScoreHero    # Score display
+│   ├── DimensionGrid # Nine-dimension breakdown
+│   ├── ReviewCard   # Review summary
+│   ├── JustificationCard
+│   └── StageNav     # Stage navigation
+├── accordion/       # Collapsible detail views
+│   ├── AccordionStage
+│   ├── StageHeader
+│   └── DetailedEntry
+├── boards/
+│   └── LiveBoard    # Live scoring board
+└── ui/
+    └── DepthLabel   # Epistemic depth indicator
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Separation of concerns
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Store** owns state transitions and validation logic
+- **Components** are presentational — they read from the store and dispatch actions
+- **Hooks** (`hooks/useDetection.ts`, `hooks/useProcessingAnimation.ts`) encapsulate side effects
+- **Tests** use MSW for API mocking (`tests/mocks/`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Key components
 
-## Learn More
+| Component | Role |
+|-----------|------|
+| `EntryGate` | Accepts DOI or URL, triggers detection |
+| `CeremonyFlow` | Orchestrates stage progression |
+| `Processing` | Animated scoring phase |
+| `Threshold` | Consent gate — user must agree before score is revealed |
+| `Pronouncement` | Final score display with dimension breakdown |
 
-To learn more about Next.js, take a look at the following resources:
+## Running locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Standalone:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Via Docker Compose** (from woodchipper root):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+docker compose up chipper-ui
+```
+
+See `DOCKER.md` in the woodchipper root for full container strategy.
+
+## Running tests
+
+```bash
+npm test              # single run (vitest)
+npm run test:watch    # watch mode
+npm run test:coverage # with coverage
+```
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml` in the chipper-ui repo):
+
+- **test** — type check (`tsc --noEmit`) + store tests (`npm test`)
+- **lint** — ESLint
+
+Triggers on push to `main`, `feat/**`, `fix/**` and on PRs to `main`.
+
+## Deployment
+
+- **Live demo:** [https://phosphene.github.io/chipper-ui/](https://phosphene.github.io/chipper-ui/) (GitHub Pages, static)
+- **Production:** Fly.io via the `phosphene/woodchipper` deploy workflow (`.github/workflows/deploy.yml`), not this repo. See `deploy/README.md` in the woodchipper root.
+
+## Design reference
+
+- `drafts/woodchipper/dikaiopomp/` — ceremony design documents (in the woodchipper repo)
+- `projects/woodchipper/ALIGNMENT.md` — product alignment
+- `projects/woodchipper/INTERFACE-ALIGNMENT.md` — interface design alignment
