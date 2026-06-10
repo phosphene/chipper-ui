@@ -53,11 +53,11 @@ export function useDetection(): UseDetectionReturn {
 
       // Map snake_case API response to camelCase store types
       const mapped: DetectionResult = {
-        workType: data.work_type ?? data.workType,
+        workType: (data as any).work_type ?? data.workType,
         domain: data.domain,
         standing: data.standing,
         confidence: data.confidence,
-        academicMarkersDetected: data.academic_markers_detected ?? data.academicMarkersDetected ?? [],
+        academicMarkersDetected: (data as any).academic_markers_detected ?? data.academicMarkersDetected ?? [],
       } as unknown as DetectionResult;
 
       setResult(mapped);

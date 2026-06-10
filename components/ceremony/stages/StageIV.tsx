@@ -58,11 +58,7 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
           onChange={(v) => store.updateConsent('consent1', v)}
           label="I've seen what this evaluation will and won't recognize about my work, and I want to proceed on these terms."
         />
-        <ConsentCheck
-          id="jc2"
-          checked={store.frameAgreement?.consent2 ?? false}
-          onChange={(v) => store.updateConsent('consent2', v)}
-        />
+
       </div>
 
       <div className="flex justify-between items-center pt-3 border-t border-white/07">

@@ -1,3 +1,5 @@
+'use client';
+import React from 'react';
 /**
  * AccordionStage — T-267
  *
@@ -16,7 +18,7 @@ import { StageHeader } from './StageHeader';
 interface Props {
   stepNum: string;
   stageLabel: string;
-  title: string;
+  title: React.ReactNode;
   chips: string[];
   isActive: boolean;
   isDone: boolean;

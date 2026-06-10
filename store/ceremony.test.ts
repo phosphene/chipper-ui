@@ -35,7 +35,7 @@ const seedIntake = () => {
 
 const completeConsent = () => {
   useCeremonyStore.getState().updateConsent('consent1', true);
-  useCeremonyStore.getState().updateConsent('consent2', true);
+  // consent2 removed — single checkbox now
 };
 
 // ── Setup ─────────────────────────────────────────────────────
@@ -62,7 +62,7 @@ describe('initFromDetection', () => {
     seedIntake();
     const s = store();
     expect(s.frameAgreement?.consent1).toBe(false);
-    expect(s.frameAgreement?.consent2).toBe(false);
+    // consent2 removed — single checkbox now
   });
 });
 
@@ -112,7 +112,7 @@ describe('advanceStage', () => {
     expect(() => store().advanceStage()).toThrow(StageAdvanceError);
   });
 
-  it('advances from IV to V when both consents given', () => {
+  it('advances from IV to V when consent given', () => {
     seedIntake();
     store().advanceStage(); // I
     store().advanceStage(); // II
@@ -240,13 +240,8 @@ describe('selectors', () => {
     expect(isConsentComplete(store())).toBe(false);
   });
 
-  it('isConsentComplete — false when only one checked', () => {
-    seedIntake();
-    store().updateConsent('consent1', true);
-    expect(isConsentComplete(store())).toBe(false);
-  });
 
-  it('isConsentComplete — true when both checked', () => {
+  it('isConsentComplete — true when consent1 checked', () => {
     seedIntake();
     completeConsent();
     expect(isConsentComplete(store())).toBe(true);
