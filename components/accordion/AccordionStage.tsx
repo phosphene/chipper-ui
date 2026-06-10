@@ -11,8 +11,6 @@ import React from 'react';
  * - Back/advance buttons call store actions, not local state
  */
 
-'use client';
-
 import { StageHeader } from './StageHeader';
 
 interface Props {
