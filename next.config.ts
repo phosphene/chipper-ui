@@ -1,14 +1,9 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-
+// Container strategy: Next.js runs as a server in Docker/Fly.io
+// No static export needed — GitHub Pages removed (2026-06-10)
 const nextConfig: NextConfig = {
-  output: "export",
-  trailingSlash: true,
   images: { unoptimized: true },
-  // GitHub Pages serves from /chipper-ui/ subdirectory
-  basePath: isProd ? "/chipper-ui" : "",
-  assetPrefix: isProd ? "/chipper-ui/" : "",
 };
 
 export default nextConfig;

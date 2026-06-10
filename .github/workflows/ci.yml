@@ -24,7 +24,7 @@ jobs:
 
       - name: Type check
         run: npx tsc --noEmit
-        continue-on-error: true  # type errors are non-blocking until components stabilise
+        continue-on-error: true
 
       - name: Run store tests
         run: npm test -- --reporter=verbose
@@ -46,4 +46,4 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        continue-on-error: true  # lint warnings non-blocking during active development
+        continue-on-error: true
