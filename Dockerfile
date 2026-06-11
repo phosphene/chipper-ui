@@ -6,8 +6,9 @@ RUN npm install
 
 COPY . .
 
-# Production build
-RUN npm run build
+# Cache bust: force fresh build (no layer cache for build step)
+ARG CACHE_BUST=1
+RUN echo "Build $CACHE_BUST" && npm run build
 
 EXPOSE 3000
 ENV PORT 3000
