@@ -4,7 +4,7 @@
  */
 'use client';
 const styles = {
-  basic:    'text-[#555]',
+  basic:    'text-[#888]',
   standard: 'text-[#4f8ef5]/60',
   advanced: 'text-[#f5a623]/60',
 };

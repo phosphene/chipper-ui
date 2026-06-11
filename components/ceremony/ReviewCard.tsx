@@ -3,7 +3,7 @@ interface Props { label: string; value: string; source?: 'detected'|'user'; note
 export function ReviewCard({ label, value, source, note, editable }: Props) {
   return (
     <div className={`mb-2 p-3 rounded-md bg-[#222] border relative ${editable ? 'border-[#4f8ef5]/25' : 'border-white/08'}`}>
-      <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#555] mb-1">{label}</p>
+      <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#888] mb-1">{label}</p>
       <p className={`text-[13px] ${source === 'detected' ? 'text-[#4f8ef5]' : 'text-[#e2e2e2]'}`}>
         {value.replace(/-/g, ' ')}
       </p>

@@ -98,7 +98,7 @@ export function SimpleEntry({ onConfirmed, onSwitchToDetailed }: Props) {
         {/* Attach */}
         <button
           onClick={() => fileRef.current?.click()}
-          className="px-4 border-l border-white/07 text-[#555] hover:text-[#888] text-lg transition-colors"
+          className="px-4 border-l border-white/07 text-[#888] hover:text-[#888] text-lg transition-colors"
           aria-label="Attach file"
         >
           📎

@@ -81,7 +81,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
 
       {/* Nine dimensions */}
       <div className="mb-5">
-        <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#555] mb-3">
+        <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#888] mb-3">
           Nine Dimensions
         </p>
         <DimensionGrid dimensionScores={result.dimensionScores} />
@@ -90,7 +90,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
       {/* Key dimension readings */}
       {notableJustifications.length > 0 && (
         <div className="mb-5">
-          <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#555] mb-3">
+          <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#888] mb-3">
             Reading
           </p>
           {notableJustifications.map(ds => (
@@ -108,13 +108,13 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
       {/* What this score is / is not */}
       <div className="mb-6 space-y-2">
         <div className="p-4 bg-[#191919] border border-white/08 rounded-md">
-          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#555] mb-2">What this score is</p>
+          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#888] mb-2">What this score is</p>
           <p className="text-[0.78rem] text-[#888] leading-relaxed">
             A reading of your work from the WCI {result.rubricVersion} general variant, rendered with a specific epistemic basis. A judgment from a position — not a verdict from nowhere.
           </p>
         </div>
         <div className="p-4 bg-[#191919] border border-white/08 rounded-md">
-          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#555] mb-2">What this score is not</p>
+          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#888] mb-2">What this score is not</p>
           <p className="text-[0.78rem] text-[#888] leading-relaxed">
             Not a measure of your worth as a researcher. Not a prediction of publication outcome. Not permanent — a subsequent reading may produce a different score, and both scores will be part of the record.
           </p>
@@ -140,7 +140,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         >
           <div>
             <div className="text-[0.82rem] font-medium text-[#888] text-left">Request Improvement Guidance</div>
-            <div className="text-[0.7rem] text-[#555] text-left">See which dimensions to strengthen before re-evaluation.</div>
+            <div className="text-[0.7rem] text-[#888] text-left">See which dimensions to strengthen before re-evaluation.</div>
           </div>
           <span className="text-[#444] group-hover:text-[#888] transition-colors ml-3">↻</span>
         </button>
@@ -151,7 +151,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         >
           <div>
             <div className="text-[0.82rem] font-medium text-[#888] text-left">Download Justification Report</div>
-            <div className="text-[0.7rem] text-[#555] text-left">Full dimension-by-dimension reading as a PDF.</div>
+            <div className="text-[0.7rem] text-[#888] text-left">Full dimension-by-dimension reading as a PDF.</div>
           </div>
           <span className="text-[#444] group-hover:text-[#888] transition-colors ml-3">↓</span>
         </button>

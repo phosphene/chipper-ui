@@ -31,7 +31,7 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
             The WCI v1.0 general variant applies. Evidence Density and Claim-Evidence Match carry primary weight.
           </p>
         ) : (
-          <p className="text-[#555] italic">Complete the intake stages to generate your summary.</p>
+          <p className="text-[#888] italic">Complete the intake stages to generate your summary.</p>
         )}
       </div>
 

@@ -50,12 +50,12 @@ export function StageII() {
                 : 'border-white/08 hover:border-white/20 bg-[#191919]'}`}
           >
             <p className={`text-[0.82rem] font-semibold mb-1 ${selected === value ? 'text-[#4f8ef5]' : 'text-[#e2e2e2]'}`}>{label}</p>
-            <p className="text-[0.72rem] text-[#555] leading-tight">{desc}</p>
+            <p className="text-[0.72rem] text-[#888] leading-tight">{desc}</p>
           </button>
         ))}
       </div>
 
-      <button className="w-full py-3 border border-dashed border-white/10 rounded-md text-[0.88rem] text-[#555] hover:border-white/20 hover:text-[#888] transition-all mb-3">
+      <button className="w-full py-3 border border-dashed border-white/10 rounded-md text-[0.88rem] text-[#888] hover:border-white/20 hover:text-[#888] transition-all mb-3">
         None of these describe my work
       </button>
 

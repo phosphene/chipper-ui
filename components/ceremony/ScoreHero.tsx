@@ -48,7 +48,7 @@ export function ScoreHero({ compositeScore, band, epistemicLabel, relativeContex
   return (
     <div className="text-center pb-6 border-b border-white/07 mb-5">
       {/* 1. Epistemic label — first */}
-      <p className="text-[0.78rem] italic text-[#555] mb-4">{epistemicLabel}</p>
+      <p className="text-[0.78rem] italic text-[#888] mb-4">{epistemicLabel}</p>
 
       {/* 2. Relative context — before the number */}
       <div className="inline-block px-4 py-2 rounded-md bg-[#4f8ef5]/04 border border-[#4f8ef5]/15 mb-5">

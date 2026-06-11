@@ -30,13 +30,13 @@ export function StageHeader({
     ? 'bg-[#4f8ef5] border-[#4f8ef5] text-white'
     : isDone
     ? 'bg-[#4caf80]/15 border-[#4caf80]/50 text-[#4caf80]'
-    : 'border-white/10 text-[#555]';
+    : 'border-white/10 text-[#888]';
 
   const labelStyle = isActive
     ? 'text-[#4f8ef5]'
     : isDone
     ? 'text-[#4caf80]'
-    : 'text-[#555]';
+    : 'text-[#888]';
 
   return (
     <button
@@ -62,7 +62,7 @@ export function StageHeader({
         <span className={`block font-mono text-[0.58rem] tracking-[0.18em] uppercase mb-0.5 ${labelStyle}`}>
           {stageLabel}
         </span>
-        <span className={`block text-[13px] font-medium ${isDone ? 'text-[#555] font-normal' : 'text-[#e2e2e2]'}`}>
+        <span className={`block text-[13px] font-medium ${isDone ? 'text-[#888] font-normal' : 'text-[#e2e2e2]'}`}>
           {title}
         </span>
       </span>
@@ -83,7 +83,7 @@ export function StageHeader({
 
       {/* Chevron */}
       {!isLocked && (
-        <span className={`flex-shrink-0 text-[#555] text-[0.55rem] transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`}>
+        <span className={`flex-shrink-0 text-[#888] text-[0.55rem] transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`}>
           ▼
         </span>
       )}

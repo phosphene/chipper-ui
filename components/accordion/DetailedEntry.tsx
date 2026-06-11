@@ -84,7 +84,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
         isActive={isActive('I')} isDone={isDone('I')} isLocked={false}
         onToggle={() => {}}
       >
-        <p className="text-[0.78rem] text-[#555] italic mb-3 leading-relaxed">
+        <p className="text-[0.78rem] text-[#888] italic mb-3 leading-relaxed">
           Describe your work in your own words. The system reads this and makes its first guesses — you correct anything wrong.
         </p>
         <textarea
@@ -100,7 +100,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
           <p className="text-[0.75rem] font-medium text-[#888] mb-2">
             Attach the data you have <DepthLabel level="standard" />
           </p>
-          <div className="border border-dashed border-white/12 rounded-md py-4 text-center text-[0.78rem] text-[#555] cursor-pointer hover:border-white/20 hover:text-[#888] transition-all">
+          <div className="border border-dashed border-white/12 rounded-md py-4 text-center text-[0.78rem] text-[#888] cursor-pointer hover:border-white/20 hover:text-[#888] transition-all">
             Drop a file, or click to choose
             <span className="block text-[0.65rem] mt-1 opacity-50">PDF · audio · image · CSV · any format</span>
           </div>
@@ -121,10 +121,10 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
         isActive={false} isDone={false} isLocked={false}
         onToggle={() => {}}
       >
-        <p className="text-[0.78rem] text-[#555] italic mb-3 leading-relaxed">
+        <p className="text-[0.78rem] text-[#888] italic mb-3 leading-relaxed">
           Information that will help guide the evaluation — prior work, voice, references, constraints.
         </p>
-        <div className="border border-dashed border-white/12 rounded-md py-3 text-center text-[0.75rem] text-[#555] cursor-pointer hover:border-white/20 mb-3 transition-all">
+        <div className="border border-dashed border-white/12 rounded-md py-3 text-center text-[0.75rem] text-[#888] cursor-pointer hover:border-white/20 mb-3 transition-all">
           Upload context material
           <span className="block text-[0.65rem] mt-0.5 opacity-50">Notes · references · prior work · voice memos</span>
         </div>
@@ -133,7 +133,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
 
         {/* Advanced depth: epistemic constraints */}
         <div className="mt-2 pt-3 border-t border-white/07">
-          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#555] mb-2">
+          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#888] mb-2">
             Epistemic constraints <DepthLabel level="advanced" />
           </p>
           <div className="flex flex-wrap gap-2">
@@ -143,7 +143,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
                 className={`px-3 py-1 border rounded-full text-[0.7rem] font-mono transition-all
                   ${epTags.has(tag)
                     ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/07'
-                    : 'border-white/10 text-[#555] hover:border-white/20 hover:text-[#888]'}`}>
+                    : 'border-white/10 text-[#888] hover:border-white/20 hover:text-[#888]'}`}>
                 {tag}
               </button>
             ))}
@@ -158,11 +158,11 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
         isActive={false} isDone={false} isLocked={false}
         onToggle={() => {}}
       >
-        <p className="text-[0.78rem] text-[#555] italic mb-3 leading-relaxed">
+        <p className="text-[0.78rem] text-[#888] italic mb-3 leading-relaxed">
           Who you are in relation to this work calibrates expectations — not the criteria, but what fair evaluation looks like.
         </p>
         <div className="mb-3">
-          <label className="block font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#555] mb-1.5">Standing</label>
+          <label className="block font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-1.5">Standing</label>
           <select
             value={store.makerDeclaration?.standing.value ?? ''}
             onChange={(e) => store.updateMakerDeclaration({ standing: { value: e.target.value as any, source: 'user' } })}
@@ -177,7 +177,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
           </select>
         </div>
         <div className="mb-2">
-          <label className="block font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#555] mb-1.5">Tradition / field</label>
+          <label className="block font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-1.5">Tradition / field</label>
           <input type="text"
             value={store.makerDeclaration?.tradition.value ?? ''}
             onChange={(e) => store.updateMakerDeclaration({ tradition: { value: e.target.value, source: 'user' } })}
@@ -188,7 +188,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
 
         {/* Advanced depth: intellectual lineage */}
         <div className="mt-3 pt-3 border-t border-white/07">
-          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#555] mb-2">
+          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#888] mb-2">
             Intellectual lineage <DepthLabel level="advanced" />
           </p>
           <textarea rows={2} placeholder="Who or what tradition shaped the approach? (optional — for deeper calibration)"
@@ -203,7 +203,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
         isActive={false} isDone={false} isLocked={false}
         onToggle={() => {}}
       >
-        <p className="text-[0.78rem] text-[#555] italic mb-3">What do you want to happen to this work?</p>
+        <p className="text-[0.78rem] text-[#888] italic mb-3">What do you want to happen to this work?</p>
         <div className="flex flex-wrap gap-2 mb-4">
           {['Understand where it stands','Improve before submission','Get a credibility score','Publish to Observatory','Register a DOI','Submit to a journal','Push to ORCID','Just exploring'].map(h => (
             <button key={h}
@@ -211,7 +211,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
               className={`px-3 py-1.5 border rounded-full text-[0.72rem] transition-all
                 ${hopes.has(h)
                   ? 'border-[#79c7f5] text-[#79c7f5] bg-[#79c7f5]/07'
-                  : 'border-white/10 text-[#555] hover:border-white/20 hover:text-[#888]'}`}>
+                  : 'border-white/10 text-[#888] hover:border-white/20 hover:text-[#888]'}`}>
               {h}
             </button>
           ))}
@@ -219,12 +219,12 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
 
         {/* Advanced: timeline + stakes */}
         <div className="pt-3 border-t border-white/07">
-          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#555] mb-2">
+          <p className="font-mono text-[0.58rem] tracking-[0.15em] uppercase text-[#888] mb-2">
             Timeline & stakes <DepthLabel level="advanced" />
           </p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-mono text-[0.55rem] tracking-[0.1em] uppercase text-[#555] mb-1">Deadline</label>
+              <label className="block font-mono text-[0.55rem] tracking-[0.1em] uppercase text-[#888] mb-1">Deadline</label>
               <select className="w-full bg-[#222] border border-white/08 rounded-md px-2 py-1.5 text-[0.8rem] text-[#888] outline-none focus:border-white/20">
                 <option value="">No deadline</option>
                 <option>Within a week</option>
@@ -233,7 +233,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
               </select>
             </div>
             <div>
-              <label className="block font-mono text-[0.55rem] tracking-[0.1em] uppercase text-[#555] mb-1">Work stage</label>
+              <label className="block font-mono text-[0.55rem] tracking-[0.1em] uppercase text-[#888] mb-1">Work stage</label>
               <select className="w-full bg-[#222] border border-white/08 rounded-md px-2 py-1.5 text-[0.8rem] text-[#888] outline-none focus:border-white/20">
                 <option value="">— Stage —</option>
                 <option>Early draft</option>
@@ -262,12 +262,12 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
                 className={`text-left p-3 rounded-md border-[1.5px] transition-all
                   ${selected ? 'border-[#4f8ef5] bg-[#4f8ef5]/06' : 'border-white/08 hover:border-white/20 bg-[#191919]'}`}>
                 <p className={`text-[0.8rem] font-semibold mb-0.5 ${selected ? 'text-[#4f8ef5]' : 'text-[#e2e2e2]'}`}>{label}</p>
-                <p className="text-[0.68rem] text-[#555] leading-tight">{desc}</p>
+                <p className="text-[0.68rem] text-[#888] leading-tight">{desc}</p>
               </button>
             );
           })}
         </div>
-        <button className="w-full py-2.5 border border-dashed border-white/10 rounded-md text-[0.82rem] text-[#555] hover:border-white/20 hover:text-[#888] transition-all mb-3">
+        <button className="w-full py-2.5 border border-dashed border-white/10 rounded-md text-[0.82rem] text-[#888] hover:border-white/20 hover:text-[#888] transition-all mb-3">
           None of these describe my work
         </button>
 
@@ -287,7 +287,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
 
         <div className="flex justify-between items-center pt-3 border-t border-white/07">
           <button onClick={() => store.backStage()}
-            className="px-3 py-2 border border-white/10 rounded-md text-[#555] text-[0.75rem] font-mono hover:border-white/20 hover:text-[#888] transition-all">
+            className="px-3 py-2 border border-white/10 rounded-md text-[#888] text-[0.75rem] font-mono hover:border-white/20 hover:text-[#888] transition-all">
             ← Back
           </button>
           <button

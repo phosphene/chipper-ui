@@ -116,7 +116,7 @@ interface Props {
 export function PartsBar({ onSelect }: Props) {
   return (
     <div className="flex items-center bg-[#191919] border-b border-white/07 overflow-x-auto flex-shrink-0">
-      <span className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-[#555] px-3 whitespace-nowrap">
+      <span className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-[#888] px-3 whitespace-nowrap">
         Parts
       </span>
       {PARTS.map((part) => (
@@ -134,7 +134,7 @@ export function PartsBar({ onSelect }: Props) {
           "
         >
           {part.icon}
-          <span className="font-mono text-[0.45rem] tracking-wide text-[#555] leading-none">
+          <span className="font-mono text-[0.45rem] tracking-wide text-[#888] leading-none">
             {part.label}
           </span>
         </button>

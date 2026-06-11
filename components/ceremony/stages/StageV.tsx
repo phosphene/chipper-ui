@@ -47,7 +47,7 @@ export function StageV({ onRested }: { onRested: () => void }) {
 
       {/* The resting act */}
       <div className="text-center py-6">
-        <p className="text-[0.85rem] text-[#555] italic max-w-sm mx-auto leading-relaxed mb-6">
+        <p className="text-[0.85rem] text-[#888] italic max-w-sm mx-auto leading-relaxed mb-6">
           I have presented my work. I have accepted the terms of evaluation. I rest my case.
         </p>
         <button
