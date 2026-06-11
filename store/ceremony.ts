@@ -129,13 +129,25 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   updateMakerDeclaration: (update) => set((state) => ({
     makerDeclaration: state.makerDeclaration
       ? { ...state.makerDeclaration, ...update }
-      : null,
+      : {
+          // Initialize with defaults if null — allows Detailed mode typing before detection
+          freeText: '',
+          standing: { value: 'independent-researcher' as const, source: 'user' as const },
+          tradition: { value: '', source: 'user' as const },
+          relationshipToWork: { value: 'Primary author', source: 'user' as const },
+          ...update,
+        },
   })),
 
   updateWorkClassification: (update) => set((state) => ({
     workClassification: state.workClassification
       ? { ...state.workClassification, ...update }
-      : null,
+      : {
+          // Initialize with defaults if null — allows Detailed mode typing before detection
+          workType: { value: 'original-argument' as const, source: 'user' as const },
+          description: '',
+          ...update,
+        },
   })),
 
   updateJudgeIdentity: (update) => set((state) => ({

@@ -58,10 +58,28 @@ test.describe('Entry — functional', () => {
 
   test('mode toggle — Simple to Detailed', async ({ page }) => {
     await page.goto('/');
-    // Scoped to the mode toggle container to avoid ambiguity
     await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
     // Detailed mode: simple entry input disappears
     await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
+  });
+
+  test('Detailed mode — textarea accepts input', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
+    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
+    await expect(textarea).toBeVisible();
+    await textarea.fill('This is a study of cortisol feedback in adult rodents under stress conditions');
+    await expect(textarea).toHaveValue('This is a study of cortisol feedback in adult rodents under stress conditions');
+  });
+
+  test('Detailed mode — Confirm button activates after typing', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
+    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
+    await textarea.fill('This is a study of cortisol feedback in adult rodents under stress conditions');
+    // Confirm & Continue button should become active
+    const confirm = page.getByRole('button', { name: /confirm.*continue/i });
+    await expect(confirm).not.toHaveAttribute('disabled');
   });
 
   test('WCI header button returns to entry', async ({ page }) => {
