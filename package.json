@@ -6,6 +6,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:live": "BASE_URL=https://chipper-ui.fly.dev API_URL=https://wci-api.fly.dev playwright test",
+    "test:e2e:accessibility": "playwright test --grep accessibility",
+    "test:e2e:functional": "playwright test --grep functional",
+    "test:e2e:labels": "playwright test --grep label",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -34,6 +39,8 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^8.0.16",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.52.0"
   }
 }
