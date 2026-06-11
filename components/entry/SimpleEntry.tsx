@@ -111,11 +111,14 @@ export function SimpleEntry({ onConfirmed, onSwitchToDetailed }: Props) {
           onChange={handleFileChange}
         />
 
-        {/* Submit */}
+        {/* Submit — aria-disabled keeps button in tab order for keyboard users */}
         <button
-          onClick={handleSubmit}
-          disabled={!isReady || isLoading}
-          className="px-6 bg-[#4f8ef5] text-white font-mono text-sm tracking-wide disabled:opacity-40 hover:opacity-85 transition-opacity"
+          onClick={isReady && !isLoading ? handleSubmit : undefined}
+          aria-disabled={!isReady || isLoading}
+          aria-label="Submit"
+          className={`px-6 bg-[#4f8ef5] text-white font-mono text-sm tracking-wide hover:opacity-85 transition-opacity ${
+            !isReady || isLoading ? 'opacity-40 cursor-not-allowed' : ''
+          }`}
         >
           {isLoading ? '…' : '→'}
         </button>

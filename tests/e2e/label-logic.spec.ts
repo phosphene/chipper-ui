@@ -22,17 +22,18 @@ const VALID_BANDS = ['seminal', 'landmark', 'strong', 'promising', 'developing',
 
 test.describe('Label/Logic — entry', () => {
 
-  test('submit button label is → (arrow, not text)', async ({ page }) => {
+  test('submit button has aria-label Submit and shows → symbol', async ({ page }) => {
     await page.goto('/');
-    // The submit uses → not "Submit" — verify the symbol is correct
-    const submit = page.getByRole('button', { name: '→' });
+    const submit = page.getByRole('button', { name: 'Submit' });
     await expect(submit).toBeVisible();
+    await expect(submit).toContainText('→');
   });
 
   test('mode buttons labeled "simple" and "detailed" (lowercase)', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('button', { name: 'simple' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'detailed' })).toBeVisible();
+    const toggle = page.locator('.flex.justify-center');
+    await expect(toggle.getByRole('button', { name: 'simple' })).toBeVisible();
+    await expect(toggle.getByRole('button', { name: 'detailed' })).toBeVisible();
   });
 
   test('header brand label is "Woodchipper"', async ({ page }) => {
@@ -61,11 +62,9 @@ test.describe('Label/Logic — detection result', () => {
     );
     await page.getByRole('button', { name: '→' }).click();
 
-    // Wait for detection confirm to appear
-    const confirmCard = page.locator('[data-testid="detection-confirm"]').or(
-      page.getByText(/synthesis-review|review|meta-analysis/i)
-    );
-    await expect(confirmCard).toBeVisible({ timeout: 10_000 });
+    // Submit and wait for detection confirm card
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
   test('detection confidence label is one of: high / medium / low', async ({ page }) => {

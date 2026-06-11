@@ -72,21 +72,19 @@ test.describe('Accessibility — landing page', () => {
   test('keyboard: Tab reaches submit button', async ({ page }) => {
     await page.goto('/');
     // Tab through all focusable elements until we hit the submit button
+    // Submit uses aria-disabled (not disabled) so it IS in tab order
     for (let i = 0; i < 10; i++) {
       await page.keyboard.press('Tab');
       const focused = await page.evaluate(() => ({
         tag: document.activeElement?.tagName,
-        text: (document.activeElement as HTMLElement)?.innerText?.trim(),
-        disabled: (document.activeElement as HTMLButtonElement)?.disabled,
+        ariaLabel: (document.activeElement as HTMLElement)?.getAttribute('aria-label'),
+        ariaDisabled: (document.activeElement as HTMLElement)?.getAttribute('aria-disabled'),
       }));
-      if (focused.tag === 'BUTTON' && focused.text === '→') {
-        // Found it — test passes
-        return;
+      if (focused.tag === 'BUTTON' && focused.ariaLabel === 'Submit') {
+        return; // Found it
       }
     }
-    // If we get here, submit button wasn't reachable by keyboard
-    // Soft fail with a clear message
-    throw new Error('Submit button not reachable via Tab navigation within 10 steps');
+    throw new Error('Submit button (aria-label=Submit) not reachable via Tab within 10 steps');
   });
 
 });
@@ -108,11 +106,11 @@ test.describe('Accessibility — after interaction', () => {
 
   test('mode toggle buttons are keyboard-accessible', async ({ page }) => {
     await page.goto('/');
-    const detailedBtn = page.getByRole('button', { name: 'detailed' });
+    const detailedBtn = page.locator('.flex.justify-center button', { hasText: 'detailed' });
     await detailedBtn.focus();
     await page.keyboard.press('Enter');
-    // Detailed mode should now be active
-    await expect(detailedBtn).toBeVisible();
+    // Detailed mode: simple entry input no longer visible
+    await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
   });
 
 });

@@ -20,7 +20,7 @@ interface Props {
 
 export function DetectionConfirm({ result, onConfirm, onAdjust }: Props) {
   return (
-    <div className="mt-4 rounded-lg border border-white/10 bg-[#191919] p-5 animate-fade-up">
+    <div data-testid="detection-confirm" className="mt-4 rounded-lg border border-white/10 bg-[#191919] p-5 animate-fade-up">
       <p className="mb-3 text-xs font-mono tracking-widest uppercase text-[#888]">
         We think this is:
       </p>

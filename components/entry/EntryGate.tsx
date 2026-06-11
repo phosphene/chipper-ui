@@ -34,8 +34,8 @@ export function EntryGate({ onCeremonyStart }: Props) {
               className={`
                 px-4 py-1.5 rounded text-[0.68rem] font-mono tracking-wide capitalize transition-all
                 ${mode === m
-                  ? 'bg-[#4f8ef5] text-white'
-                  : 'text-[#555] hover:text-[#888]'
+                  ? 'bg-[#1a5fd4] text-white'  /* darkened for WCAG AA contrast */
+                  : 'text-[#999] hover:text-[#ccc]'  /* lightened for WCAG AA contrast */
                 }
               `}
             >

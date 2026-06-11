@@ -18,22 +18,22 @@ test.describe('Entry — functional', () => {
 
   test('page loads — title and submit button present', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByText('Woodchipper')).toBeVisible();
-    // Submit button starts disabled (< 15 chars)
-    const submit = page.getByRole('button', { name: '→' });
-    await expect(submit).toBeDisabled();
+    await expect(page.locator('header').getByText('Woodchipper')).toBeVisible();
+    // Submit button starts aria-disabled (< 15 chars)
+    const submit = page.getByRole('button', { name: 'Submit' });
+    await expect(submit).toHaveAttribute('aria-disabled', 'true');
   });
 
   test('submit button enables after 15 chars', async ({ page }) => {
     await page.goto('/');
     const input = page.getByPlaceholder(/describe your work/i);
-    const submit = page.getByRole('button', { name: '→' });
+    const submit = page.getByRole('button', { name: 'Submit' });
 
     await input.fill('short');
-    await expect(submit).toBeDisabled();
+    await expect(submit).toHaveAttribute('aria-disabled', 'true');
 
     await input.fill('This is a sufficiently long description to unlock submission');
-    await expect(submit).toBeEnabled();
+    await expect(submit).not.toHaveAttribute('aria-disabled', 'true');
   });
 
   test('submit fires detection and shows confirm card', async ({ page }) => {
@@ -41,12 +41,10 @@ test.describe('Entry — functional', () => {
     const input = page.getByPlaceholder(/describe your work/i);
     await input.fill('Original research on cortisol feedback in primates. n=120, p<0.01.');
 
-    await page.getByRole('button', { name: '→' }).click();
+    await page.getByRole('button', { name: 'Submit' }).click();
 
     // Detection confirm card should appear
-    await expect(page.locator('[data-testid="detection-confirm"]').or(
-      page.getByText(/detected|looks like|work type/i)
-    )).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
   test('Enter key submits when input is ready', async ({ page }) => {
@@ -55,16 +53,15 @@ test.describe('Entry — functional', () => {
     await input.fill('Original research on cortisol feedback in primates with full methodology');
     await input.press('Enter');
 
-    await expect(page.locator('[data-testid="detection-confirm"]').or(
-      page.getByText(/detected|looks like|work type/i)
-    )).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
   test('mode toggle — Simple to Detailed', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'detailed' }).click();
-    // Detailed mode shows accordion-style entry
-    await expect(page.getByText(/detailed/i).first()).toBeVisible();
+    // Scoped to the mode toggle container to avoid ambiguity
+    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
+    // Detailed mode: simple entry input disappears
+    await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
   });
 
   test('WCI header button returns to entry', async ({ page }) => {
