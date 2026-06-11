@@ -15,6 +15,7 @@
  * All decisions (proceed/improve/export) call parent callbacks.
  */
 import { useCeremonyStore } from '@/store/ceremony';
+import type { Band, Dimension } from '@/store/ceremony.types';
 import { ScoreHero } from './ScoreHero';
 import { DimensionGrid } from './DimensionGrid';
 import { JustificationCard } from './JustificationCard';
