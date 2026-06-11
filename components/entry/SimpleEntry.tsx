@@ -71,7 +71,7 @@ export function SimpleEntry({ onConfirmed, onSwitchToDetailed }: Props) {
             px-4 py-1.5 rounded-full border text-xs font-mono tracking-wide transition-all
             ${showHint
               ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/08 animate-pulse-once'
-              : 'border-white/10 text-[#555] hover:border-white/20 hover:text-[#888]'
+              : 'border-white/10 text-[#999] hover:border-white/20 hover:text-[#ccc]'  /* WCAG AA: #999 on #111 = 4.6:1 */
             }
           `}
         >

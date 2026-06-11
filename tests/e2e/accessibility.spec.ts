@@ -38,12 +38,10 @@ test.describe('Accessibility — landing page', () => {
 
   test('submit button has accessible name', async ({ page }) => {
     await page.goto('/');
-    const submit = page.getByRole('button', { name: '→' });
+    // Submit uses aria-label="Submit" (not visible text '→')
+    const submit = page.getByRole('button', { name: 'Submit' });
     await expect(submit).toBeVisible();
-    // aria-label is acceptable alternative
-    const ariaLabel = await submit.getAttribute('aria-label');
-    const textContent = await submit.textContent();
-    expect(ariaLabel || textContent?.trim()).toBeTruthy();
+    await expect(submit).toHaveAttribute('aria-label', 'Submit');
   });
 
   test('file attach button has aria-label', async ({ page }) => {

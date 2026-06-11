@@ -60,8 +60,6 @@ test.describe('Label/Logic — detection result', () => {
     await page.getByPlaceholder(/describe your work/i).fill(
       'Literature review and meta-analysis of 47 studies on sleep deprivation and working memory'
     );
-    await page.getByRole('button', { name: '→' }).click();
-
     // Submit and wait for detection confirm card
     await page.getByRole('button', { name: 'Submit' }).click();
     await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
@@ -72,7 +70,7 @@ test.describe('Label/Logic — detection result', () => {
     await page.getByPlaceholder(/describe your work/i).fill(
       'Original experimental research on gene expression under thermal stress. p=0.003, n=84'
     );
-    await page.getByRole('button', { name: '→' }).click();
+    await page.getByRole('button', { name: 'Submit' }).click();
 
     await page.waitForTimeout(3000);
 
