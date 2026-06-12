@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Woodchipper — Credibility Index",
-  description: "Submit your work. Understand where it stands.",
+  title: "Woodchipper",
+  description: "What are you working on?",
 };
 
 export default function RootLayout({

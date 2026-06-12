@@ -14,10 +14,12 @@ export default function Home() {
           Woodchipper
         </span>
         <button
-          onClick={() => setMode('entry')}
-          className="px-4 py-1.5 border border-[#4f8ef5]/40 rounded-full text-[#4f8ef5] text-xs font-mono tracking-wide hover:bg-[#4f8ef5]/08 transition-all"
+          data-testid="stage2-jump"
+          onClick={() => setMode('ceremony')}
+          className="px-3 py-1.5 border border-dashed border-[#555]/60 rounded text-[#666] text-[0.65rem] font-mono tracking-wide hover:border-[#888]/60 hover:text-[#888] transition-all"
         >
-          ⚖ WCI
+          STAGE 2 JUMP
+          <span className="block text-[0.5rem] text-[#555] tracking-normal">direct access</span>
         </button>
       </header>
 
@@ -25,15 +27,9 @@ export default function Home() {
       <div className="max-w-2xl mx-auto px-6 py-12">
         {mode === 'entry' && (
           <>
-            <p className="font-mono text-[0.6rem] tracking-[0.4em] uppercase text-[#4f8ef5] mb-3">
-              Credibility Index
-            </p>
-            <h1 className="text-[2rem] font-light text-[#e2e2e2] mb-2 leading-tight">
-              Woodchipper
+            <h1 className="text-[2rem] font-light text-[#e2e2e2] mb-6 leading-tight">
+              What are you working on?
             </h1>
-            <p className="text-[0.95rem] text-[#888] italic mb-10 leading-relaxed max-w-lg">
-              Submit your work. Understand where it stands.
-            </p>
             <EntryGate onCeremonyStart={() => setMode('ceremony')} />
           </>
         )}

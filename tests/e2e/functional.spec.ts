@@ -57,11 +57,13 @@ test.describe('Entry — functional', () => {
     await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
-  test('WCI header button returns to entry', async ({ page }) => {
+  test('STAGE 2 JUMP button skips entry to ceremony', async ({ page }) => {
     await page.goto('/');
-    // Navigate somewhere then hit WCI button to return
-    await page.getByRole('button', { name: /WCI/i }).click();
-    await expect(page.locator('[data-testid="entry-accordion"]')).toBeVisible();
+    const jumpBtn = page.locator('[data-testid="stage2-jump"]');
+    await expect(jumpBtn).toBeVisible();
+    await jumpBtn.click();
+    // Should skip entry and go to ceremony
+    await expect(page.locator('text=/maker declaration|who brings|stage i/i').first()).toBeVisible({ timeout: 5000 });
   });
 
 });
@@ -288,6 +290,35 @@ test.describe('API connectivity', () => {
 
     const validConfidence = ['high', 'medium', 'low'];
     expect(validConfidence).toContain(body.confidence);
+  });
+
+});
+
+test.describe('Brand integrity — WCI not visible before Recording', () => {
+
+  test('landing page has no WCI mention', async ({ page }) => {
+    await page.goto('/');
+    const content = await page.locator('main').textContent();
+    // WCI should not appear in the main content on the landing page
+    expect(content).not.toMatch(/credibility index/i);
+    expect(content).not.toContain('⚖ WCI');
+  });
+
+  test('STAGE 2 JUMP button is present and works', async ({ page }) => {
+    await page.goto('/');
+    const jumpBtn = page.locator('[data-testid="stage2-jump"]');
+    await expect(jumpBtn).toBeVisible();
+    await jumpBtn.click();
+    // Should skip entry and go to ceremony
+    // Ceremony stage I should be visible
+    await expect(page.locator('text=/maker declaration|who brings|stage i/i').first()).toBeVisible({ timeout: 5000 });
+  });
+
+  test('page title is Woodchipper not Credibility Index', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveTitle(/^Woodchipper/);
+    const title = await page.title();
+    expect(title).not.toMatch(/credibility index/i);
   });
 
 });

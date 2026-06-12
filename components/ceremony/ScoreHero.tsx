@@ -66,7 +66,7 @@ export function ScoreHero({ compositeScore, band, epistemicLabel, relativeContex
         {band}
       </span>
       <div className="font-mono text-[0.58rem] tracking-[0.1em] text-[#444]">
-        WCI {rubricVersion} · {provenance} read
+        v{rubricVersion} · {provenance} read
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
       {/* Nine dimensions */}
       <div className="mb-5">
         <p className="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-[#888] mb-3">
-          Nine Dimensions
+          Dimensions
         </p>
         <DimensionGrid dimensionScores={result.dimensionScores} />
       </div>
@@ -110,7 +110,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         <div className="p-4 bg-[#191919] border border-white/08 rounded-md">
           <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#888] mb-2">What this score is</p>
           <p className="text-[0.78rem] text-[#888] leading-relaxed">
-            A reading of your work from the WCI {result.rubricVersion} general variant, rendered with a specific epistemic basis. A judgment from a position — not a verdict from nowhere.
+            A reading of your work from this evaluation, rendered with a specific epistemic basis. A judgment from a position — not a verdict from nowhere.
           </p>
         </div>
         <div className="p-4 bg-[#191919] border border-white/08 rounded-md">
@@ -129,7 +129,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         >
           <div>
             <div className="text-[0.82rem] font-medium text-[#4f8ef5] text-left">Proceed to Recording</div>
-            <div className="text-[0.7rem] text-[#4f8ef5]/60 text-left">Decide whether to save privately, submit to boards, or publish.</div>
+            <div className="text-[0.7rem] text-[#4f8ef5]/60 text-left">Save privately, improve, or publish to boards. WCI indexing available.</div>
           </div>
           <span className="text-[#4f8ef5]/60 group-hover:text-[#4f8ef5] transition-colors ml-3">→</span>
         </button>
