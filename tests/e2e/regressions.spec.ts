@@ -283,6 +283,63 @@ test.describe('BUG-005 — Submit button excluded from keyboard tab order', () =
 // Proof: Axe color-contrast rule must report zero violations on both landing
 //   page and in Detailed mode (which reveals additional buttons).
 
+// ── BUG-007 ───────────────────────────────────────────────────────────────────
+//
+// Mechanism: api.py returned compiled regex pattern strings as marker labels.
+//   ACADEMIC_MARKERS was a list of raw regex strings, and _detect_academic_markers
+//   tried to strip \b and parens from the matched pattern to produce a label.
+//   The result was strings like "p\\s*[<=>]\\s*0\\.\\d+" — unreadable regex syntax.
+//
+// Symptom: DetectionConfirm chips showed raw regex strings instead of human-readable
+//   labels. Users saw "p\\s*[<=>]\\s*0\\.\\d+" instead of "p-value".
+//
+// Fix: ACADEMIC_MARKERS changed to list of (pattern, human_label) tuples.
+//   _detect_academic_markers now returns the human label, not the regex string.
+//
+// Proof: API response academic_markers_detected contains no backslash characters.
+
+test.describe('BUG-007 — Marker chips showed raw regex strings', () => {
+
+  test('academic_markers_detected values contain no backslashes', async ({ request }) => {
+    const apiUrl = process.env.API_URL ?? 'https://wci-api.fly.dev';
+    const res = await request.post(`${apiUrl}/api/detect`, {
+      data: {
+        text: 'Original study on cortisol feedback. n=84, p=0.003. DOI: 10.1234/example. The experiment used a control group.',
+      },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    expect(body.academic_markers_detected.length).toBeGreaterThan(0);
+    for (const marker of body.academic_markers_detected) {
+      // On broken build: markers contained regex syntax with backslashes
+      expect(marker).not.toContain('\\');
+      expect(marker).not.toMatch(/\\[bsdwBSDW]/);
+      // Should be a human-readable label
+      expect(marker.length).toBeLessThan(50);
+    }
+  });
+
+  test('academic_markers_detected returns known human labels', async ({ request }) => {
+    const apiUrl = process.env.API_URL ?? 'https://wci-api.fly.dev';
+    const res = await request.post(`${apiUrl}/api/detect`, {
+      data: {
+        text: 'Original study on cortisol. n=84, p=0.003. DOI: 10.1234/example',
+      },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+    const knownLabels = [
+      'p-value', 'DOI', 'sample size', 'structured sections', 'hypothesis',
+      'statistical significance', 'systematic review', 'citations (et al.)',
+      'publication venue', 'experimental design',
+    ];
+    for (const marker of body.academic_markers_detected) {
+      expect(knownLabels).toContain(marker);
+    }
+  });
+
+});
+
 test.describe('BUG-006 — Color contrast failures in mode toggle and hint buttons', () => {
 
   test('no color-contrast violations on landing page', async ({ page }) => {
