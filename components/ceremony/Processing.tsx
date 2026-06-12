@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import { useProcessingAnimation, type DotState } from '@/hooks/useProcessingAnimation';
 
 interface Props {
-  onReveal: () => void;  // calls store.revealScore() from parent after setting processingComplete
+  onReveal: () => void | Promise<void>;  // calls store.revealScore() from parent after setting processingComplete
   autoStart?: boolean;
 }
 

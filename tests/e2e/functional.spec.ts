@@ -216,6 +216,56 @@ test.describe('API connectivity', () => {
     expect(body.status).toBe('ok');
   });
 
+  test('wci-api /api/score returns valid 9-dimension response', async ({ request }) => {
+    const apiUrl = process.env.API_URL ?? 'https://wci-api.fly.dev';
+    const res = await request.post(`${apiUrl}/api/score`, {
+      data: {
+        text: 'Original experimental study on cortisol regulation in adult primates. n=84, p=0.003. DOI: 10.1234/example.',
+        work_type: 'original-argument',
+        standing: 'independent-researcher',
+        domain: 'biology',
+      },
+    });
+    expect(res.ok()).toBeTruthy();
+    const body = await res.json();
+
+    // Shape assertions
+    expect(body).toHaveProperty('composite_score');
+    expect(body).toHaveProperty('band');
+    expect(body).toHaveProperty('dimension_scores');
+    expect(body).toHaveProperty('epistemic_label');
+    expect(body).toHaveProperty('rubric_version');
+    expect(body).toHaveProperty('provenance');
+
+    // Composite score is a number in valid range
+    expect(typeof body.composite_score).toBe('number');
+    expect(body.composite_score).toBeGreaterThan(0);
+    expect(body.composite_score).toBeLessThanOrEqual(100);
+
+    // Score must NOT be exactly 62 (which would mean demo data leaked)
+    expect(body.composite_score).not.toBe(62);
+
+    // 9 dimensions
+    expect(body.dimension_scores).toHaveLength(9);
+    const expectedDims = ['N', 'E', 'P', 'C', 'S', 'Sc', 'L', 'M', 'D'];
+    const actualDims = body.dimension_scores.map((d: any) => d.dimension);
+    expect(actualDims).toEqual(expectedDims);
+
+    // Each dimension has required fields
+    for (const dim of body.dimension_scores) {
+      expect(dim).toHaveProperty('raw_score');
+      expect(dim).toHaveProperty('weight');
+      expect(dim).toHaveProperty('weighted_score');
+      expect(dim).toHaveProperty('justification');
+      expect(dim.raw_score).toBeGreaterThanOrEqual(1.0);
+      expect(dim.raw_score).toBeLessThanOrEqual(10.0);
+    }
+
+    // Band is a valid value
+    const validBands = ['landmark', 'significant', 'promising', 'developing', 'early-stage'];
+    expect(validBands).toContain(body.band);
+  });
+
   test('wci-api /api/detect returns valid shape', async ({ request }) => {
     const apiUrl = process.env.API_URL ?? 'https://wci-api.fly.dev';
     const res = await request.post(`${apiUrl}/api/detect`, {
