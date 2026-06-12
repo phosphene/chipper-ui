@@ -100,30 +100,43 @@ const initialState = {
 export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   ...initialState,
 
-  initFromDetection: (result: DetectionResult) => set({
-    makerDeclaration: {
-      freeText: '',
-      standing: { value: result.standing, source: 'detected' },
-      tradition: { value: result.domain, source: 'detected' },
-      relationshipToWork: { value: 'Primary author', source: 'detected' },
-    },
-    workClassification: {
-      workType: { value: result.workType, source: 'detected' },
-      description: '',
-    },
-    judgeIdentity: {
-      domain: { value: result.domain, source: 'detected' },
-      instrumentVersion: 'WCI v1.0',
-      variantAvailable: false,
-      variantName: null,
-      corpusSize: 0,
-      contentConfidence: result.confidence,
-    },
-    frameAgreement: {
-      consent1: false,
-      consent2: false,
-      lastWord: '',
-    },
+  initFromDetection: (result: DetectionResult) => set((state) => {
+    // Preserve user-set values from accordion; only fill in detected values where
+    // the user hasn't already specified something.
+    const existingMaker = state.makerDeclaration;
+    const existingWork = state.workClassification;
+
+    return {
+      makerDeclaration: {
+        freeText: existingMaker?.freeText ?? '',
+        standing: existingMaker?.standing?.source === 'user'
+          ? existingMaker.standing
+          : { value: result.standing, source: 'detected' as const },
+        tradition: existingMaker?.tradition?.source === 'user' && existingMaker.tradition.value
+          ? existingMaker.tradition
+          : { value: result.domain, source: 'detected' as const },
+        relationshipToWork: existingMaker?.relationshipToWork ?? { value: 'Primary author', source: 'detected' as const },
+      },
+      workClassification: {
+        workType: existingWork?.workType?.source === 'user'
+          ? existingWork.workType
+          : { value: result.workType, source: 'detected' as const },
+        description: existingWork?.description ?? '',
+      },
+      judgeIdentity: {
+        domain: { value: result.domain, source: 'detected' as const },
+        instrumentVersion: 'WCI v1.0',
+        variantAvailable: false,
+        variantName: null,
+        corpusSize: 0,
+        contentConfidence: result.confidence,
+      },
+      frameAgreement: state.frameAgreement ?? {
+        consent1: false,
+        consent2: false,
+        lastWord: '',
+      },
+    };
   }),
 
   updateMakerDeclaration: (update) => set((state) => ({

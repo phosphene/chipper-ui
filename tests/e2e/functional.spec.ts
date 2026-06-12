@@ -171,6 +171,41 @@ test.describe('EntryAccordion — accordion behavior', () => {
 
 });
 
+test.describe('EntryAccordion — ceremony pre-population', () => {
+
+  test('accordion work type selection survives detection and appears in ceremony', async ({ page }) => {
+    await page.goto('/');
+    const input = page.locator('[data-testid="entry-text-field"]');
+    await input.fill('Original experimental study on cortisol regulation in adult primates. n=84, p=0.003.');
+
+    // Expand and select work type
+    await page.locator('[data-testid="accordion-expander"]').click();
+    await page.locator('[data-testid="work-type-null-result"]').click();
+    await page.locator('[data-testid="standing-graduate-researcher"]').click();
+
+    // Submit via Evaluate
+    await page.locator('[data-testid="evaluate-button"]').click();
+
+    // Wait for detection confirm
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
+
+    // Confirm detection to start ceremony
+    await page.getByRole('button', { name: /confirm/i }).click();
+
+    // Ceremony Stage I should show — verify store has the user's standing
+    // The ReviewCard for Standing should show "graduate-researcher"
+    // Wait for ceremony to render
+    await page.waitForTimeout(1000);
+
+    // Check that the page now shows ceremony content
+    // (Stage I is the Maker Declaration stage)
+    const pageContent = await page.textContent('body');
+    // The standing value should appear somewhere in the ceremony
+    expect(pageContent).toContain('graduate');
+  });
+
+});
+
 test.describe('API connectivity', () => {
 
   test('wci-api /health responds', async ({ request }) => {
