@@ -48,17 +48,21 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
     // store.rest() already called inside StageV; just transition view
   };
 
+  // Demo fallback result — used only if API call fails
+  const DEMO_RESULT: import('@/store/ceremony.types').WCIResult = {
+    compositeScore: 0,
+    band: 'promising',
+    dimensionScores: [],
+    epistemicLabel: '',
+    relativeContext: '',
+    rubricVersion: '1.0',
+    evaluationDate: new Date().toISOString(),
+    provenance: 'warm',
+  };
+
   const handleReveal = () => {
-    store.setWCIResult({
-      compositeScore: 0,     // placeholder — real score arrives via API in T-276
-      band: 'promising',
-      dimensionScores: [],
-      epistemicLabel: '',
-      relativeContext: '',
-      rubricVersion: '1.0',
-      evaluationDate: new Date().toISOString(),
-      provenance: 'warm',
-    });
+    // Unused legacy handler — real scoring happens in handleRealReveal
+    store.setWCIResult(DEMO_RESULT);
     onScoreReady();
   };
 
@@ -70,28 +74,50 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
   if (isActive('VII')) {
     return (
       <Processing
-        onReveal={() => {
-          // Seed demo result — real scores arrive from wci-api in T-276
-          store.setWCIResult({
-            compositeScore: 62,
-            band: 'promising',
-            dimensionScores: [
-              { dimension: 'N',  rawScore: 4.0, weight: 1.0, weightedScore: 4.0,   justification: 'Structurally expected for a null result.', keyPassage: null },
-              { dimension: 'E',  rawScore: 8.0, weight: 1.5, weightedScore: 12.0,  justification: 'Three independent community studies with controlled comparisons.', keyPassage: 'Across all three sites, feedback loop indicators showed no statistically significant deviation from baseline ecological variation (p > 0.3).' },
-              { dimension: 'P',  rawScore: 5.0, weight: 1.2, weightedScore: 6.0,   justification: 'General prior applies; no domain variant available.', keyPassage: null },
-              { dimension: 'C',  rawScore: 7.0, weight: 1.0, weightedScore: 7.0,   justification: 'Framework holds throughout.', keyPassage: null },
-              { dimension: 'S',  rawScore: 7.0, weight: 1.0, weightedScore: 7.0,   justification: 'Economical apparatus.', keyPassage: null },
-              { dimension: 'Sc', rawScore: 5.0, weight: 0.8, weightedScore: 4.0,   justification: 'Limited to three study sites.', keyPassage: null },
-              { dimension: 'L',  rawScore: 7.0, weight: 1.0, weightedScore: 7.0,   justification: 'Well-situated in prior work.', keyPassage: null },
-              { dimension: 'M',  rawScore: 8.5, weight: 1.5, weightedScore: 12.75, justification: 'Excellent calibration. The null finding is stated as a null finding.', keyPassage: 'We do not conclude that niche construction feedback loops are absent — only that they are not detectable at the temporal resolution our methodology affords.' },
-              { dimension: 'D',  rawScore: 6.0, weight: 0.8, weightedScore: 4.8,   justification: 'Some boundary conditions stated.', keyPassage: null },
-            ],
-            epistemicLabel: 'corpus-level — no in-session reading on record',
-            relativeContext: 'Null-result papers in behavioral ecology typically score 55–68.',
-            rubricVersion: '1.0',
-            evaluationDate: new Date().toISOString(),
-            provenance: 'warm',
-          });
+        onReveal={async () => {
+          const state = useCeremonyStore.getState();
+          const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://wci-api.fly.dev';
+
+          try {
+            const res = await fetch(`${apiBase}/api/score`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                text: state.makerDeclaration?.freeText ?? '',
+                work_type: state.workClassification?.workType.value ?? 'original-argument',
+                standing: state.makerDeclaration?.standing.value ?? 'independent-researcher',
+                domain: state.judgeIdentity?.domain.value ?? 'general',
+              }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              // Map snake_case API response to camelCase store types
+              store.setWCIResult({
+                compositeScore: data.composite_score,
+                band: data.band,
+                dimensionScores: (data.dimension_scores ?? []).map((d: any) => ({
+                  dimension: d.dimension,
+                  rawScore: d.raw_score,
+                  weight: d.weight,
+                  weightedScore: d.weighted_score,
+                  justification: d.justification,
+                  keyPassage: d.key_passage ?? null,
+                })),
+                epistemicLabel: data.epistemic_label ?? '',
+                relativeContext: data.relative_context ?? '',
+                rubricVersion: data.rubric_version ?? '1.0',
+                evaluationDate: new Date().toISOString(),
+                provenance: data.provenance ?? 'cold',
+              });
+            } else {
+              // Fall back to demo if API fails
+              store.setWCIResult(DEMO_RESULT);
+            }
+          } catch {
+            store.setWCIResult(DEMO_RESULT);
+          }
+
           store.revealScore();
           onScoreReady();
         }}
