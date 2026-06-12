@@ -220,7 +220,7 @@ test.describe('API connectivity', () => {
     const apiUrl = process.env.API_URL ?? 'https://wci-api.fly.dev';
     const res = await request.post(`${apiUrl}/api/score`, {
       data: {
-        text: 'Original experimental study on cortisol regulation in adult primates. n=84, p=0.003. DOI: 10.1234/example.',
+        text: 'This systematic review and meta-analysis examines 47 studies on memory consolidation, sleep deprivation, and hippocampal plasticity. et al., p<0.01, n=1240.',
         work_type: 'original-argument',
         standing: 'independent-researcher',
         domain: 'biology',
