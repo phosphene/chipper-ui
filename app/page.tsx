@@ -16,10 +16,10 @@ export default function Home() {
         <button
           data-testid="stage2-jump"
           onClick={() => setMode('ceremony')}
-          className="px-3 py-1.5 border border-dashed border-[#555]/60 rounded text-[#666] text-[0.65rem] font-mono tracking-wide hover:border-[#888]/60 hover:text-[#888] transition-all"
+          className="px-3 py-1.5 border border-dashed border-[#888]/60 rounded text-[#999] text-[0.65rem] font-mono tracking-wide hover:border-[#888]/60 hover:text-[#888] transition-all"
         >
           STAGE 2 JUMP
-          <span className="block text-[0.5rem] text-[#555] tracking-normal">direct access</span>
+          <span className="block text-[0.5rem] text-[#888] tracking-normal">direct access</span>
         </button>
       </header>
 
