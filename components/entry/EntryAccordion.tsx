@@ -212,7 +212,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Work type button group */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Work type <span className="text-[#555]">(optional)</span>
+              Work type <span className="text-[#888]">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {WORK_TYPES.map(({ value, label }) => (
@@ -235,7 +235,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Standing button group */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Standing <span className="text-[#555]">(optional)</span>
+              Standing <span className="text-[#888]">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {STANDINGS.map(({ value, label }) => (
@@ -258,7 +258,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Field/tradition text input */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Field / tradition <span className="text-[#555]">(optional)</span>
+              Field / tradition <span className="text-[#888]">(optional)</span>
             </p>
             <input
               type="text"
