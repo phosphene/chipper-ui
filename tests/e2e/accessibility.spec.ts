@@ -8,7 +8,6 @@
  *  - No WCAG 2.1 AA violations on landing page
  *  - All interactive elements reachable by keyboard
  *  - Submit button has accessible name
- *  - Input has accessible label (placeholder counts as hint, not label — we check both)
  *  - No duplicate IDs
  */
 
@@ -64,7 +63,7 @@ test.describe('Accessibility — landing page', () => {
     await page.keyboard.press('Tab');
     const focused = await page.evaluate(() => document.activeElement?.tagName);
     // Input or button should be focused — not body
-    expect(['INPUT', 'BUTTON', 'A']).toContain(focused);
+    expect(['INPUT', 'BUTTON', 'A', 'TEXTAREA']).toContain(focused);
   });
 
   test('keyboard: Tab reaches submit button', async ({ page }) => {
@@ -91,7 +90,7 @@ test.describe('Accessibility — after interaction', () => {
 
   test('no new violations after typing in input', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder(/describe your work/i).fill(
+    await page.locator('[data-testid="entry-text-field"]').fill(
       'Original research on neuroplasticity mechanisms in adult mammals'
     );
 
@@ -102,13 +101,13 @@ test.describe('Accessibility — after interaction', () => {
     expect(results.violations).toEqual([]);
   });
 
-  test('mode toggle buttons are keyboard-accessible', async ({ page }) => {
+  test('accordion expand is keyboard-accessible', async ({ page }) => {
     await page.goto('/');
-    const detailedBtn = page.locator('.flex.justify-center button', { hasText: 'detailed' });
-    await detailedBtn.focus();
+    const expander = page.locator('[data-testid="accordion-expander"]');
+    await expander.focus();
     await page.keyboard.press('Enter');
-    // Detailed mode: simple entry input no longer visible
-    await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
+    // Expanded content should be visible
+    await expect(page.locator('[data-testid="accordion-expanded"]')).toBeVisible();
   });
 
 });

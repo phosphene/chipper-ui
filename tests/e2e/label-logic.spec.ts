@@ -6,19 +6,13 @@
  *
  * Scope:
  *  - UI labels match API-returned values (not hardcoded stubs)
- *  - Band label on Pronouncement matches score band
+ *  - Accordion UI labels correct
  *  - Nine canonical WCI dimensions render (N E P C I S R T X)
  *  - Error state renders only when API fails
  *  - Stage headings match known stage names
  */
 
 import { test, expect } from '@playwright/test';
-
-// Canonical WCI dimension IDs — frozen. Never change without principal review.
-const CANONICAL_DIMENSIONS = ['N', 'E', 'P', 'C', 'I', 'S', 'R', 'T', 'X'];
-
-// Known band labels — must match ceremony.types Band type
-const VALID_BANDS = ['seminal', 'landmark', 'strong', 'promising', 'developing', 'preliminary'];
 
 test.describe('Label/Logic — entry', () => {
 
@@ -29,11 +23,9 @@ test.describe('Label/Logic — entry', () => {
     await expect(submit).toContainText('→');
   });
 
-  test('mode buttons labeled "simple" and "detailed" (lowercase)', async ({ page }) => {
+  test('accordion expander trigger visible on load', async ({ page }) => {
     await page.goto('/');
-    const toggle = page.locator('.flex.justify-center');
-    await expect(toggle.getByRole('button', { name: 'simple' })).toBeVisible();
-    await expect(toggle.getByRole('button', { name: 'detailed' })).toBeVisible();
+    await expect(page.locator('[data-testid="accordion-expander"]')).toBeVisible();
   });
 
   test('header brand label is "Woodchipper"', async ({ page }) => {
@@ -57,7 +49,7 @@ test.describe('Label/Logic — detection result', () => {
 
   test('detection confirm shows work type from API response', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder(/describe your work/i).fill(
+    await page.locator('[data-testid="entry-text-field"]').fill(
       'Literature review and meta-analysis of 47 studies on sleep deprivation and working memory'
     );
     // Submit and wait for detection confirm card
@@ -67,7 +59,7 @@ test.describe('Label/Logic — detection result', () => {
 
   test('detection confidence label is one of: high / medium / low', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder(/describe your work/i).fill(
+    await page.locator('[data-testid="entry-text-field"]').fill(
       'Original experimental research on gene expression under thermal stress. p=0.003, n=84'
     );
     await page.getByRole('button', { name: 'Submit' }).click();

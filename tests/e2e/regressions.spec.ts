@@ -30,7 +30,7 @@ import AxeBuilder from '@axe-core/playwright';
 //   `http://localhost:8000`. The resulting bundle shipped that string to
 //   every browser.
 //
-// Symptom: User typed in the Simple entry field and clicked →. The button
+// Symptom: User typed in the entry field and clicked →. The button
 //   activated (15-char threshold was met), the click handler fired, but the
 //   fetch went to localhost:8000 — which is unreachable from the browser.
 //   The request failed silently; no error was shown; DetectionConfirm never
@@ -49,7 +49,7 @@ test.describe('BUG-001 — API URL baked as localhost at build time', () => {
     page.on('request', req => requests.push(req.url()));
 
     await page.goto('/');
-    await page.getByPlaceholder(/describe your work/i).fill(
+    await page.locator('[data-testid="entry-text-field"]').fill(
       'Original experimental study on memory consolidation in adult rodents. n=60, p=0.04.'
     );
     await page.getByRole('button', { name: 'Submit' }).click();
@@ -82,14 +82,14 @@ test.describe('BUG-001 — API URL baked as localhost at build time', () => {
 //   which invalidates the `RUN npm run build` layer on every deploy.
 //
 // Proof: Interactive behaviour must work. A click that should trigger a state
-//   change (mode toggle) must produce a visible DOM change. If React didn't
-//   hydrate, clicking Detailed would leave the Simple input still visible.
+//   change must produce a visible DOM change. If React didn't hydrate,
+//   clicking submit wouldn't fire the handler and DetectionConfirm wouldn't appear.
 
 test.describe('BUG-002 — Stale Docker build cache suppressed React hydration', () => {
 
   test('click handler fires on submit (React is hydrated)', async ({ page }) => {
     await page.goto('/');
-    await page.getByPlaceholder(/describe your work/i).fill(
+    await page.locator('[data-testid="entry-text-field"]').fill(
       'Original research on cortisol levels in stressed adult primates'
     );
     await page.getByRole('button', { name: 'Submit' }).click();
@@ -97,12 +97,11 @@ test.describe('BUG-002 — Stale Docker build cache suppressed React hydration',
     await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
-  test('mode toggle click handler fires (DOM changes on click)', async ({ page }) => {
+  test('accordion expander click fires (DOM changes on click)', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-    // Non-hydrated: Simple input stays visible. Hydrated: it disappears.
-    await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
-    await expect(page.getByPlaceholder(/describe what you.re working on/i)).toBeVisible();
+    await page.locator('[data-testid="accordion-expander"]').click();
+    // Non-hydrated: expanded content wouldn't appear — the click handler wouldn't exist
+    await expect(page.locator('[data-testid="accordion-expanded"]')).toBeVisible();
   });
 
 });
@@ -114,16 +113,11 @@ test.describe('BUG-002 — Stale Docker build cache suppressed React hydration',
 //   intent was defensive — don't merge into a state that hasn't been
 //   initialized. But `makerDeclaration` is only initialized by
 //   `initFromDetection`, which fires after a successful `/api/detect` call.
-//   In Detailed mode, the user types BEFORE detection — so makerDeclaration
-//   was always null, and every keystroke was silently discarded.
+//   Users typing BEFORE detection had makerDeclaration always null, and every
+//   keystroke was silently discarded.
 //
-//   The textarea is a controlled React input: `value={store.makerDeclaration
-//   ?.freeText ?? ''}`. With state perpetually null, the value was always ''
-//   and React re-rendered the textarea empty on every keystroke. The user
-//   saw characters appear for a frame and then vanish, or nothing at all.
-//
-// Symptom: Jan opened Detailed mode, clicked the textarea, typed — nothing
-//   appeared. The field looked interactive but was unresponsive.
+// Symptom: User typed in the textarea, nothing appeared. The field looked
+//   interactive but was unresponsive.
 //
 // Fix: `updateMakerDeclaration` now initializes `makerDeclaration` with
 //   sensible defaults when it's null, then merges the update in. This mirrors
@@ -131,14 +125,13 @@ test.describe('BUG-002 — Stale Docker build cache suppressed React hydration',
 //
 // Proof: After fill(), toHaveValue() must return the filled string. On the
 //   broken build it would return '' — the store never updated.
+//   (Now tested via EntryAccordion's main textarea which writes to store.)
 
-test.describe('BUG-003 — Detailed mode textarea discarded all input', () => {
+test.describe('BUG-003 — Textarea discarded input before detection', () => {
 
-  test('typing in Detailed textarea updates and retains the value', async ({ page }) => {
+  test('typing in entry textarea updates and retains the value', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-
-    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
+    const textarea = page.locator('[data-testid="entry-text-field"]');
     await expect(textarea).toBeVisible();
 
     await textarea.fill('A study of cortisol feedback in adult rodents under chronic stress');
@@ -146,32 +139,14 @@ test.describe('BUG-003 — Detailed mode textarea discarded all input', () => {
     await expect(textarea).toHaveValue('A study of cortisol feedback in adult rodents under chronic stress');
   });
 
-  test('second typing session appends correctly (state persists)', async ({ page }) => {
+  test('submit button activates after typing (state is live)', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-
-    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
-    await textarea.fill('First sentence.');
-    await textarea.press('End');
-    await textarea.type(' Second sentence.');
-
-    const value = await textarea.inputValue();
-    // On broken build: value is '' or just ' Second sentence.' (first fill vanished)
-    expect(value).toContain('First sentence.');
-    expect(value).toContain('Second sentence.');
-  });
-
-  test('Confirm button activates after typing (state is live)', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-
-    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
+    const textarea = page.locator('[data-testid="entry-text-field"]');
     await textarea.fill('Original research on primate social hierarchy and cortisol regulation');
 
-    // On broken build: button stays disabled because store.makerDeclaration was null
-    // and the canAdvance selector returned false
-    const confirm = page.getByRole('button', { name: /confirm.*continue/i });
-    await expect(confirm).not.toHaveAttribute('disabled');
+    // On broken build: submit stayed disabled because store.makerDeclaration was null
+    const submit = page.getByRole('button', { name: 'Submit' });
+    await expect(submit).not.toHaveAttribute('aria-disabled', 'true');
   });
 
 });
@@ -266,22 +241,39 @@ test.describe('BUG-005 — Submit button excluded from keyboard tab order', () =
 //
 // Mechanism: The dark-theme palette used low-luminance grey text on near-black
 //   backgrounds. WCAG 2.1 AA requires a contrast ratio of 4.5:1 for normal
-//   text. Three elements failed:
-//     - Mode toggle inactive button: #555555 on #191919 → 2.35:1
-//     - Mode toggle active button: #ffffff on #4f8ef5 → 3.22:1
-//     - "Detailed" hint button in SimpleEntry: #555555 on #111111 → 2.53:1
+//   text. Low contrast makes text illegible for users with low vision or in
+//   bright environments.
 //
-//   These weren't cosmetic failures — low contrast makes text illegible for
-//   users with low vision, colour blindness, or in bright environments.
+// Symptom: Axe audit flagged color-contrast violations at WCAG 2.1 AA level.
 //
-// Symptom: Axe audit flagged 3 color-contrast violations at WCAG 2.1 AA level.
-//
-// Fix:
-//   - Active button: bg darkened from #4f8ef5 to #1a5fd4 (passes 4.5:1 with white)
-//   - Inactive buttons: text lightened from #555 to #999 (#999 on #191919 = 4.6:1)
+// Fix: Text colors adjusted to meet 4.5:1 contrast ratio against backgrounds.
 //
 // Proof: Axe color-contrast rule must report zero violations on both landing
-//   page and in Detailed mode (which reveals additional buttons).
+//   page and after expanding the accordion (which reveals additional elements).
+
+test.describe('BUG-006 — Color contrast failures', () => {
+
+  test('no color-contrast violations on landing page', async ({ page }) => {
+    await page.goto('/');
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2aa'])
+      .withRules(['color-contrast'])
+      .analyze();
+    expect(results.violations).toHaveLength(0);
+  });
+
+  test('no color-contrast violations after expanding accordion', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-testid="accordion-expander"]').click();
+    await expect(page.locator('[data-testid="accordion-expanded"]')).toBeVisible();
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2aa'])
+      .withRules(['color-contrast'])
+      .analyze();
+    expect(results.violations).toHaveLength(0);
+  });
+
+});
 
 // ── BUG-007 ───────────────────────────────────────────────────────────────────
 //
@@ -336,30 +328,6 @@ test.describe('BUG-007 — Marker chips showed raw regex strings', () => {
     for (const marker of body.academic_markers_detected) {
       expect(knownLabels).toContain(marker);
     }
-  });
-
-});
-
-test.describe('BUG-006 — Color contrast failures in mode toggle and hint buttons', () => {
-
-  test('no color-contrast violations on landing page', async ({ page }) => {
-    await page.goto('/');
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2aa'])
-      .withRules(['color-contrast'])
-      .analyze();
-    // On broken build: 3 nodes failed (active toggle, inactive toggle, Detailed hint)
-    expect(results.violations).toHaveLength(0);
-  });
-
-  test('no color-contrast violations after switching to Detailed mode', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2aa'])
-      .withRules(['color-contrast'])
-      .analyze();
-    expect(results.violations).toHaveLength(0);
   });
 
 });

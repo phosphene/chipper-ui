@@ -5,11 +5,12 @@
  * Tests are against the real chipper-ui + wci-api (BASE_URL env var).
  *
  * Scope:
- *  - Page loads and renders entry point
+ *  - Page loads and renders entry point (EntryAccordion)
  *  - Submit button activates after 15+ chars
  *  - Detection API call fires and DetectionConfirm card appears
- *  - Ceremony flow begins after confirmation
- *  - Mode toggle (Simple ↔ Detailed) works
+ *  - Accordion expand/collapse behavior
+ *  - File drop zone always visible
+ *  - Store pre-population from accordion fields
  */
 
 import { test, expect } from '@playwright/test';
@@ -26,7 +27,7 @@ test.describe('Entry — functional', () => {
 
   test('submit button enables after 15 chars', async ({ page }) => {
     await page.goto('/');
-    const input = page.getByPlaceholder(/describe your work/i);
+    const input = page.locator('[data-testid="entry-text-field"]');
     const submit = page.getByRole('button', { name: 'Submit' });
 
     await input.fill('short');
@@ -38,7 +39,7 @@ test.describe('Entry — functional', () => {
 
   test('submit fires detection and shows confirm card', async ({ page }) => {
     await page.goto('/');
-    const input = page.getByPlaceholder(/describe your work/i);
+    const input = page.locator('[data-testid="entry-text-field"]');
     await input.fill('Original research on cortisol feedback in primates. n=120, p<0.01.');
 
     await page.getByRole('button', { name: 'Submit' }).click();
@@ -49,44 +50,123 @@ test.describe('Entry — functional', () => {
 
   test('Enter key submits when input is ready', async ({ page }) => {
     await page.goto('/');
-    const input = page.getByPlaceholder(/describe your work/i);
+    const input = page.locator('[data-testid="entry-text-field"]');
     await input.fill('Original research on cortisol feedback in primates with full methodology');
     await input.press('Enter');
 
     await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
-  test('mode toggle — Simple to Detailed', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-    // Detailed mode: simple entry input disappears
-    await expect(page.getByPlaceholder(/describe your work/i)).not.toBeVisible();
-  });
-
-  test('Detailed mode — textarea accepts input', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
-    await expect(textarea).toBeVisible();
-    await textarea.fill('This is a study of cortisol feedback in adult rodents under stress conditions');
-    await expect(textarea).toHaveValue('This is a study of cortisol feedback in adult rodents under stress conditions');
-  });
-
-  test('Detailed mode — Confirm button activates after typing', async ({ page }) => {
-    await page.goto('/');
-    await page.locator('.flex.justify-center button', { hasText: 'detailed' }).click();
-    const textarea = page.getByPlaceholder(/describe what you.re working on/i);
-    await textarea.fill('This is a study of cortisol feedback in adult rodents under stress conditions');
-    // Confirm & Continue button should become active
-    const confirm = page.getByRole('button', { name: /confirm.*continue/i });
-    await expect(confirm).not.toHaveAttribute('disabled');
-  });
-
   test('WCI header button returns to entry', async ({ page }) => {
     await page.goto('/');
     // Navigate somewhere then hit WCI button to return
     await page.getByRole('button', { name: /WCI/i }).click();
-    await expect(page.getByPlaceholder(/describe your work/i)).toBeVisible();
+    await expect(page.locator('[data-testid="entry-accordion"]')).toBeVisible();
+  });
+
+});
+
+test.describe('EntryAccordion — accordion behavior', () => {
+
+  test('accordion renders', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-testid="entry-accordion"]')).toBeVisible();
+  });
+
+  test('file drop zone visible in collapsed state', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-testid="file-drop-zone"]')).toBeVisible();
+  });
+
+  test('file drop zone visible in expanded state', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-testid="accordion-expander"]').click();
+    await expect(page.locator('[data-testid="file-drop-zone"]')).toBeVisible();
+  });
+
+  test('expanding reveals work type buttons', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-testid="accordion-expander"]').click();
+    await expect(page.locator('[data-testid="accordion-expanded"]')).toBeVisible();
+    // Work type buttons should be visible
+    await expect(page.locator('[data-testid="work-type-null-result"]')).toBeVisible();
+    await expect(page.locator('[data-testid="work-type-original-argument"]')).toBeVisible();
+  });
+
+  test('top → disappears when expanded', async ({ page }) => {
+    await page.goto('/');
+    // Top submit button visible in collapsed state
+    await expect(page.locator('[data-testid="submit-button-top"]')).toBeVisible();
+    // Expand
+    await page.locator('[data-testid="accordion-expander"]').click();
+    // Top submit should be gone
+    await expect(page.locator('[data-testid="submit-button-top"]')).not.toBeVisible();
+  });
+
+  test('bottom Evaluate → appears when expanded', async ({ page }) => {
+    await page.goto('/');
+    // Evaluate button not visible in collapsed state
+    await expect(page.locator('[data-testid="evaluate-button"]')).not.toBeVisible();
+    // Expand
+    await page.locator('[data-testid="accordion-expander"]').click();
+    // Evaluate button should appear
+    await expect(page.locator('[data-testid="evaluate-button"]')).toBeVisible();
+  });
+
+  test('state persists across collapse/expand', async ({ page }) => {
+    await page.goto('/');
+    const input = page.locator('[data-testid="entry-text-field"]');
+
+    // Type in collapsed state
+    await input.fill('A study on cortisol feedback in primates');
+
+    // Expand
+    await page.locator('[data-testid="accordion-expander"]').click();
+
+    // Text should still be there
+    await expect(input).toHaveValue('A study on cortisol feedback in primates');
+
+    // Select a work type
+    await page.locator('[data-testid="work-type-null-result"]').click();
+
+    // Collapse
+    await page.getByText('▲ Fewer details').click();
+
+    // Expand again
+    await page.locator('[data-testid="accordion-expander"]').click();
+
+    // Text still there
+    await expect(input).toHaveValue('A study on cortisol feedback in primates');
+
+    // Work type button should still be selected (highlighted)
+    const nullBtn = page.locator('[data-testid="work-type-null-result"]');
+    await expect(nullBtn).toHaveClass(/border-\[#4f8ef5\]/);
+  });
+
+  test('submission via top → still works (DetectionConfirm appears)', async ({ page }) => {
+    await page.goto('/');
+    const input = page.locator('[data-testid="entry-text-field"]');
+    await input.fill('Original experimental study on memory consolidation in adult rodents. n=60, p=0.04.');
+
+    await page.locator('[data-testid="submit-button-top"]').click();
+
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
+  });
+
+  test('work type button click pre-populates store — visible in DetectionConfirm', async ({ page }) => {
+    await page.goto('/');
+    const input = page.locator('[data-testid="entry-text-field"]');
+    await input.fill('This is an original experimental study on cortisol regulation in primates');
+
+    // Expand and select work type
+    await page.locator('[data-testid="accordion-expander"]').click();
+    await page.locator('[data-testid="work-type-null-result"]').click();
+
+    // Submit via Evaluate button
+    await page.locator('[data-testid="evaluate-button"]').click();
+
+    // DetectionConfirm should appear
+    await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
 });
