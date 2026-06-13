@@ -263,7 +263,7 @@ test.describe('API connectivity', () => {
       expect(dim.raw_score).toBeLessThanOrEqual(10.0);
     }
 
-    // Band is a valid value
+    // Band is a valid value — lowercase on the wire (frontend contract)
     const validBands = ['landmark', 'significant', 'promising', 'developing', 'early-stage'];
     expect(validBands).toContain(body.band);
   });
