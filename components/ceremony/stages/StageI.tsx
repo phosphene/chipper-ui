@@ -15,7 +15,7 @@ export function StageI() {
   const decl = store.makerDeclaration;
 
   return (
-    <div>
+    <div data-testid="stage-I">
       <div className="epigraph">
         The isnad precedes the matn. The chain of who carries the work is examined before the work itself.
         <span className="attr">— Islamic hadith science</span>
@@ -25,6 +25,7 @@ export function StageI() {
         <label className="field-label">In your own words</label>
         <p className="field-hint">Describe yourself in relation to this work.</p>
         <textarea
+          data-testid="stage-I-freetext"
           className="ceremony-input"
           value={decl?.freeText ?? ''}
           onChange={(e) => store.updateMakerDeclaration({ freeText: e.target.value })}
@@ -42,7 +43,7 @@ export function StageI() {
         </>
       )}
 
-      <StageNav canAdvance={canAdvance} onAdvance={() => store.advanceStage()} showBack={false} />
+      <StageNav canAdvance={canAdvance} onAdvance={() => store.advanceStage()} showBack={false} testidPrefix="stage-I" />
     </div>
   );
 }

@@ -15,7 +15,7 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
   const wc = store.workClassification;
 
   return (
-    <div>
+    <div data-testid="stage-IV">
       <div className="epigraph">
         Once <em>litis contestatio</em> occurs, the claim is fixed. The agreement to the frame is binding.
         <span className="attr">— Roman formula system</span>
@@ -63,14 +63,17 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
 
       <div className="flex justify-between items-center pt-3 border-t border-white/07">
         <button
+          data-testid="stage-IV-decline"
           onClick={onDecline}
           className="px-4 py-2 border border-[#e05252]/35 rounded-md text-[#e05252] text-[0.78rem] font-mono hover:border-[#e05252] transition-colors"
         >
           I Decline — Exit Evaluation
         </button>
         <button
+          data-testid="stage-IV-enter"
           onClick={() => store.advanceStage()}
           disabled={!consentReady}
+          aria-disabled={!consentReady}
           className="px-6 py-2.5 bg-[#4f8ef5] text-white rounded-md text-[0.85rem] font-mono tracking-wide disabled:opacity-35 hover:opacity-85 transition-opacity"
         >
           Enter Judgment ⚖
@@ -86,6 +89,7 @@ function ConsentCheck({ id, checked, onChange, label }: {
   return (
     <label className="flex items-start gap-3 cursor-pointer">
       <input
+        data-testid={`consent-${id}`}
         type="checkbox" id={id} checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         className="mt-0.5 w-[17px] h-[17px] accent-[#4f8ef5] flex-shrink-0"

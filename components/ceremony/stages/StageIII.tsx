@@ -11,7 +11,7 @@ export function StageIII() {
   const judge = store.judgeIdentity;
 
   return (
-    <div>
+    <div data-testid="stage-III">
       <div className="epigraph">
         Before debate can proceed, interlocutors must agree on which means of knowledge are valid.
         <span className="attr">— Indian pramāṇa tradition</span>
@@ -41,7 +41,7 @@ export function StageIII() {
         </LimNotice>
       </div>
 
-      <StageNav canAdvance={true} advanceLabel="Acknowledged →" onAdvance={() => store.advanceStage()} onBack={() => store.backStage()} />
+      <StageNav canAdvance={true} advanceLabel="Acknowledged →" onAdvance={() => store.advanceStage()} onBack={() => store.backStage()} testidPrefix="stage-III" />
     </div>
   );
 }

@@ -22,7 +22,7 @@ export function StageII() {
   const canAdvance = !!selected && selected !== 'unknown';
 
   return (
-    <div>
+    <div data-testid="stage-II">
       <div className="epigraph">
         The praetor classifies the claim into a formula before it reaches the judge.
         <span className="attr">— Roman formula system</span>
@@ -31,6 +31,7 @@ export function StageII() {
       <div className="field-group">
         <label className="field-label">Describe your work</label>
         <textarea
+          data-testid="stage-II-description"
           rows={2}
           className="ceremony-input"
           value={store.workClassification?.description ?? ''}
@@ -43,6 +44,8 @@ export function StageII() {
         {WORK_TYPES.map(({ value, label, desc }) => (
           <button
             key={value}
+            data-testid={`work-type-${value}`}
+            aria-pressed={selected === value}
             onClick={() => store.updateWorkClassification({ workType: { value, source: 'user' } })}
             className={`text-left p-4 rounded-md border-[1.5px] transition-all
               ${selected === value
@@ -55,7 +58,9 @@ export function StageII() {
         ))}
       </div>
 
-      <button className="w-full py-3 border border-dashed border-white/10 rounded-md text-[0.88rem] text-[#888] hover:border-white/20 hover:text-[#888] transition-all mb-3">
+      <button
+        data-testid="work-type-none"
+        className="w-full py-3 border border-dashed border-white/10 rounded-md text-[0.88rem] text-[#888] hover:border-white/20 hover:text-[#888] transition-all mb-3">
         None of these describe my work
       </button>
 
@@ -68,7 +73,7 @@ export function StageII() {
         </div>
       )}
 
-      <StageNav canAdvance={canAdvance} onAdvance={() => store.advanceStage()} onBack={() => store.backStage()} />
+      <StageNav canAdvance={canAdvance} onAdvance={() => store.advanceStage()} onBack={() => store.backStage()} testidPrefix="stage-II" />
     </div>
   );
 }

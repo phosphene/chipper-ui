@@ -14,7 +14,7 @@ interface Props {
 
 export function Threshold({ onProceed }: Props) {
   return (
-    <div className="
+    <div data-testid="threshold" className="
       flex flex-col items-center justify-center min-h-screen text-center
       bg-[#070707] px-6
     ">
@@ -50,7 +50,8 @@ export function Threshold({ onProceed }: Props) {
       </p>
 
       <button
-        onClick={onProceed}
+        data-testid="threshold-proceed"
+          onClick={onProceed}
         className="
           px-7 py-2.5 rounded-md border border-[#4f8ef5]/35
           text-[#4f8ef5]/75 font-mono text-[0.82rem] tracking-wide

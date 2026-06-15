@@ -16,7 +16,7 @@ export function StageV({ onRested }: { onRested: () => void }) {
   ].filter(Boolean) as string[];
 
   return (
-    <div>
+    <div data-testid="stage-V">
       <div className="epigraph">
         The defense rests. The confessions are complete. What follows belongs to the judge.
         <span className="attr">— The universal closing</span>
@@ -40,6 +40,7 @@ export function StageV({ onRested }: { onRested: () => void }) {
           className="ceremony-input"
           style={{ minHeight: '72px', borderStyle: 'dashed' }}
           value={store.frameAgreement?.lastWord ?? ''}
+          data-testid="stage-V-last-word"
           onChange={(e) => store.updateLastWord(e.target.value)}
           placeholder="Optional…"
         />
@@ -51,6 +52,7 @@ export function StageV({ onRested }: { onRested: () => void }) {
           I have presented my work. I have accepted the terms of evaluation. I rest my case.
         </p>
         <button
+          data-testid="stage-V-rest"
           onClick={() => { store.rest(); onRested(); }}
           className="px-8 py-3 bg-[#4f8ef5] text-white rounded-md font-mono text-[0.85rem] tracking-wide hover:opacity-85 transition-opacity"
         >

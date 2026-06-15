@@ -46,7 +46,7 @@ export function ScoreHero({ compositeScore, band, epistemicLabel, relativeContex
   }, [compositeScore]);
 
   return (
-    <div className="text-center pb-6 border-b border-white/07 mb-5">
+    <div data-testid="score-hero" className="text-center pb-6 border-b border-white/07 mb-5">
       {/* 1. Epistemic label — first */}
       <p className="text-[0.78rem] italic text-[#888] mb-4">{epistemicLabel}</p>
 

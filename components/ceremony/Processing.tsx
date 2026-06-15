@@ -33,7 +33,7 @@ export function Processing({ onReveal, autoStart = true }: Props) {
   }, [autoStart, start]);
 
   return (
-    <div className="
+    <div data-testid="processing" className="
       flex flex-col items-center justify-center min-h-screen text-center
       bg-[#060606] px-6
     ">
@@ -68,6 +68,7 @@ export function Processing({ onReveal, autoStart = true }: Props) {
       {/* Reveal button — fades in 1.5s after final dot */}
       <div className={`transition-opacity duration-500 ${revealReady ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         <button
+          data-testid="score-reveal"
           onClick={onReveal}
           disabled={!revealReady}
           className="

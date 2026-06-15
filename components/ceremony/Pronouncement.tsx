@@ -67,7 +67,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
   );
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-1">
+    <div data-testid="pronouncement" className="w-full max-w-2xl mx-auto px-1">
 
       {/* Score hero — sequence locked */}
       <ScoreHero
@@ -124,6 +124,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
       {/* Decision tools */}
       <div className="pt-4 border-t border-white/07 space-y-2">
         <button
+          data-testid="pronouncement-proceed"
           onClick={onProceedToRecording}
           className="w-full flex items-center justify-between px-4 py-3 bg-[#4f8ef5]/08 border border-[#4f8ef5]/30 rounded-md cursor-pointer hover:bg-[#4f8ef5]/12 transition-all group"
         >
