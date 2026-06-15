@@ -9,7 +9,7 @@ import type { WorkType } from '@/store/ceremony.types';
 
 const WORK_TYPES: { value: WorkType; label: string; desc: string }[] = [
   { value: 'null-result',    label: 'Null Result',    desc: 'Evidence for absence. Higher evidential standard on E and M.' },
-  { value: 'original-argument', label: 'Original Argument', desc: 'New claim with supporting evidence. Full WCI applies.' },
+  { value: 'original-argument', label: 'Original Argument', desc: 'New claim with supporting evidence. All nine dimensions apply.' },
   { value: 'replication',   label: 'Replication',    desc: 'Fidelity assessment. Novelty structurally depressed.' },
   { value: 'synthesis-review', label: 'Synthesis / Review', desc: 'Argument from accumulated evidence.' },
   { value: 'methodological-contribution', label: 'Methodological', desc: 'New procedure or instrument.' },

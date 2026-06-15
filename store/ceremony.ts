@@ -125,7 +125,7 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
       },
       judgeIdentity: {
         domain: { value: result.domain, source: 'detected' as const },
-        instrumentVersion: 'WCI v1.0',
+        instrumentVersion: 'Woodchipper v1.0',
         variantAvailable: false,
         variantName: null,
         corpusSize: 0,

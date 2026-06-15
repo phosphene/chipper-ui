@@ -19,11 +19,11 @@ export function StageIII() {
 
       <div className="mb-3">
         <InfoCard label="Domain" value={judge?.domain.value ?? '—'} />
-        <InfoCard label="Instrument" value="WCI v1.0 · Nine dimensions · 0–100" />
+        <InfoCard label="Instrument" value="Nine dimensions · 0–100" />
         <InfoCard
           label="Domain Variant"
-          value={judge?.variantAvailable ? (judge.variantName ?? 'Available') : 'General WCI — no domain-specific variant available'}
-          note={judge?.variantAvailable ? undefined : 'The general WCI criteria will apply. This may affect the Predictive Power (P) dimension.'}
+          value={judge?.variantAvailable ? (judge.variantName ?? 'Available') : 'General variant — no domain-specific calibration available'}
+          note={judge?.variantAvailable ? undefined : 'The general evaluation criteria will apply. This may affect the Predictive Power (P) dimension.'}
         />
       </div>
 
@@ -34,7 +34,7 @@ export function StageIII() {
 
       <div className="mt-3 space-y-2">
         <LimNotice kind="tool">
-          No {judge?.domain.value ?? 'domain'}-specific variant yet. Scoring uses general WCI. This has a fix — the variant can be derived.
+          No {judge?.domain.value ?? 'domain'}-specific variant yet. The general evaluation variant applies. This has a fix — the variant can be derived.
         </LimNotice>
         <LimNotice kind="universe">
           Some work types score structurally lower on certain dimensions by design — not an instrument failure.

@@ -11,7 +11,7 @@ export function StageV({ onRested }: { onRested: () => void }) {
   const summary = [
     store.makerDeclaration?.standing.value && `Identity: ${store.makerDeclaration.standing.value.replace(/-/g, ' ')}${store.makerDeclaration.tradition.value ? ` · ${store.makerDeclaration.tradition.value}` : ''}`,
     store.workClassification?.workType.value && `Work: ${store.workClassification.workType.value.replace(/-/g, ' ')}`,
-    'Instrument: WCI v1.0, general variant',
+    'Instrument: Woodchipper, general variant',
     'Frame: Consented',
   ].filter(Boolean) as string[];
 

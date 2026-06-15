@@ -28,7 +28,7 @@ export function StageIV({ onDecline }: { onDecline: () => void }) {
             You are a <strong className="text-[#e2e2e2]">{decl.standing.value.replace(/-/g, ' ')}</strong> bringing a{' '}
             <strong className="text-[#e2e2e2]">{wc.workType.value.replace(/-/g, ' ')}</strong>
             {decl.tradition.value ? <> in <strong className="text-[#e2e2e2]">{decl.tradition.value}</strong></> : ''}.
-            The WCI v1.0 general variant applies. Evidence Density and Claim-Evidence Match carry primary weight.
+            The general evaluation variant applies. Evidence Density and Claim-Evidence Match carry primary weight.
           </p>
         ) : (
           <p className="text-[#888] italic">Complete the intake stages to generate your summary.</p>
