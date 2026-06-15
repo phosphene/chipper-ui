@@ -66,11 +66,17 @@ export function Processing({ onReveal, autoStart = true }: Props) {
       </div>
 
       {/* Reveal button — fades in 1.5s after final dot */}
-      <div className={`transition-opacity duration-500 ${revealReady ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      {/* data-state="ready" / "waiting" lets Playwright waitForSelector without timing dependency */}
+      <div
+        data-testid="score-reveal-container"
+        data-state={revealReady ? 'ready' : 'waiting'}
+        className={`transition-opacity duration-500 ${revealReady ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      >
         <button
           data-testid="score-reveal"
           onClick={onReveal}
           disabled={!revealReady}
+          aria-disabled={!revealReady}
           className="
             px-7 py-2.5 rounded-md border border-[#4f8ef5]/35
             text-[#4f8ef5]/75 font-mono text-[0.8rem] tracking-wide

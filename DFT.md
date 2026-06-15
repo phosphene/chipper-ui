@@ -3,6 +3,10 @@
 Every UI element with behavior gets a stable semantic handle.
 Tests never rely on text content, CSS classes, or visual position.
 
+**If an element is not easily reachable in the E2E environment, the element
+must be modified until it is. Testability is not optional and is not added
+after the fact. An untestable element is an unfinished element.**
+
 ---
 
 ## The Standard
@@ -71,7 +75,52 @@ await expect(page.locator('[data-testid="work-type-null-result"]'))
 | VIII | `pronouncement` | `pronouncement-proceed` | _(none)_ |
 | IX | `recording-beat` | `recording-confirm` | `recording-choice-{value}`, `export-{format}` |
 
-### 5. DFT review checklist (before PR)
+### 5. Timed / animated elements
+
+Elements that appear after a delay or animation must expose a `data-state`
+attribute so Playwright can wait for readiness without relying on timing:
+
+```ts
+// Not this — timing-dependent, fragile under load
+await page.waitForTimeout(5000);
+await page.locator('[data-testid="score-reveal"]').click();
+
+// This — state-driven, timing-independent
+await page.locator('[data-testid="score-reveal-container"][data-state="ready"]')
+  .waitFor({ timeout: 15000 });
+await page.locator('[data-testid="score-reveal"]').click();
+```
+
+Elements with `data-state` values:
+| Element | data-testid | data-state values |
+|---------|-------------|-------------------|
+| Score reveal container | `score-reveal-container` | `waiting` \| `ready` |
+
+Any new element that is conditionally visible/interactive after a delay
+or animation **must** follow this pattern before shipping.
+
+### 6. Reachability requirement
+
+An element is **reachable** if a Playwright test can:
+1. Navigate to it without manual intervention
+2. Interact with it via `data-testid` or ARIA role
+3. Assert the resulting state change
+
+If any of these fail — because the element is behind an unreachable state,
+because it requires timing that Playwright can't hit, because it's only
+visible after an animation with no completion signal — **the component
+must be modified**. Options in order of preference:
+
+1. Add a `data-testid` that is present in the DOM regardless of visual state
+2. Add an `aria-*` attribute that reflects the current state
+3. Add a `data-state` attribute that Playwright can poll
+4. Add a test-only prop (`testBypass?: boolean`) that skips animations
+5. Restructure the component so the element is reachable without the bypass
+
+Option 5 is always preferred. Options 1–4 are acceptable. An element that
+remains unreachable after options 1–5 are considered is not shippable.
+
+### 6. DFT review checklist (before PR)
 
 - [ ] Every new interactive element has a `data-testid`
 - [ ] Every new stage container has `data-testid="stage-{beat}"`
