@@ -15,6 +15,29 @@
 
 import { test, expect } from '@playwright/test';
 
+// ── Test helper: navigate through opening/expectations gates ─────────────────
+// The Opening screen and Expectations screen are now part of the flow.
+// Tests that need to reach the ceremony must call this after triggering ceremony start.
+async function dismissGates(page: any, timeoutMs = 8000) {
+  // Dismiss Opening if present
+  const openingBtn = page.locator('[data-testid="opening-begin"]');
+  if (await openingBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await openingBtn.click();
+  }
+  // Dismiss Expectations if present
+  const expectBtn = page.locator('[data-testid="expectations-begin"]');
+  if (await expectBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await expectBtn.click();
+  }
+  // Dismiss Fit Assessment if present
+  const fitBtn = page.locator('[data-testid="fit-assessment-proceed"]');
+  if (await fitBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await fitBtn.click();
+  }
+}
+
+
+
 test.describe('Entry — functional', () => {
 
   test('page loads — title and submit button present', async ({ page }) => {
@@ -62,8 +85,9 @@ test.describe('Entry — functional', () => {
     const jumpBtn = page.locator('[data-testid="stage2-jump"]');
     await expect(jumpBtn).toBeVisible();
     await jumpBtn.click();
-    // Should skip entry and go to ceremony
-    await expect(page.locator('text=/maker declaration|who brings|stage i/i').first()).toBeVisible({ timeout: 5000 });
+    await dismissGates(page);
+    // Should reach ceremony Stage I
+    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
   });
 
 });
@@ -176,6 +200,7 @@ test.describe('EntryAccordion — accordion behavior', () => {
 test.describe('EntryAccordion — ceremony pre-population', () => {
 
   test('accordion work type selection survives detection and appears in ceremony', async ({ page }) => {
+    // Note: Opening/Expectations gates may need dismissal before ceremony stages are visible
     await page.goto('/');
     const input = page.locator('[data-testid="entry-text-field"]');
     await input.fill('Original experimental study on cortisol regulation in adult primates. n=84, p=0.003.');
@@ -309,9 +334,9 @@ test.describe('Brand integrity — WCI not visible before Recording', () => {
     const jumpBtn = page.locator('[data-testid="stage2-jump"]');
     await expect(jumpBtn).toBeVisible();
     await jumpBtn.click();
-    // Should skip entry and go to ceremony
-    // Ceremony stage I should be visible
-    await expect(page.locator('text=/maker declaration|who brings|stage i/i').first()).toBeVisible({ timeout: 5000 });
+    await dismissGates(page);
+    // Should reach ceremony Stage I
+    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
   });
 
   test('page title is Woodchipper not Credibility Index', async ({ page }) => {
