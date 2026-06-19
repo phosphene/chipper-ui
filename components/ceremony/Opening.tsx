@@ -43,7 +43,7 @@ export function Opening({ onBegin }: Props) {
       {/* Body copy */}
       <div className="max-w-lg space-y-6 mb-12">
         <p style={{ color: '#2c1f0e' }} className="text-[1.1rem] leading-relaxed">
-          You have chosen to bring your work forward for evaluation.
+          You have chosen to submit your work for review.
         </p>
 
         <p style={{ color: '#3d2b12' }} className="text-[1.05rem] leading-relaxed">
