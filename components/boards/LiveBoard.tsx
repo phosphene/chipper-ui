@@ -4,8 +4,10 @@
  * Three themes: circuit (green grid), aqueduct (stone/water), chipper (amber grid).
  * Same data, three visual languages.
  *
+ * In workspace mode, also shows completed operation nodes (Evaluate → score).
+ *
  * SoC: reads from ceremony store and renders. Zero business logic.
- * Nodes: Work Type, Domain, Maker, Stage, Work text excerpt.
+ * Nodes: Work Type, Domain, Maker, Stage, Work text excerpt, Operations.
  */
 'use client';
 import { useEffect, useRef } from 'react';
@@ -26,6 +28,9 @@ const THEMES = {
     roleText: 'rgba(0,255,65,0.5)',
     edgeColor: 'rgba(0,255,65,0.25)',
     emptyText: 'rgba(0,255,65,0.2)',
+    opNodeStroke: 'rgba(79,142,245,0.55)',
+    opNodeText: 'rgba(79,142,245,0.85)',
+    opRoleText: 'rgba(79,142,245,0.5)',
   },
   aqueduct: {
     bg: '#1a1510',
@@ -35,6 +40,9 @@ const THEMES = {
     roleText: 'rgba(200,180,140,0.6)',
     edgeColor: 'rgba(74,144,217,0.2)',
     emptyText: 'rgba(139,115,85,0.3)',
+    opNodeStroke: 'rgba(76,175,128,0.55)',
+    opNodeText: 'rgba(76,175,128,0.85)',
+    opRoleText: 'rgba(76,175,128,0.5)',
   },
   chipper: {
     bg: '#111',
@@ -44,10 +52,13 @@ const THEMES = {
     roleText: 'rgba(255,140,0,0.5)',
     edgeColor: 'rgba(255,140,0,0.2)',
     emptyText: 'rgba(255,140,0,0.15)',
+    opNodeStroke: 'rgba(79,142,245,0.55)',
+    opNodeText: 'rgba(79,142,245,0.85)',
+    opRoleText: 'rgba(79,142,245,0.5)',
   },
 };
 
-interface Node { id: string; label: string; role: string; x: number; y: number; }
+interface Node { id: string; label: string; role: string; x: number; y: number; isOp?: boolean; }
 
 function buildNodes(store: ReturnType<typeof useCeremonyStore.getState>): Node[] {
   const nodes: Node[] = [];
@@ -64,6 +75,22 @@ function buildNodes(store: ReturnType<typeof useCeremonyStore.getState>): Node[]
     const txt = store.makerDeclaration.freeText;
     nodes.push({ id: 'tx', role: 'Work', label: txt.slice(0, 24) + (txt.length > 24 ? '…' : ''), x: 20, y: 180 });
   }
+
+  // Operation result nodes — show completed evaluations
+  if (store.wciResult) {
+    const score = store.wciResult.compositeScore;
+    const band = store.wciResult.band;
+    nodes.push({
+      id: 'eval',
+      role: 'Evaluate',
+      label: `${score.toFixed(1)} — ${band}`,
+      x: 160,
+      y: 200,
+      isOp: true,
+    });
+  }
+
+  // Stage node — only when not in workspace mode (avoids clutter)
   const stageMap: Record<string, string> = {
     'I': 'Maker declared', 'II': 'Work classified', 'III': 'Judge identified',
     'IV': 'Frame agreed', 'V': 'Case rested', 'VI': 'Threshold crossed',
@@ -86,6 +113,13 @@ export function LiveBoard({ theme }: Props) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Resize canvas to fill container
+    const parent = canvas.parentElement;
+    if (parent) {
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+    }
+
     const t = THEMES[theme];
     const W = canvas.width;
     const H = canvas.height;
@@ -106,7 +140,16 @@ export function LiveBoard({ theme }: Props) {
 
     const nodes = buildNodes(store);
 
-    if (nodes.length === 0) {
+    // Scale node positions proportionally to canvas size
+    const scaleX = W / 300;
+    const scaleY = H / 340;
+    const scaledNodes = nodes.map(n => ({
+      ...n,
+      x: n.x * scaleX,
+      y: n.y * scaleY + 20,
+    }));
+
+    if (scaledNodes.length === 0) {
       ctx.fillStyle = t.emptyText;
       ctx.font = '11px JetBrains Mono, monospace';
       ctx.textAlign = 'center';
@@ -118,8 +161,8 @@ export function LiveBoard({ theme }: Props) {
     ctx.strokeStyle = t.edgeColor;
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
-    nodes.forEach((a, ai) => {
-      nodes.forEach((b, bi) => {
+    scaledNodes.forEach((a, ai) => {
+      scaledNodes.forEach((b, bi) => {
         if (bi <= ai) return;
         ctx.beginPath();
         ctx.moveTo(a.x + 60, a.y + 18);
@@ -130,37 +173,43 @@ export function LiveBoard({ theme }: Props) {
     ctx.setLineDash([]);
 
     // Draw nodes
-    nodes.forEach(node => {
+    scaledNodes.forEach(node => {
       const nx = node.x;
       const ny = node.y;
       const nw = 120;
       const nh = 38;
 
+      // Pick colors based on whether this is an operation node
+      const strokeColor = node.isOp ? t.opNodeStroke : t.nodeStroke;
+      const textColor = node.isOp ? t.opNodeText : t.nodeText;
+      const roleLabelColor = node.isOp ? t.opRoleText : t.roleText;
+
       // Box
-      ctx.strokeStyle = t.nodeStroke;
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 1.5;
       ctx.fillStyle = 'rgba(0,0,0,0.55)';
       roundRect(ctx, nx, ny, nw, nh, 5);
 
       // Role label
-      ctx.fillStyle = t.roleText;
+      ctx.fillStyle = roleLabelColor;
       ctx.font = '8px JetBrains Mono, monospace';
       ctx.textAlign = 'left';
       ctx.fillText(node.role.toUpperCase(), nx + 8, ny + 13);
 
       // Value
-      ctx.fillStyle = t.nodeText;
+      ctx.fillStyle = textColor;
       ctx.font = '10px Inter, sans-serif';
       ctx.fillText(node.label, nx + 8, ny + 28);
     });
 
-  }, [theme, store.currentStage, store.workClassification, store.makerDeclaration, store.judgeIdentity]);
+  }, [theme, store.currentStage, store.workClassification, store.makerDeclaration, store.judgeIdentity, store.wciResult]);
 
   return (
     <canvas
       ref={canvasRef}
       width={280}
       height={300}
+      data-testid="live-board-canvas"
       className="w-full h-full"
       style={{ background: THEMES[theme].bg }}
     />
