@@ -59,7 +59,7 @@ export default function Home() {
   // ── Header ────────────────────────────────────────────────────────────────
   const Header = ({ children }: { children?: React.ReactNode }) => (
     <header className="flex items-center justify-between px-6 py-3 border-b border-white/07 flex-shrink-0">
-      <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#555]">
+      <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#888]">
         Woodchipper
       </span>
       {children}
@@ -73,7 +73,7 @@ export default function Home() {
         <button
           data-testid="stage2-jump"
           onClick={() => { acknowledgeExpectations(); useCeremonyStore.getState().acknowledgeOpening(); setMode('workspace'); }}
-          className="px-3 py-1 border border-dashed border-white/10 rounded text-[#555] text-[0.6rem] font-mono hover:text-[#888] hover:border-white/20 transition-all"
+          className="px-3 py-1 border border-dashed border-white/10 rounded text-[#888] text-[0.6rem] font-mono hover:text-[#aaa] hover:border-white/20 transition-all"
         >
           skip to workspace
         </button>
@@ -103,7 +103,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#111] text-[#e2e2e2] flex flex-col">
       <Header>
         <button data-testid="ready-gate-back" onClick={() => setMode('workspace')}
-          className="text-[0.65rem] text-[#555] hover:text-[#888] font-mono transition-colors">
+          className="text-[0.65rem] text-[#888] hover:text-[#aaa] font-mono transition-colors">
           ← back to workspace
         </button>
       </Header>
@@ -140,7 +140,7 @@ export default function Home() {
     <main className="h-screen bg-[#111] text-[#e2e2e2] flex flex-col overflow-hidden">
       {/* Workspace header */}
       <header className="flex items-center justify-between px-5 py-2.5 border-b border-white/07 flex-shrink-0">
-        <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#555]">Woodchipper</span>
+        <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#888]">Woodchipper</span>
         <div className="flex items-center gap-3">
           {/* Board controls — only when board is open */}
           {boardOpen && (
@@ -149,7 +149,7 @@ export default function Home() {
                 <button key={t} data-testid={`board-theme-${t}`}
                   onClick={() => setBoardTheme(t)}
                   className={`px-2 py-0.5 rounded text-[0.55rem] font-mono uppercase tracking-wider transition-all
-                    ${boardTheme === t ? 'text-[#e2e2e2] bg-white/08' : 'text-[#444] hover:text-[#888]'}`}>
+                    ${boardTheme === t ? 'text-[#e2e2e2] bg-white/08' : 'text-[#666] hover:text-[#aaa]'}`}>
                   {t === 'circuit' ? '⚡' : t === 'aqueduct' ? '🏛' : '⚙'} {t}
                 </button>
               ))}

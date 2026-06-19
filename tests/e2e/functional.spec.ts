@@ -96,9 +96,9 @@ test.describe('Entry — functional', () => {
     const jumpBtn = page.locator('[data-testid="stage2-jump"]');
     await expect(jumpBtn).toBeVisible();
     await jumpBtn.click();
-    await dismissGates(page);
-    // Should reach ceremony Stage I
-    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
+    // STAGE 2 JUMP now lands on the workspace (Zone B), not directly on Stage I.
+    // Stage I is inside the Evaluate operation within the workspace.
+    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible({ timeout: 8000 });
   });
 
 });
@@ -230,13 +230,11 @@ test.describe('EntryAccordion — ceremony pre-population', () => {
     // Confirm detection to start ceremony
     await page.getByRole('button', { name: /confirm/i }).click();
 
-    // Dismiss Expectations gate (appears between entry and ceremony)
+    // After confirm, should land on workspace (Zone B)
     await dismissGates(page);
-
-    // Ceremony Stage I should show — verify store has the user's standing
-    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
-    const pageContent = await page.textContent('body');
-    expect(pageContent).toContain('graduate');
+    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible({ timeout: 8000 });
+    // The workspace should show the operation panel
+    await expect(page.locator('[data-testid="operation-evaluate"]')).toBeVisible({ timeout: 5000 });
   });
 
 });
@@ -342,9 +340,7 @@ test.describe('Brand integrity — WCI not visible before Recording', () => {
     const jumpBtn = page.locator('[data-testid="stage2-jump"]');
     await expect(jumpBtn).toBeVisible();
     await jumpBtn.click();
-    await dismissGates(page);
-    // Should reach ceremony Stage I
-    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
+    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible({ timeout: 8000 });
   });
 
   test('page title is Woodchipper not Credibility Index', async ({ page }) => {
