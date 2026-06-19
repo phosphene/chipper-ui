@@ -33,6 +33,9 @@ import {
 // ── State shape ───────────────────────────────────────────────
 
 export interface CeremonyState {
+  // Opening
+  openingAcknowledged: boolean;
+
   // Intake
   makerDeclaration: MakerDeclaration | null;
   workClassification: WorkClassification | null;
@@ -72,6 +75,9 @@ export interface CeremonyState {
   setRecordingChoice: (choice: RecordingChoice) => void;
   toggleProperty: (property: Property) => void;
 
+  // Actions — opening
+  acknowledgeOpening: () => void;
+
   // Actions — score
   setWCIResult: (result: WCIResult) => void;
 
@@ -82,6 +88,7 @@ export interface CeremonyState {
 // ── Initial state ─────────────────────────────────────────────
 
 const initialState = {
+  openingAcknowledged: false,
   makerDeclaration: null,
   workClassification: null,
   judgeIdentity: null,
@@ -256,6 +263,8 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
     else props.add(property);
     return { selectedProperties: props };
   }),
+
+  acknowledgeOpening: () => set({ openingAcknowledged: true }),
 
   setWCIResult: (result) => set({
     wciResult: result,

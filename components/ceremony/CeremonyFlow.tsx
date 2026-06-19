@@ -17,6 +17,7 @@ import { StageII }  from './stages/StageII';
 import { StageIII } from './stages/StageIII';
 import { StageIV }  from './stages/StageIV';
 import { StageV }   from './stages/StageV';
+import { Opening } from './Opening';
 import { Threshold } from './Threshold';
 import { Processing } from './Processing';
 import type { Stage } from '@/store/ceremony.types';
@@ -66,6 +67,11 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
     store.setWCIResult(DEMO_RESULT);
     onScoreReady();
   };
+
+  // Opening — presided review welcome, before any stage
+  if (!store.openingAcknowledged) {
+    return <Opening onBegin={() => store.acknowledgeOpening()} />;
+  }
 
   // Dark screens — full viewport, no accordion wrapper
   if (isActive('VI')) {
