@@ -16,23 +16,29 @@
 import { test, expect } from '@playwright/test';
 
 // ── Test helper: navigate through opening/expectations gates ─────────────────
-// The Opening screen and Expectations screen are now part of the flow.
-// Tests that need to reach the ceremony must call this after triggering ceremony start.
-async function dismissGates(page: any, timeoutMs = 8000) {
-  // Dismiss Opening if present
+// The Opening and Expectations screens are now part of the flow.
+// Wait for each gate to appear before clicking — don't assume timing.
+async function dismissGates(page: any) {
+  // Wait for Opening and click through
   const openingBtn = page.locator('[data-testid="opening-begin"]');
-  if (await openingBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+  await openingBtn.waitFor({ state: 'visible', timeout: 8000 }).catch(() => {});
+  if (await openingBtn.isVisible().catch(() => false)) {
     await openingBtn.click();
+    await page.waitForTimeout(300);
   }
-  // Dismiss Expectations if present
+  // Wait for Expectations and click through
   const expectBtn = page.locator('[data-testid="expectations-begin"]');
-  if (await expectBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+  await expectBtn.waitFor({ state: 'visible', timeout: 4000 }).catch(() => {});
+  if (await expectBtn.isVisible().catch(() => false)) {
     await expectBtn.click();
+    await page.waitForTimeout(300);
   }
   // Dismiss Fit Assessment if present
   const fitBtn = page.locator('[data-testid="fit-assessment-proceed"]');
-  if (await fitBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
+  await fitBtn.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
+  if (await fitBtn.isVisible().catch(() => false)) {
     await fitBtn.click();
+    await page.waitForTimeout(300);
   }
 }
 

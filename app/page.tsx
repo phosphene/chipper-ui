@@ -18,7 +18,7 @@ export default function Home() {
         </span>
         <button
           data-testid="stage2-jump"
-          onClick={() => setMode(expectationsAcknowledged ? 'ceremony' : 'expectations')}
+          onClick={() => { acknowledgeExpectations(); useCeremonyStore.getState().acknowledgeOpening(); setMode('ceremony'); }}
           className="px-3 py-1.5 border border-dashed border-[#888]/60 rounded text-[#999] text-[0.65rem] font-mono tracking-wide hover:border-[#888]/60 hover:text-[#888] transition-all"
         >
           STAGE 2 JUMP
