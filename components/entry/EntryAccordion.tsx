@@ -182,7 +182,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           hover:border-white/20 hover:bg-white/02 transition-all"
       >
         <p className="text-[0.82rem] text-[#888]">
-          📁 Drop files here — PDF · audio · image · data · any format
+          📁 Add details and context for your work — PDF · audio · image · data · any format
         </p>
         <input
           ref={dropFileRef}
@@ -201,7 +201,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
             text-[0.82rem] text-[#888] font-mono tracking-wide
             hover:border-white/15 hover:text-[#ccc] transition-all"
         >
-          ▼ Upload files &amp; add details
+          ▼ Add details and context for your work
         </button>
       )}
 
