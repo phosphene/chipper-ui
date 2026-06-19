@@ -17,6 +17,7 @@ import type {
   RecordingChoice,
   Property,
   DetectionResult,
+  FitAssessmentResult,
 } from './ceremony.types';
 import {
   STAGE_ORDER,
@@ -54,6 +55,10 @@ export interface CeremonyState {
   // Score
   wciResult: WCIResult | null;
 
+  // Fit Assessment
+  fitAssessment: FitAssessmentResult | null;
+  fitAssessmentChoice: string | null;
+
   // Recording
   recordingChoice: RecordingChoice;
   selectedProperties: Set<Property>;
@@ -87,6 +92,10 @@ export interface CeremonyState {
   // Actions — score
   setWCIResult: (result: WCIResult) => void;
 
+  // Actions — fit assessment
+  setFitAssessment: (result: FitAssessmentResult) => void;
+  setFitAssessmentChoice: (choice: string) => void;
+
   // Reset
   reset: () => void;
 }
@@ -105,6 +114,8 @@ const initialState = {
   processingComplete: false,
   processingDimensions: new Set<string>(),
   wciResult: null,
+  fitAssessment: null,
+  fitAssessmentChoice: null,
   recordingChoice: null as RecordingChoice,
   selectedProperties: new Set<Property>(),
 };
@@ -279,6 +290,10 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
     wciResult: result,
     processingComplete: true,
   }),
+
+  setFitAssessment: (result) => set({ fitAssessment: result }),
+
+  setFitAssessmentChoice: (choice) => set({ fitAssessmentChoice: choice }),
 
   reset: () => set({ ...initialState,
     completedStages: new Set<Stage>(),

@@ -114,6 +114,22 @@ export type RecordingChoice = 'view-only' | 'private' | 'public' | null;
 
 export type Property = 'boards' | 'observatory' | 'zenodo' | 'orcid';
 
+// ── Fit Assessment types ──────────────────────────────────────
+
+export interface FitOption {
+  id: string;
+  label: string;
+  description: string;
+}
+
+export interface FitAssessmentResult {
+  trigger: string | null;
+  whatWeRead: string | null;
+  whyThisMatters: string | null;
+  options: FitOption[];
+  proceedAnyway: boolean;
+}
+
 // ── Detection result (from API) ───────────────────────────────
 
 export interface DetectionResult {
