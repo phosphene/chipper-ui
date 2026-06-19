@@ -69,56 +69,12 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
     onScoreReady();
   };
 
-  // Opening — presided review welcome, before any stage
+  // Opening — Woodchipper formal review welcome, before any stage.
+  // WCI is NOT mentioned here — it becomes available at Beat IX (Recording).
   if (!store.openingAcknowledged) {
     return <Opening onBegin={() => {
       store.acknowledgeOpening();
-      // Fire fit assessment automatically on ceremony start
-      const state = useCeremonyStore.getState();
-      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://wci-api.fly.dev';
-      fetch(`${apiBase}/api/fit-assessment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: state.makerDeclaration?.freeText ?? '',
-          work_type: state.workClassification?.workType.value ?? 'original-argument',
-          markers: [],
-          credentialing_genre: null,
-          credentialing_tradition: state.makerDeclaration?.tradition?.value ?? null,
-        }),
-      })
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data) {
-            store.setFitAssessment({
-              trigger: data.trigger,
-              whatWeRead: data.what_we_read,
-              whyThisMatters: data.why_this_matters,
-              options: data.options ?? [],
-              proceedAnyway: data.proceed_anyway ?? true,
-            });
-          }
-        })
-        .catch(() => { /* fit assessment is best-effort */ });
     }} />;
-  }
-
-  // Fit Assessment — between Opening and Stage I, when trigger is detected
-  if (
-    store.fitAssessment?.trigger &&
-    !store.fitAssessmentChoice
-  ) {
-    return (
-      <FitAssessment
-        assessment={store.fitAssessment}
-        onSelectOption={(optionId) => {
-          store.setFitAssessmentChoice(optionId);
-        }}
-        onProceedAnyway={() => {
-          store.setFitAssessmentChoice('proceed-anyway');
-        }}
-      />
-    );
   }
 
   // Dark screens — full viewport, no accordion wrapper
