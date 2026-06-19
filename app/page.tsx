@@ -1,10 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { EntryGate } from '@/components/entry/EntryGate';
+import { ExpectationsScreen } from '@/components/entry/ExpectationsScreen';
 import { CeremonyFlow } from '@/components/ceremony/CeremonyFlow';
+import { useCeremonyStore } from '@/store/ceremony';
 
 export default function Home() {
-  const [mode, setMode] = useState<'entry' | 'ceremony' | 'done'>('entry');
+  const [mode, setMode] = useState<'entry' | 'expectations' | 'ceremony' | 'done'>('entry');
+  const { expectationsAcknowledged, acknowledgeExpectations } = useCeremonyStore();
 
   return (
     <main className="min-h-screen bg-[#111] text-[#e2e2e2]">
@@ -15,7 +18,7 @@ export default function Home() {
         </span>
         <button
           data-testid="stage2-jump"
-          onClick={() => setMode('ceremony')}
+          onClick={() => setMode(expectationsAcknowledged ? 'ceremony' : 'expectations')}
           className="px-3 py-1.5 border border-dashed border-[#888]/60 rounded text-[#999] text-[0.65rem] font-mono tracking-wide hover:border-[#888]/60 hover:text-[#888] transition-all"
         >
           STAGE 2 JUMP
@@ -30,8 +33,17 @@ export default function Home() {
             <h1 className="text-[2rem] font-light text-[#e2e2e2] mb-6 leading-tight">
               What are you working on?
             </h1>
-            <EntryGate onCeremonyStart={() => setMode('ceremony')} />
+            <EntryGate onCeremonyStart={() => setMode(expectationsAcknowledged ? 'ceremony' : 'expectations')} />
           </>
+        )}
+
+        {mode === 'expectations' && (
+          <ExpectationsScreen
+            onBegin={() => {
+              acknowledgeExpectations();
+              setMode('ceremony');
+            }}
+          />
         )}
 
         {mode === 'ceremony' && (

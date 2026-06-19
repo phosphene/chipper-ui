@@ -36,6 +36,9 @@ export interface CeremonyState {
   // Opening
   openingAcknowledged: boolean;
 
+  // Expectations (Layer 2 terminal)
+  expectationsAcknowledged: boolean;
+
   // Intake
   makerDeclaration: MakerDeclaration | null;
   workClassification: WorkClassification | null;
@@ -78,6 +81,9 @@ export interface CeremonyState {
   // Actions — opening
   acknowledgeOpening: () => void;
 
+  // Actions — expectations
+  acknowledgeExpectations: () => void;
+
   // Actions — score
   setWCIResult: (result: WCIResult) => void;
 
@@ -89,6 +95,7 @@ export interface CeremonyState {
 
 const initialState = {
   openingAcknowledged: false,
+  expectationsAcknowledged: false,
   makerDeclaration: null,
   workClassification: null,
   judgeIdentity: null,
@@ -265,6 +272,8 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   }),
 
   acknowledgeOpening: () => set({ openingAcknowledged: true }),
+
+  acknowledgeExpectations: () => set({ expectationsAcknowledged: true }),
 
   setWCIResult: (result) => set({
     wciResult: result,
