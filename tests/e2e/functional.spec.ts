@@ -19,26 +19,31 @@ import { test, expect } from '@playwright/test';
 // The Opening and Expectations screens are now part of the flow.
 // Wait for each gate to appear before clicking — don't assume timing.
 async function dismissGates(page: any) {
-  // Wait for Opening and click through
-  const openingBtn = page.locator('[data-testid="opening-begin"]');
-  await openingBtn.waitFor({ state: 'visible', timeout: 8000 }).catch(() => {});
-  if (await openingBtn.isVisible().catch(() => false)) {
-    await openingBtn.click();
-    await page.waitForTimeout(300);
-  }
-  // Wait for Expectations and click through
+  // Gates appear in this order: Expectations → Opening → Fit Assessment
+  // Each gate must be checked and dismissed in the order they appear.
+
+  // 1. Expectations screen (appears after entry confirm, before ceremony)
   const expectBtn = page.locator('[data-testid="expectations-begin"]');
-  await expectBtn.waitFor({ state: 'visible', timeout: 4000 }).catch(() => {});
+  await expectBtn.waitFor({ state: 'visible', timeout: 6000 }).catch(() => {});
   if (await expectBtn.isVisible().catch(() => false)) {
     await expectBtn.click();
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
   }
-  // Dismiss Fit Assessment if present
+
+  // 2. Opening screen (appears inside ceremony, before Stage I)
+  const openingBtn = page.locator('[data-testid="opening-begin"]');
+  await openingBtn.waitFor({ state: 'visible', timeout: 6000 }).catch(() => {});
+  if (await openingBtn.isVisible().catch(() => false)) {
+    await openingBtn.click();
+    await page.waitForTimeout(400);
+  }
+
+  // 3. Fit Assessment (appears after Opening, before Stage I, if triggered)
   const fitBtn = page.locator('[data-testid="fit-assessment-proceed"]');
   await fitBtn.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
   if (await fitBtn.isVisible().catch(() => false)) {
     await fitBtn.click();
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
   }
 }
 
