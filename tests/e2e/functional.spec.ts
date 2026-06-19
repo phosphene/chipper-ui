@@ -225,15 +225,12 @@ test.describe('EntryAccordion — ceremony pre-population', () => {
     // Confirm detection to start ceremony
     await page.getByRole('button', { name: /confirm/i }).click();
 
-    // Ceremony Stage I should show — verify store has the user's standing
-    // The ReviewCard for Standing should show "graduate-researcher"
-    // Wait for ceremony to render
-    await page.waitForTimeout(1000);
+    // Dismiss Expectations gate (appears between entry and ceremony)
+    await dismissGates(page);
 
-    // Check that the page now shows ceremony content
-    // (Stage I is the Maker Declaration stage)
+    // Ceremony Stage I should show — verify store has the user's standing
+    await expect(page.locator('[data-testid="stage-I"]')).toBeVisible({ timeout: 8000 });
     const pageContent = await page.textContent('body');
-    // The standing value should appear somewhere in the ceremony
     expect(pageContent).toContain('graduate');
   });
 
