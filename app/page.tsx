@@ -58,8 +58,8 @@ export default function Home() {
 
   // ── Header ────────────────────────────────────────────────────────────────
   const Header = ({ children }: { children?: React.ReactNode }) => (
-    <header className="flex items-center justify-between px-6 py-3 border-b border-white/07 flex-shrink-0">
-      <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#888]">
+    <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 flex-shrink-0">
+      <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">
         Woodchipper
       </span>
       {children}
@@ -68,18 +68,18 @@ export default function Home() {
 
   // ── Zone A ────────────────────────────────────────────────────────────────
   if (mode === 'entry') return (
-    <main className="min-h-screen bg-[#111] text-[#e2e2e2] flex flex-col">
+    <main className="min-h-screen bg-white text-black flex flex-col">
       <Header>
         <button
           data-testid="stage2-jump"
           onClick={() => { acknowledgeExpectations(); setMode('workspace'); }}
-          className="px-3 py-1 border border-dashed border-white/10 rounded text-[#888] text-[0.6rem] font-mono hover:text-[#aaa] hover:border-white/20 transition-all"
+          className="px-3 py-1 border border-dashed border-gray-200 rounded text-gray-500 text-[0.6rem] font-mono hover:text-gray-400 hover:border-gray-300 transition-all"
         >
           skip to workspace
         </button>
       </Header>
       <div className="max-w-2xl mx-auto px-6 py-12 flex-1 w-full">
-        <h1 className="text-[1.8rem] font-light text-[#e2e2e2] mb-8 leading-tight">
+        <h1 className="text-[1.8rem] font-light text-black mb-8 leading-tight">
           What are you working on?
         </h1>
         <EntryGate
@@ -90,7 +90,7 @@ export default function Home() {
   );
 
   if (mode === 'expectations') return (
-    <main className="min-h-screen bg-[#111] text-[#e2e2e2] flex flex-col">
+    <main className="min-h-screen bg-white text-black flex flex-col">
       <Header />
       <div className="max-w-2xl mx-auto px-6 py-12 flex-1 w-full">
         <ExpectationsScreen onBegin={() => { acknowledgeExpectations(); setMode('workspace'); }} />
@@ -100,10 +100,10 @@ export default function Home() {
 
   // ── Zone C ────────────────────────────────────────────────────────────────
   if (mode === 'ready-gate') return (
-    <main className="min-h-screen bg-[#111] text-[#e2e2e2] flex flex-col">
+    <main className="min-h-screen bg-white text-black flex flex-col">
       <Header>
         <button data-testid="ready-gate-back" onClick={() => setMode('workspace')}
-          className="text-[0.65rem] text-[#888] hover:text-[#aaa] font-mono transition-colors">
+          className="text-[0.65rem] text-gray-500 hover:text-gray-400 font-mono transition-colors">
           ← back to workspace
         </button>
       </Header>
@@ -114,18 +114,18 @@ export default function Home() {
   );
 
   if (mode === 'done') return (
-    <main className="min-h-screen bg-[#111] text-[#e2e2e2] flex flex-col">
+    <main className="min-h-screen bg-white text-black flex flex-col">
       <Header />
       <div data-testid="woodchipper-done" className="flex-1 flex items-center justify-center">
         <div className="text-center max-w-sm">
           <div className="w-10 h-10 rounded-full border border-[#4caf80]/40 flex items-center justify-center mx-auto mb-6">
             <div className="w-5 h-5 rounded-full border border-[#4caf80]/40" />
           </div>
-          <h2 className="text-lg font-light text-[#e2e2e2] mb-2">Complete</h2>
-          <p className="text-[0.82rem] text-[#888] mb-8">Your work and its record are preserved.</p>
+          <h2 className="text-lg font-light text-black mb-2">Complete</h2>
+          <p className="text-[0.82rem] text-gray-500 mb-8">Your work and its record are preserved.</p>
           <button data-testid="woodchipper-restart"
             onClick={() => { useCeremonyStore.getState().reset(); setMode('entry'); }}
-            className="px-5 py-2 border border-white/10 rounded text-[#888] text-xs font-mono hover:border-white/20 hover:text-[#e2e2e2] transition-all">
+            className="px-5 py-2 border border-gray-200 rounded text-gray-500 text-xs font-mono hover:border-gray-300 hover:text-black transition-all">
             Evaluate another work
           </button>
         </div>
@@ -137,10 +137,10 @@ export default function Home() {
   // Forms LEFT (100-boardPct% when board open, 100% when closed)
   // Board RIGHT (boardPct%, resizable, dismissible)
   return (
-    <main className="h-screen bg-[#111] text-[#e2e2e2] flex flex-col overflow-hidden">
+    <main className="h-screen bg-white text-black flex flex-col overflow-hidden">
       {/* Workspace header */}
-      <header className="flex items-center justify-between px-5 py-2.5 border-b border-white/07 flex-shrink-0">
-        <span className="font-mono text-xs tracking-[0.35em] uppercase text-[#888]">Woodchipper</span>
+      <header className="flex items-center justify-between px-5 py-2.5 border-b border-gray-200 flex-shrink-0">
+        <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">Woodchipper</span>
         <div className="flex items-center gap-3">
           {/* Board controls — only when board is open */}
           {boardOpen && (
@@ -149,7 +149,7 @@ export default function Home() {
                 <button key={t} data-testid={`board-theme-${t}`}
                   onClick={() => setBoardTheme(t)}
                   className={`px-2 py-0.5 rounded text-[0.55rem] font-mono uppercase tracking-wider transition-all
-                    ${boardTheme === t ? 'text-[#e2e2e2] bg-white/08' : 'text-[#666] hover:text-[#aaa]'}`}>
+                    ${boardTheme === t ? 'text-black bg-white/08' : 'text-gray-600 hover:text-gray-400'}`}>
                   {t === 'circuit' ? '⚡' : t === 'aqueduct' ? '🏛' : '⚙'} {t}
                 </button>
               ))}
@@ -160,7 +160,7 @@ export default function Home() {
             data-testid="board-toggle"
             onClick={() => setBoardOpen(v => !v)}
             title={boardOpen ? 'Hide board' : 'Show board'}
-            className="text-[0.6rem] font-mono text-[#444] hover:text-[#888] transition-colors px-1.5 py-0.5 border border-white/06 rounded"
+            className="text-[0.6rem] font-mono text-gray-600 hover:text-gray-500 transition-colors px-1.5 py-0.5 border border-gray-200 rounded"
           >
             {boardOpen ? 'hide board ×' : 'show board ◫'}
           </button>
@@ -196,7 +196,7 @@ export default function Home() {
         {boardOpen && (
           <div
             data-testid="workspace-board"
-            className="flex-shrink-0 overflow-hidden border-l border-white/06"
+            className="flex-shrink-0 overflow-hidden border-l border-gray-200"
             style={{ width: `${boardPct}%` }}
           >
             <LiveBoard theme={boardTheme} />

@@ -123,10 +123,10 @@ export function EntryAccordion({ onConfirmed }: Props) {
 
       {/* ── Input row ── */}
       <div className={`
-        flex items-stretch rounded-xl border bg-[#191919] overflow-hidden
+        flex items-stretch rounded-xl border bg-gray-50 overflow-hidden
         transition-colors duration-200
-        ${isReady ? 'border-white/15' : 'border-white/07'}
-        focus-within:border-white/20
+        ${isReady ? 'border-gray-300' : 'border-gray-200'}
+        focus-within:border-gray-300
       `}>
         <textarea
           data-testid="entry-text-field"
@@ -135,13 +135,13 @@ export function EntryAccordion({ onConfirmed }: Props) {
           onKeyDown={handleKeyDown}
           rows={1}
           placeholder="Title or description of your work…"
-          className="flex-1 px-5 py-4 bg-transparent text-[#e2e2e2] text-base placeholder-[#555] italic outline-none min-h-14 resize-none"
+          className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-400 italic outline-none min-h-14 resize-none"
         />
 
         {/* Attach */}
         <button
           onClick={() => fileRef.current?.click()}
-          className="px-4 border-l border-white/07 text-[#888] hover:text-[#ccc] text-lg transition-colors"
+          className="px-4 border-l border-gray-200 text-gray-500 hover:text-[#ccc] text-lg transition-colors"
           aria-label="Attach file"
         >
           📎
@@ -176,10 +176,10 @@ export function EntryAccordion({ onConfirmed }: Props) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={() => dropFileRef.current?.click()}
-        className="mt-3 border border-dashed border-white/12 rounded-lg py-4 text-center cursor-pointer
-          hover:border-white/20 hover:bg-white/02 transition-all"
+        className="mt-3 border border-dashed border-gray-300 rounded-lg py-4 text-center cursor-pointer
+          hover:border-gray-300 hover:bg-white/02 transition-all"
       >
-        <p className="text-[0.82rem] text-[#888]">
+        <p className="text-[0.82rem] text-gray-500">
           📁 Add details and context for your work — PDF · audio · image · data · any format
         </p>
         <input
@@ -195,9 +195,9 @@ export function EntryAccordion({ onConfirmed }: Props) {
         <button
           data-testid="accordion-expander"
           onClick={() => setExpanded(true)}
-          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-white/07
-            text-[0.82rem] text-[#888] font-mono tracking-wide
-            hover:border-white/15 hover:text-[#ccc] transition-all"
+          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-gray-200
+            text-[0.82rem] text-gray-500 font-mono tracking-wide
+            hover:border-gray-300 hover:text-[#ccc] transition-all"
         >
           ▼ Add details and context for your work
         </button>
@@ -209,8 +209,8 @@ export function EntryAccordion({ onConfirmed }: Props) {
 
           {/* Form 3: Share details about the work */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Share details about the work <span className="text-[#888]">(optional)</span>
+            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
+              Share details about the work <span className="text-gray-500">(optional)</span>
             </p>
             <textarea
               data-testid="entry-details"
@@ -218,14 +218,14 @@ export function EntryAccordion({ onConfirmed }: Props) {
               value={text}
               onChange={(e) => handleTextChange(e.target.value)}
               placeholder="Describe the work in more detail — its argument, method, key findings, context, or anything else that would help evaluate it…"
-              className="w-full bg-[#222] border border-white/08 rounded-md px-4 py-3 text-[0.88rem] text-[#e2e2e2] placeholder-[#555] italic outline-none focus:border-white/20 resize-y"
+              className="w-full bg-gray-100 border border-gray-200 rounded-md px-4 py-3 text-[0.88rem] text-gray-900 placeholder-gray-400 italic outline-none focus:border-gray-300 resize-y"
             />
           </div>
 
           {/* Work type button group */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              What type of work is this? <span className="text-[#888]">(optional)</span>
+            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
+              What type of work is this? <span className="text-gray-500">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {WORK_TYPES.map(({ value, label }) => (
@@ -236,7 +236,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
                   className={`px-3 py-1.5 rounded-full border text-[0.75rem] font-mono transition-all
                     ${selectedWorkType === value
                       ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/08'
-                      : 'border-white/10 text-[#888] hover:border-white/20 hover:text-[#ccc]'
+                      : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-[#ccc]'
                     }`}
                 >
                   {label}
@@ -247,8 +247,8 @@ export function EntryAccordion({ onConfirmed }: Props) {
 
           {/* Standing button group */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              I am a: <span className="text-[#888]">(optional)</span>
+            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
+              I am a: <span className="text-gray-500">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {STANDINGS.map(({ value, label }) => (
@@ -259,7 +259,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
                   className={`px-3 py-1.5 rounded-full border text-[0.75rem] font-mono transition-all
                     ${selectedStanding === value
                       ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/08'
-                      : 'border-white/10 text-[#888] hover:border-white/20 hover:text-[#ccc]'
+                      : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-[#ccc]'
                     }`}
                 >
                   {label}
@@ -270,8 +270,8 @@ export function EntryAccordion({ onConfirmed }: Props) {
 
           {/* Field/tradition text input */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Domain / Research Area / Discipline <span className="text-[#888]">(optional)</span>
+            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
+              Domain / Research Area / Discipline <span className="text-gray-500">(optional)</span>
             </p>
             <input
               type="text"
@@ -279,16 +279,16 @@ export function EntryAccordion({ onConfirmed }: Props) {
               value={tradition}
               onChange={(e) => handleTraditionChange(e.target.value)}
               placeholder="e.g. Behavioral ecology, Historical linguistics, Clinical medicine…"
-              className="w-full bg-[#222] border border-white/08 rounded-md px-4 py-2.5 text-[0.88rem] text-[#e2e2e2] placeholder-[#555] italic outline-none focus:border-white/20"
+              className="w-full bg-gray-100 border border-gray-200 rounded-md px-4 py-2.5 text-[0.88rem] text-gray-900 placeholder-gray-400 italic outline-none focus:border-gray-300"
             />
           </div>
 
           {/* Collapser */}
           <button
             onClick={() => setExpanded(false)}
-            className="w-full text-left px-4 py-2 rounded-lg border border-white/07
-              text-[0.82rem] text-[#888] font-mono tracking-wide
-              hover:border-white/15 hover:text-[#ccc] transition-all"
+            className="w-full text-left px-4 py-2 rounded-lg border border-gray-200
+              text-[0.82rem] text-gray-500 font-mono tracking-wide
+              hover:border-gray-300 hover:text-[#ccc] transition-all"
           >
             ▲ Fewer details
           </button>

@@ -81,14 +81,14 @@ export function OperationPanel({ onReadyGate }: Props) {
         data-testid="operation-evaluate-active"
         className="h-full flex flex-col overflow-y-auto"
       >
-        <div className="flex items-center justify-between px-5 py-3 border-b border-white/07">
-          <span className="font-mono text-[0.65rem] tracking-[0.25em] uppercase text-[#888]">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
+          <span className="font-mono text-[0.65rem] tracking-[0.25em] uppercase text-gray-500">
             Evaluating
           </span>
           <button
             data-testid="operation-evaluate-cancel"
             onClick={() => setActiveOp(null)}
-            className="text-[0.7rem] text-[#555] hover:text-[#888] transition-colors font-mono"
+            className="text-[0.7rem] text-gray-600 hover:text-gray-500 transition-colors font-mono"
           >
             ← Back to operations
           </button>
@@ -112,8 +112,8 @@ export function OperationPanel({ onReadyGate }: Props) {
       className="h-full flex flex-col"
     >
       {/* Header */}
-      <div className="px-5 py-4 border-b border-white/07">
-        <span className="font-mono text-[0.65rem] tracking-[0.25em] uppercase text-[#888]">
+      <div className="px-5 py-4 border-b border-gray-200">
+        <span className="font-mono text-[0.65rem] tracking-[0.25em] uppercase text-gray-500">
           Operations
         </span>
       </div>
@@ -144,7 +144,7 @@ export function OperationPanel({ onReadyGate }: Props) {
             <button
               data-testid="operation-evaluate-rerun"
               onClick={handleEvaluateClick}
-              className="mt-3 w-full text-center text-[0.75rem] font-mono text-[#888] hover:text-[#e2e2e2] transition-colors py-1.5 border border-white/08 rounded-md hover:border-white/20"
+              className="mt-3 w-full text-center text-[0.75rem] font-mono text-gray-500 hover:text-gray-900 transition-colors py-1.5 border border-gray-200 rounded-md hover:border-gray-300"
             >
               Run another evaluation
             </button>
@@ -169,31 +169,31 @@ export function OperationPanel({ onReadyGate }: Props) {
               disabled={!isAvailable}
               className={`w-full text-left p-4 rounded-lg border transition-all
                 ${isComingSoon
-                  ? 'border-white/05 bg-[#161616] opacity-40 cursor-not-allowed'
+                  ? 'border-white/05 bg-gray-50 opacity-40 cursor-not-allowed'
                   : isDone
                   ? 'border-[#4caf80]/30 bg-[#4caf80]/04 cursor-default'
                   : isAvailable
-                  ? 'border-white/10 bg-[#191919] hover:border-white/25 hover:bg-[#1e1e1e] cursor-pointer'
-                  : 'border-white/08 bg-[#191919]'
+                  ? 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-[#1e1e1e] cursor-pointer'
+                  : 'border-gray-200 bg-gray-50'
                 }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <span className={`text-[0.88rem] font-medium
-                  ${isDone ? 'text-[#4caf80]' : isAvailable ? 'text-[#e2e2e2]' : 'text-[#555]'}`}>
+                  ${isDone ? 'text-[#4caf80]' : isAvailable ? 'text-gray-900' : 'text-gray-600'}`}>
                   {op.label}
                 </span>
                 <span className={`font-mono text-[0.55rem] tracking-wider px-2 py-0.5 rounded-full border
                   ${isDone
                     ? 'border-[#4caf80]/40 text-[#4caf80]'
                     : isAvailable
-                    ? 'border-white/15 text-[#888]'
-                    : 'border-white/06 text-[#444]'
+                    ? 'border-gray-300 text-gray-500'
+                    : 'border-gray-200 text-gray-600'
                   }`}>
                   {isDone ? 'done' : isAvailable ? 'available' : 'coming soon'}
                 </span>
               </div>
               <p className={`text-[0.75rem] leading-relaxed
-                ${isDone ? 'text-[#4caf80]/60' : isAvailable ? 'text-[#888]' : 'text-[#444]'}`}>
+                ${isDone ? 'text-[#4caf80]/60' : isAvailable ? 'text-gray-500' : 'text-gray-600'}`}>
                 {op.desc}
               </p>
             </button>
@@ -202,7 +202,7 @@ export function OperationPanel({ onReadyGate }: Props) {
       </div>
 
       {/* Ready gate button */}
-      <div className="px-5 py-4 border-t border-white/07">
+      <div className="px-5 py-4 border-t border-gray-200">
         <button
           data-testid="workspace-ready-gate"
           onClick={onReadyGate}
@@ -214,7 +214,7 @@ export function OperationPanel({ onReadyGate }: Props) {
           I am ready — proceed to export →
         </button>
         {completedOps.length === 0 && (
-          <p className="text-center text-[0.65rem] text-[#555] mt-2 font-mono">
+          <p className="text-center text-[0.65rem] text-gray-600 mt-2 font-mono">
             Complete at least one operation to proceed
           </p>
         )}

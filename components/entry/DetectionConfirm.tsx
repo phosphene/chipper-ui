@@ -20,8 +20,8 @@ interface Props {
 
 export function DetectionConfirm({ result, onConfirm, onAdjust }: Props) {
   return (
-    <div data-testid="detection-confirm" className="mt-4 rounded-lg border border-white/10 bg-[#191919] p-5 animate-fade-up">
-      <p className="mb-3 text-xs font-mono tracking-widest uppercase text-[#888]">
+    <div data-testid="detection-confirm" className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-5 animate-fade-up">
+      <p className="mb-3 text-xs font-mono tracking-widest uppercase text-gray-500">
         We think this is:
       </p>
 
@@ -46,7 +46,7 @@ export function DetectionConfirm({ result, onConfirm, onAdjust }: Props) {
         </button>
         <button
           onClick={onAdjust}
-          className="px-4 py-2 rounded-md border border-white/10 text-[#888] text-sm font-mono hover:border-white/25 hover:text-[#e2e2e2] transition-all"
+          className="px-4 py-2 rounded-md border border-gray-200 text-gray-500 text-sm font-mono hover:border-gray-400 hover:text-gray-900 transition-all"
         >
           Adjust
         </button>
@@ -60,7 +60,7 @@ function Chip({ kind, label }: { kind: 'type' | 'domain' | 'confidence' | 'marke
     type:       'border-[#4fc3f7]/40 text-[#4fc3f7] bg-[#4fc3f7]/06',
     domain:     'border-[#4caf80]/40 text-[#4caf80] bg-[#4caf80]/06',
     confidence: 'border-[#f5a623]/40 text-[#f5a623] bg-[#f5a623]/06',
-    marker:     'border-white/15 text-[#888]',
+    marker:     'border-gray-300 text-gray-500',
   };
 
   return (
