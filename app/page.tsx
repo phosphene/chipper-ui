@@ -15,7 +15,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { EntryGate } from '@/components/entry/EntryGate';
 import { ExpectationsScreen } from '@/components/entry/ExpectationsScreen';
 import { LiveBoard, type BoardTheme } from '@/components/boards/LiveBoard';
-import { WorkspaceForm } from '@/components/workspace/WorkspaceForm';
+import { ProgressiveForm } from '@/components/workspace/ProgressiveForm';
 import { useCeremonyStore } from '@/store/ceremony';
 
 type Mode = 'entry' | 'expectations' | 'workspace' | 'done';
@@ -165,9 +165,7 @@ export default function Home() {
           className="flex-1 min-w-0 overflow-y-auto"
           style={{ width: boardOpen ? `${100 - boardPct}%` : '100%' }}
         >
-          <WorkspaceForm
-                onProceed={() => setMode('done')}
-              />
+          <ProgressiveForm />
         </div>
 
         {/* Resizer handle */}
