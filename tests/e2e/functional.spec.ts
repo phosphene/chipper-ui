@@ -121,13 +121,13 @@ test.describe('EntryAccordion — accordion behavior', () => {
     await expect(page.locator('[data-testid="file-drop-zone"]')).toBeVisible();
   });
 
-  test('expanding reveals work type buttons', async ({ page }) => {
+  test('expanding reveals details fields', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-testid="accordion-expander"]').click();
     await expect(page.locator('[data-testid="accordion-expanded"]')).toBeVisible();
-    // Work type buttons should be visible
-    await expect(page.locator('[data-testid="work-type-null-result"]')).toBeVisible();
-    await expect(page.locator('[data-testid="work-type-original-argument"]')).toBeVisible();
+    // Description textarea and standing buttons should be visible
+    await expect(page.locator('[data-testid="entry-details"]')).toBeVisible();
+    await expect(page.locator('[data-testid="standing-graduate-researcher"]')).toBeVisible();
   });
 
   test('top → disappears when expanded', async ({ page }) => {
@@ -163,8 +163,8 @@ test.describe('EntryAccordion — accordion behavior', () => {
     // Text should still be there
     await expect(input).toHaveValue('A study on cortisol feedback in primates');
 
-    // Select a work type
-    await page.locator('[data-testid="work-type-null-result"]').click();
+    // Select standing
+    await page.locator('[data-testid="standing-graduate-researcher"]').click();
 
     // Collapse
     await page.getByText('▲ Fewer details').click();
@@ -174,10 +174,6 @@ test.describe('EntryAccordion — accordion behavior', () => {
 
     // Text still there
     await expect(input).toHaveValue('A study on cortisol feedback in primates');
-
-    // Work type button should still be selected (highlighted)
-    const nullBtn = page.locator('[data-testid="work-type-null-result"]');
-    await expect(nullBtn).toHaveClass(/border-\[#4f8ef5\]/);
   });
 
   test('submission via top → still works (DetectionConfirm appears)', async ({ page }) => {
@@ -190,14 +186,14 @@ test.describe('EntryAccordion — accordion behavior', () => {
     await expect(page.locator('[data-testid="detection-confirm"]')).toBeVisible({ timeout: 10_000 });
   });
 
-  test('work type button click pre-populates store — visible in DetectionConfirm', async ({ page }) => {
+  test('standing selection pre-populates store — visible after submit', async ({ page }) => {
     await page.goto('/');
     const input = page.locator('[data-testid="entry-text-field"]');
     await input.fill('This is an original experimental study on cortisol regulation in primates');
 
-    // Expand and select work type
+    // Expand and select standing
     await page.locator('[data-testid="accordion-expander"]').click();
-    await page.locator('[data-testid="work-type-null-result"]').click();
+    await page.locator('[data-testid="standing-graduate-researcher"]').click();
 
     // Submit via Evaluate button
     await page.locator('[data-testid="evaluate-button"]').click();
