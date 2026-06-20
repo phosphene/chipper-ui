@@ -17,7 +17,6 @@ import { StageII }  from './stages/StageII';
 import { StageIII } from './stages/StageIII';
 import { StageIV }  from './stages/StageIV';
 import { StageV }   from './stages/StageV';
-import { Opening } from './Opening';
 import { FitAssessment } from './FitAssessment';
 import { Threshold } from './Threshold';
 import { Processing } from './Processing';
@@ -69,13 +68,6 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
     onScoreReady();
   };
 
-  // Opening — Woodchipper formal review welcome, before any stage.
-  // WCI is NOT mentioned here — it becomes available at Beat IX (Recording).
-  if (!store.openingAcknowledged) {
-    return <Opening onBegin={() => {
-      store.acknowledgeOpening();
-    }} />;
-  }
 
   // Dark screens — full viewport, no accordion wrapper
   if (isActive('VI')) {

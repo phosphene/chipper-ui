@@ -72,7 +72,7 @@ export default function Home() {
       <Header>
         <button
           data-testid="stage2-jump"
-          onClick={() => { acknowledgeExpectations(); useCeremonyStore.getState().acknowledgeOpening(); setMode('workspace'); }}
+          onClick={() => { acknowledgeExpectations(); setMode('workspace'); }}
           className="px-3 py-1 border border-dashed border-white/10 rounded text-[#888] text-[0.6rem] font-mono hover:text-[#aaa] hover:border-white/20 transition-all"
         >
           skip to workspace
