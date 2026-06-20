@@ -14,7 +14,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dft:audit": "tsx scripts/dft-audit.ts",
+    "dft:audit:strict": "tsx scripts/dft-audit.ts --strict",
+    "gate": "bash scripts/pre-commit-gate.sh",
+    "hooks:install": "bash scripts/install-hooks.sh"
   },
   "dependencies": {
     "next": "16.2.7",

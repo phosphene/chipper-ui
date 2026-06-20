@@ -120,6 +120,61 @@ must be modified**. Options in order of preference:
 Option 5 is always preferred. Options 1–4 are acceptable. An element that
 remains unreachable after options 1–5 are considered is not shippable.
 
+### 7. Deterministic enforcement
+
+DFT is not a code review checklist. It is enforced automatically at three layers:
+
+**Layer 1 — Pre-commit hook (local, instant)**
+Install once: `npm run hooks:install`
+
+Blocks every `git commit` that:
+- Has TypeScript errors
+- Is missing a required testid from the beat map
+- Has failing Vitest unit tests
+
+Run manually: `npm run gate`
+
+**Layer 2 — DFT audit script (standalone)**
+
+```sh
+npm run dft:audit          # soft: warns on untested testids
+npm run dft:audit:strict   # hard: fails if any testid lacks E2E coverage
+```
+
+The beat map in `scripts/dft-audit.ts` is the canonical source of required testids.
+When you add a new interactive element, you add it to `REQUIRED_TESTIDS` there first,
+then the pre-commit hook enforces it on every subsequent commit.
+
+**Layer 3 — CI gate (GHA, blocks deploy)**
+
+The `dft-gate` job runs before `deploy-chipper-ui` and `deploy-wci-api`.
+Deploy is structurally impossible if:
+- TypeScript errors exist
+- Any required testid from the beat map is missing from component source
+- Unit tests are failing
+
+E2E tests run after deploy against the live URL. They are the final proof.
+
+**The invariant:** if it deploys, it passed DFT. If DFT fails, it cannot deploy.
+
+**Never claim UI behavior works until a Playwright test proves it.**
+`curl` and page inspection are not proof. E2E test output is proof.
+
+---
+
+### 8. Adding new elements (mandatory sequence)
+
+1. Add the testid to `REQUIRED_TESTIDS` in `scripts/dft-audit.ts`
+2. Add the `data-testid` to the component
+3. Write the E2E test assertion
+4. Run `npm run gate` — all three layers must pass
+5. Then commit
+
+If you commit without step 3, the pre-commit hook blocks you.
+If somehow a commit lands without step 3, `--strict` CI will catch it.
+
+---
+
 ### 6. DFT review checklist (before PR)
 
 - [ ] Every new interactive element has a `data-testid`
