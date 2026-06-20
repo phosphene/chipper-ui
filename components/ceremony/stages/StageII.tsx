@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';
 import { StageNav } from '../StageNav';
-import type { WorkType, MakerStanding } from '@/store/ceremony.types';
+import type { WorkType } from '@/store/ceremony.types';
 
 interface DomainEntry {
   domain: string;
@@ -26,18 +26,10 @@ const WORK_TYPES: { value: WorkType; label: string; desc: string }[] = [
   { value: 'methodological-contribution', label: 'Methodological',       desc: 'New procedure, instrument, or method' },
 ];
 
-const STANDINGS: { value: MakerStanding; label: string }[] = [
-  { value: 'graduate-researcher', label: 'Student' },
-  { value: 'professor',           label: 'Scholar' },
-  { value: 'practitioner',        label: 'Practitioner' },
-];
 
 export function StageII() {
   const store = useCeremonyStore();
 
-  const [standing, setStanding] = useState<MakerStanding | null>(
-    store.makerDeclaration?.standing?.value ?? null
-  );
   const [taxonomy, setTaxonomy] = useState<DomainEntry[]>([]);
   const [domainFilter, setDomainFilter] = useState('');
   const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
@@ -55,10 +47,6 @@ export function StageII() {
       .catch(() => {});
   }, []);
 
-  const handleStanding = (s: MakerStanding) => {
-    setStanding(s);
-    store.updateMakerDeclaration({ standing: { value: s, source: 'user' } });
-  };
 
   const toggleDomain = (domain: string) => {
     setSelectedDomains(prev => {
@@ -100,7 +88,7 @@ export function StageII() {
     store.updateWorkClassification({ workType: { value: wt, source: 'user' } });
   };
 
-  const canAdvance = !!selectedWorkType || !!selectedDomains.length || !!standing;
+  const canAdvance = true;
 
   const filteredDomains = taxonomy.filter(d =>
     d.domain.toLowerCase().includes(domainFilter.toLowerCase())
@@ -109,28 +97,7 @@ export function StageII() {
   return (
     <div data-testid="stage-II">
 
-      {/* I am a */}
-      <div className="mb-6">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3">
-          I am a: <span className="normal-case font-normal text-gray-400">(optional)</span>
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {STANDINGS.map(({ value, label }) => (
-            <button
-              key={value}
-              data-testid={`standing-${value}`}
-              onClick={() => handleStanding(value)}
-              aria-pressed={standing === value}
-              className={`px-5 py-2 rounded-full border text-sm transition-all
-                ${standing === value
-                  ? 'border-gray-900 bg-gray-900 text-white'
-                  : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+      
 
       {/* Domain */}
       <div className="mb-6">
