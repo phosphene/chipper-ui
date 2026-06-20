@@ -16,10 +16,9 @@ import { EntryGate } from '@/components/entry/EntryGate';
 import { ExpectationsScreen } from '@/components/entry/ExpectationsScreen';
 import { LiveBoard, type BoardTheme } from '@/components/boards/LiveBoard';
 import { WorkspaceForm } from '@/components/workspace/WorkspaceForm';
-import { Recording } from '@/components/ceremony/Recording';
 import { useCeremonyStore } from '@/store/ceremony';
 
-type Mode = 'entry' | 'expectations' | 'workspace' | 'ready-gate' | 'done';
+type Mode = 'entry' | 'expectations' | 'workspace' | 'done';
 
 const BOARD_DEFAULT_PCT = 30;   // default board width as % of workspace
 const BOARD_MIN_PCT     = 15;   // minimum board width when open
@@ -100,20 +99,6 @@ export default function Home() {
 
   // ── Zone C ────────────────────────────────────────────────────────────────
 
-  if (mode === 'ready-gate') return (
-    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
-      <Header>
-        <button data-testid="ready-gate-back" onClick={() => setMode('workspace')}
-          className="text-[0.65rem] text-gray-500 hover:text-gray-400 font-mono transition-colors">
-          ← back to workspace
-        </button>
-      </Header>
-      <div className="max-w-2xl mx-auto px-6 py-10 flex-1 w-full">
-        <Recording onDone={() => setMode('done')} />
-      </div>
-    </main>
-  );
-
   if (mode === 'done') return (
     <main className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header />
@@ -181,7 +166,7 @@ export default function Home() {
           style={{ width: boardOpen ? `${100 - boardPct}%` : '100%' }}
         >
           <WorkspaceForm
-                onProceed={() => setMode('ready-gate')}
+                onProceed={() => setMode('done')}
               />
         </div>
 
