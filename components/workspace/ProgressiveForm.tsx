@@ -83,17 +83,19 @@ export function ProgressiveForm() {
   }, []);
 
   // Section tracking
-  const [activeIndex, setActiveIndex] = useState(1); // Start at creator-role (work is pre-complete)
+  const [activeIndex, setActiveIndex] = useState(0); // Start at work (entry text)
   const [sections, setSections] = useState<SectionState[]>(() =>
     SECTION_ORDER.map((id, i) => ({
       id,
       label: SECTION_LABELS[id],
-      status: i === 0 ? 'complete' : i === 1 ? 'active' : 'pending',
-      summary: i === 0 ? buildWorkSummary(store.makerDeclaration?.freeText ?? '') : '',
+      status: i === 0 ? 'active' : 'pending',
+      summary: '',
     }))
   );
 
   // Section-local state
+  const [workText, setWorkText] = useState('');
+  const [workFile, setWorkFile] = useState<string | null>(null);
   const [creatorRole, setCreatorRole] = useState<string | null>(null);
   const [selectedHopes, setSelectedHopes] = useState<string[]>([]);
   const [hopeText, setHopeText] = useState('');
@@ -110,14 +112,6 @@ export function ProgressiveForm() {
 
   // Animation ref for the active area
   const activeAreaRef = useRef<HTMLDivElement>(null);
-
-  // Keep work summary in sync with store
-  useEffect(() => {
-    const text = store.makerDeclaration?.freeText ?? '';
-    setSections(prev => prev.map(s =>
-      s.id === 'work' ? { ...s, summary: buildWorkSummary(text) } : s
-    ));
-  }, [store.makerDeclaration?.freeText]);
 
   // ── Section navigation ─────────────────────────────────────
 
@@ -209,8 +203,10 @@ export function ProgressiveForm() {
   // ── Evaluate ───────────────────────────────────────────────
 
   const handleEvaluate = useCallback(async () => {
-    const text = store.makerDeclaration?.freeText ?? '';
-    if (!text || text.trim().length < 15) return;
+    const text = workText.trim();
+    if (!text || text.length < 15) return;
+    // Write to store so downstream components can read it
+    store.updateMakerDeclaration({ freeText: text });
 
     setEvaluating(true);
     try {
@@ -222,7 +218,7 @@ export function ProgressiveForm() {
     } finally {
       setEvaluating(false);
     }
-  }, [store.makerDeclaration?.freeText, detect]);
+  }, [workText, detect, store]);
 
   // ── Export stubs ───────────────────────────────────────────
 
@@ -260,7 +256,7 @@ export function ProgressiveForm() {
 
   const activeSection = sections.find(s => s.status === 'active');
   const allDone = sections.every(s => s.status === 'complete' || s.status === 'skipped');
-  const hasWorkText = (store.makerDeclaration?.freeText ?? '').trim().length >= 15;
+  const hasWorkText = workText.trim().length >= 15;
 
   // ── Render ─────────────────────────────────────────────────
 
@@ -319,6 +315,20 @@ export function ProgressiveForm() {
             </p>
 
             {/* Section content */}
+            {activeSection.id === 'work' && (
+              <div className="space-y-3" data-testid="section-work-input">
+                <h1 className="text-2xl font-light text-black leading-tight">What are you working on?</h1>
+                <textarea
+                  data-testid="entry-text-field"
+                  rows={5}
+                  value={workText}
+                  onChange={e => setWorkText(e.target.value)}
+                  placeholder="Describe your work — a research paper, a finding, an argument, a null result…"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-gray-400 resize-none"
+                  autoFocus
+                />
+              </div>
+            )}
             {activeSection.id === 'creator-role' && (
               <div className="space-y-3">
                 <div className="flex flex-wrap gap-2">
@@ -515,6 +525,11 @@ export function ProgressiveForm() {
                 data-testid={`btn-done-${activeSection.id}`}
                 onClick={() => {
                   switch (activeSection.id) {
+                    case 'work': {
+                      store.updateMakerDeclaration({ freeText: workText });
+                      completeSection('work', workText.slice(0, 80) + (workText.length > 80 ? '…' : ''));
+                      break;
+                    }
                     case 'creator-role': handleCreatorDone(); break;
                     case 'hopes': handleHopesDone(); break;
                     case 'domain': handleDomainDone(); break;

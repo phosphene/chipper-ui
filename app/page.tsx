@@ -1,46 +1,33 @@
 'use client';
 /**
- * Woodchipper — Three-Zone Architecture
+ * Woodchipper — single page, no mode swaps.
  *
- * Zone A — Entry: "What are you working on?" → detect → confirm → expectations
- * Zone B — Workspace: forms LEFT (70%) + visual board RIGHT (30%, resizable/dismissible)
- *   - Forms drive the work: fill fields, run operations, fill again, loop
- *   - Board tracks the work: each form action adds a node/edge on the board
- *   - Board is interactive: clicking a board item surfaces the relevant form
- *   - Board is resizable (drag) and dismissible (click ×)
- * Zone C — Ready Gate: export options. WCI indexing appears here and only here.
+ * Everything lives here: entry text, progressive form sections, board.
+ * No screen jumps. Content moves to the user — user stays put.
  */
 
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { EntryGate } from '@/components/entry/EntryGate';
-import { ExpectationsScreen } from '@/components/entry/ExpectationsScreen';
+import { useRef, useCallback, useEffect, useState } from 'react';
 import { LiveBoard, type BoardTheme } from '@/components/boards/LiveBoard';
 import { ProgressiveForm } from '@/components/workspace/ProgressiveForm';
 import { useCeremonyStore } from '@/store/ceremony';
 
-type Mode = 'entry' | 'expectations' | 'workspace' | 'done';
-
-const BOARD_DEFAULT_PCT = 30;   // default board width as % of workspace
-const BOARD_MIN_PCT     = 15;   // minimum board width when open
-const BOARD_MAX_PCT     = 60;   // maximum board width
+const BOARD_DEFAULT_PCT = 30;
+const BOARD_MIN_PCT     = 15;
+const BOARD_MAX_PCT     = 60;
 
 export default function Home() {
-  const [mode, setMode]           = useState<Mode>('entry');
   const [boardTheme, setBoardTheme] = useState<BoardTheme>('circuit');
-  const [boardPct, setBoardPct]   = useState(BOARD_DEFAULT_PCT);
-  const [boardOpen, setBoardOpen] = useState(true);
+  const [boardPct, setBoardPct]     = useState(BOARD_DEFAULT_PCT);
+  const [boardOpen, setBoardOpen]   = useState(true);
 
-  const { expectationsAcknowledged, acknowledgeExpectations } = useCeremonyStore();
-
-  // ── Resizer drag ──────────────────────────────────────────────────────────
   const workspaceRef = useRef<HTMLDivElement>(null);
   const dragging     = useRef(false);
 
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (!dragging.current || !workspaceRef.current) return;
-    const rect  = workspaceRef.current.getBoundingClientRect();
+    const rect    = workspaceRef.current.getBoundingClientRect();
     const fromRight = rect.right - e.clientX;
-    const pct   = Math.round((fromRight / rect.width) * 100);
+    const pct     = Math.round((fromRight / rect.width) * 100);
     setBoardPct(Math.min(BOARD_MAX_PCT, Math.max(BOARD_MIN_PCT, pct)));
   }, []);
 
@@ -55,136 +42,58 @@ export default function Home() {
     };
   }, [onMouseMove, onMouseUp]);
 
-  // ── Header ────────────────────────────────────────────────────────────────
-  const Header = ({ children }: { children?: React.ReactNode }) => (
-    <header className="flex items-center justify-between px-6 py-3 border-b border-gray-200 flex-shrink-0">
-      <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">
-        Woodchipper
-      </span>
-      {children}
-    </header>
-  );
-
-  // ── Zone A ────────────────────────────────────────────────────────────────
-  if (mode === 'entry') return (
-    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
-      <Header>
-        <button
-          data-testid="stage2-jump"
-          onClick={() => { acknowledgeExpectations(); setMode('workspace'); }}
-          className="px-3 py-1 border border-dashed border-gray-200 rounded text-gray-500 text-[0.6rem] font-mono hover:text-gray-400 hover:border-gray-300 transition-all"
-        >
-          skip to workspace
-        </button>
-      </Header>
-      <div className="max-w-2xl mx-auto px-6 py-12 flex-1 w-full">
-        <h1 className="text-[1.8rem] font-light text-black mb-8 leading-tight">
-          What are you working on?
-        </h1>
-        <EntryGate
-          onCeremonyStart={() => setMode('workspace')}
-        />
-      </div>
-    </main>
-  );
-
-  if (mode === 'expectations') return (
-    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
-      <Header />
-      <div className="max-w-2xl mx-auto px-6 py-12 flex-1 w-full">
-        <ExpectationsScreen onBegin={() => { acknowledgeExpectations(); setMode('workspace'); }} />
-      </div>
-    </main>
-  );
-
-  // ── Zone C ────────────────────────────────────────────────────────────────
-
-  if (mode === 'done') return (
-    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
-      <Header />
-      <div data-testid="woodchipper-done" className="flex-1 flex items-center justify-center">
-        <div className="text-center max-w-sm">
-          <div className="w-10 h-10 rounded-full border border-[#4caf80]/40 flex items-center justify-center mx-auto mb-6">
-            <div className="w-5 h-5 rounded-full border border-[#4caf80]/40" />
-          </div>
-          <h2 className="text-lg font-light text-black mb-2">Complete</h2>
-          <p className="text-[0.82rem] text-gray-500 mb-8">Your work and its record are preserved.</p>
-          <button data-testid="woodchipper-restart"
-            onClick={() => { useCeremonyStore.getState().reset(); setMode('entry'); }}
-            className="px-5 py-2 border border-gray-200 rounded text-gray-500 text-xs font-mono hover:border-gray-300 hover:text-black transition-all">
-            Evaluate another work
-          </button>
-        </div>
-      </div>
-    </main>
-  );
-
-  // ── Zone B — Workspace ────────────────────────────────────────────────────
-  // Forms LEFT (100-boardPct% when board open, 100% when closed)
-  // Board RIGHT (boardPct%, resizable, dismissible)
   return (
     <main className="h-screen bg-white text-gray-900 flex flex-col overflow-hidden">
-      {/* Workspace header */}
+      {/* Header */}
       <header className="flex items-center justify-between px-5 py-2.5 border-b border-gray-200 flex-shrink-0">
         <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">Woodchipper</span>
         <div className="flex items-center gap-3">
-          {/* Board controls — only when board is open */}
           {boardOpen && (
             <div data-testid="board-theme-selector" className="flex gap-1">
               {(['circuit', 'aqueduct', 'chipper'] as BoardTheme[]).map(t => (
                 <button key={t} data-testid={`board-theme-${t}`}
                   onClick={() => setBoardTheme(t)}
                   className={`px-2 py-0.5 rounded text-[0.55rem] font-mono uppercase tracking-wider transition-all
-                    ${boardTheme === t ? 'text-black bg-white/08' : 'text-gray-600 hover:text-gray-400'}`}>
+                    ${boardTheme === t ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}>
                   {t === 'circuit' ? '⚡' : t === 'aqueduct' ? '🏛' : '⚙'} {t}
                 </button>
               ))}
             </div>
           )}
-          {/* Toggle board */}
-          <button
-            data-testid="board-toggle"
-            onClick={() => setBoardOpen(v => !v)}
-            title={boardOpen ? 'Hide board' : 'Show board'}
-            className="text-[0.6rem] font-mono text-gray-600 hover:text-gray-500 transition-colors px-1.5 py-0.5 border border-gray-200 rounded"
-          >
+          <button data-testid="board-toggle" onClick={() => setBoardOpen(v => !v)}
+            className="text-[0.6rem] font-mono text-gray-500 hover:text-gray-700 px-1.5 py-0.5 border border-gray-200 rounded">
             {boardOpen ? 'hide board ×' : 'show board ◫'}
+          </button>
+          {/* Dev shortcut — jump past entry */}
+          <button data-testid="stage2-jump"
+            onClick={() => useCeremonyStore.getState().acknowledgeExpectations?.()}
+            className="px-2 py-0.5 border border-dashed border-gray-200 rounded text-[0.55rem] font-mono text-gray-400 hover:text-gray-600">
+            dev
           </button>
         </div>
       </header>
 
-      {/* Two-panel body */}
-      <div
-        data-testid="workspace-panels"
-        ref={workspaceRef}
-        className="flex-1 flex min-h-0 overflow-hidden"
-      >
-        {/* LEFT — Forms (grows to fill remaining space) */}
-        <div
-          data-testid="workspace-forms"
-          className="flex-1 min-w-0 overflow-y-auto"
-          style={{ width: boardOpen ? `${100 - boardPct}%` : '100%' }}
-        >
+      {/* Body — left form + right board */}
+      <div data-testid="workspace-panels" ref={workspaceRef}
+        className="flex-1 flex min-h-0 overflow-hidden">
+
+        {/* LEFT — ProgressiveForm owns everything: entry + sections + reading */}
+        <div data-testid="workspace-forms"
+          className="flex-1 min-w-0 overflow-hidden"
+          style={{ width: boardOpen ? `${100 - boardPct}%` : '100%' }}>
           <ProgressiveForm />
         </div>
 
-        {/* Resizer handle */}
         {boardOpen && (
-          <div
-            data-testid="board-resizer"
-            className="w-[4px] cursor-col-resize flex-shrink-0 hover:bg-white/10 transition-colors"
-            style={{ background: 'rgba(255,255,255,0.05)' }}
-            onMouseDown={() => { dragging.current = true; }}
-          />
+          <div data-testid="board-resizer"
+            className="w-[4px] cursor-col-resize flex-shrink-0 bg-gray-100 hover:bg-gray-300 transition-colors"
+            onMouseDown={() => { dragging.current = true; }} />
         )}
 
-        {/* RIGHT — Visual Board (resizable) */}
         {boardOpen && (
-          <div
-            data-testid="workspace-board"
+          <div data-testid="workspace-board"
             className="flex-shrink-0 overflow-hidden border-l border-gray-200"
-            style={{ width: `${boardPct}%` }}
-          >
+            style={{ width: `${boardPct}%` }}>
             <LiveBoard theme={boardTheme} />
           </div>
         )}
