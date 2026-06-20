@@ -237,7 +237,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
                 ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
           >
-            {isLoading ? 'Analysing…' : '→'}
+            {isLoading ? 'Evaluating…' : 'Evaluate →'}
           </button>
         </>
       )}
