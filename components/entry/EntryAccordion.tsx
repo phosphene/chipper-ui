@@ -151,13 +151,15 @@ export function EntryAccordion({ onConfirmed }: Props) {
           onKeyDown={handleKeyDown}
           rows={2}
           placeholder="Title or description of your work…"
-          className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-400 outline-none resize-none"
+          className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-500 outline-none resize-none"
         />
         {!expanded && (
           <button
             data-testid="submit-button-top"
             onClick={isReady && !isLoading ? handleSubmit : undefined}
             aria-disabled={!isReady || isLoading}
+            aria-label="Evaluate"
+            tabIndex={0}
             className={`px-6 bg-gray-900 text-white text-sm font-mono tracking-wide hover:bg-gray-700 transition-colors ${!isReady || isLoading ? 'opacity-30 cursor-not-allowed' : ''}`}
           >
             {isLoading ? '…' : '→'}
@@ -173,10 +175,10 @@ export function EntryAccordion({ onConfirmed }: Props) {
         onClick={() => dropFileRef.current?.click()}
         className="mt-3 border-2 border-dashed border-gray-200 rounded-xl py-5 text-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
       >
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-gray-600">
           📁 Add details and context for your work
         </p>
-        <p className="text-xs text-gray-300 mt-1">PDF · audio · image · data · any format</p>
+        <p className="text-xs text-gray-500 mt-1">PDF · audio · image · data · any format</p>
         <input ref={dropFileRef} type="file" className="hidden" onChange={handleFileChange} />
         <input ref={fileRef} type="file" accept=".pdf,.txt,.md,.docx" className="hidden" onChange={handleFileChange} />
       </div>
@@ -186,7 +188,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
         <button
           data-testid="accordion-expander"
           onClick={() => setExpanded(true)}
-          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-all"
+          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:border-gray-400 hover:text-gray-600 transition-all"
         >
           + Add more details
         </button>
@@ -199,7 +201,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* 3. Optional description */}
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
-              Description <span className="normal-case font-normal text-gray-400">(optional)</span>
+              Description <span className="normal-case font-normal text-gray-600">(optional)</span>
             </label>
             <textarea
               data-testid="entry-details"
@@ -214,7 +216,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* 4. I am a: */}
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
-              I am a: <span className="normal-case font-normal text-gray-400">(optional)</span>
+              I am a: <span className="normal-case font-normal text-gray-600">(optional)</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {STANDINGS.map(({ value, label }) => (
@@ -236,7 +238,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* 5. Domain */}
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
-              Domain / Research Area / Discipline <span className="normal-case font-normal text-gray-400">(optional)</span>
+              Domain / Research Area / Discipline <span className="normal-case font-normal text-gray-600">(optional)</span>
             </label>
 
             {/* Selected domain chips */}
@@ -264,7 +266,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
             {/* Dropdown toggle */}
             <button
               onClick={() => setDomainDropdownOpen(v => !v)}
-              className="mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+              className="mt-2 text-xs text-gray-600 hover:text-gray-600 transition-colors"
             >
               {domainDropdownOpen ? '▲ Hide list' : '▼ Choose from list'}
             </button>
@@ -303,7 +305,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Collapse */}
           <button
             onClick={() => setExpanded(false)}
-            className="w-full text-left px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-all"
+            className="w-full text-left px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:border-gray-400 hover:text-gray-600 transition-all"
           >
             ▲ Fewer details
           </button>
