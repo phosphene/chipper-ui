@@ -235,10 +235,7 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   },
 
   rest: () => {
-    const state = get();
-    if (!isIntakeComplete(state)) {
-      throw new StageAdvanceError('Cannot rest: intake not complete');
-    }
+    // No gate — all stages are optional
     set((s) => ({
       completedStages: new Set([...s.completedStages, 'V' as Stage]),
       currentStage: 'VI' as Stage,
@@ -246,10 +243,7 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   },
 
   crossThreshold: () => {
-    const state = get();
-    if (!canCrossThreshold(state)) {
-      throw new StageAdvanceError('Cannot cross threshold: intake not complete');
-    }
+    // No gate — threshold always crossable
     set((s) => ({
       completedStages: new Set([...s.completedStages, 'VI' as Stage]),
       currentStage: 'VII' as Stage,

@@ -28,7 +28,7 @@ export const canRevealScore = (state: CeremonyState): boolean =>
 export const canAdvanceFromCurrent = (state: CeremonyState): boolean => {
   const stage = state.currentStage;
   switch (stage) {
-    case 'I':  return !!(state.makerDeclaration?.standing?.value);
+    case 'I':  return true; // creator role is optional — always can advance
     case 'II': return true; // all fields optional — always can advance
     case 'III': return true; // acknowledged
     case 'IV': return true; // no checkbox — Proceed button always enabled
