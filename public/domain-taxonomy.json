@@ -1,0 +1,642 @@
+[
+  {
+    "domain": "Anthropology",
+    "subtopics": [
+      "General",
+      "Cultural / Social Anthropology",
+      "Biological / Physical Anthropology",
+      "Archaeological Anthropology",
+      "Linguistic Anthropology",
+      "Applied Anthropology",
+      "Medical Anthropology",
+      "Visual Anthropology"
+    ]
+  },
+  {
+    "domain": "Archaeology",
+    "subtopics": [
+      "General",
+      "Prehistoric Archaeology",
+      "Classical Archaeology",
+      "Historical Archaeology",
+      "Environmental Archaeology",
+      "Computational Archaeology",
+      "Maritime Archaeology",
+      "Zooarchaeology",
+      "Archaeobotany"
+    ]
+  },
+  {
+    "domain": "Architecture",
+    "subtopics": [
+      "General",
+      "Architectural Design",
+      "Architectural History & Theory",
+      "Urban Design",
+      "Landscape Architecture",
+      "Sustainable / Environmental Design",
+      "Interior Architecture"
+    ]
+  },
+  {
+    "domain": "Art History",
+    "subtopics": [
+      "General",
+      "Ancient & Medieval Art",
+      "Renaissance & Early Modern",
+      "Modern Art (19th\u201320th c.)",
+      "Contemporary Art",
+      "Non-Western Art Traditions",
+      "Photography & New Media",
+      "Curatorial Studies"
+    ]
+  },
+  {
+    "domain": "Behavioral Biology",
+    "subtopics": [
+      "General",
+      "Animal Behavior / Ethology",
+      "Behavioral Ecology",
+      "Comparative Psychology",
+      "Neuroethology",
+      "Social Behavior",
+      "Evolutionary Behavioral Biology"
+    ]
+  },
+  {
+    "domain": "Biochemistry",
+    "subtopics": [
+      "General",
+      "Structural Biochemistry",
+      "Enzymology",
+      "Metabolomics",
+      "Molecular Biochemistry",
+      "Lipid Biochemistry",
+      "Protein Chemistry"
+    ]
+  },
+  {
+    "domain": "Business",
+    "subtopics": [
+      "General",
+      "Strategy & Management",
+      "Finance & Accounting",
+      "Marketing",
+      "Organizational Behavior",
+      "Operations & Supply Chain",
+      "Entrepreneurship & Innovation",
+      "International Business"
+    ]
+  },
+  {
+    "domain": "Chemistry",
+    "subtopics": [
+      "General",
+      "Organic Chemistry",
+      "Inorganic Chemistry",
+      "Physical Chemistry",
+      "Analytical Chemistry",
+      "Computational Chemistry",
+      "Materials Chemistry",
+      "Green Chemistry"
+    ]
+  },
+  {
+    "domain": "Clinical Medicine",
+    "subtopics": [
+      "General",
+      "Internal Medicine",
+      "Surgery",
+      "Pediatrics",
+      "Psychiatry",
+      "Oncology",
+      "Cardiology",
+      "Neurology",
+      "Infectious Disease",
+      "Primary Care / Family Medicine"
+    ]
+  },
+  {
+    "domain": "Cognitive Science",
+    "subtopics": [
+      "General",
+      "Cognitive Psychology",
+      "Computational Cognitive Science",
+      "Cognitive Neuroscience",
+      "Philosophy of Mind",
+      "Linguistics & Language Cognition",
+      "Developmental Cognition"
+    ]
+  },
+  {
+    "domain": "Communication",
+    "subtopics": [
+      "General",
+      "Media Studies",
+      "Journalism & News",
+      "Political Communication",
+      "Health Communication",
+      "Organizational Communication",
+      "Digital & Social Media",
+      "Rhetoric"
+    ]
+  },
+  {
+    "domain": "Computer Science",
+    "subtopics": [
+      "General",
+      "Algorithms & Theory",
+      "Artificial Intelligence & ML",
+      "Systems & Networks",
+      "Human-Computer Interaction",
+      "Software Engineering",
+      "Computer Vision",
+      "Natural Language Processing",
+      "Security & Privacy",
+      "Databases"
+    ]
+  },
+  {
+    "domain": "Cultural Studies",
+    "subtopics": [
+      "General",
+      "Critical Theory",
+      "Gender & Sexuality Studies",
+      "Race & Ethnicity Studies",
+      "Postcolonial Studies",
+      "Media & Popular Culture",
+      "Science & Technology Studies"
+    ]
+  },
+  {
+    "domain": "Development Economics",
+    "subtopics": [
+      "General",
+      "Poverty & Inequality",
+      "Health Economics",
+      "Agricultural Economics",
+      "Education Economics",
+      "Microfinance & Institutions",
+      "Political Economy of Development"
+    ]
+  },
+  {
+    "domain": "Earth Sciences",
+    "subtopics": [
+      "General",
+      "Geology",
+      "Geophysics",
+      "Oceanography",
+      "Atmospheric Science / Meteorology",
+      "Hydrology",
+      "Geochemistry",
+      "Volcanology",
+      "Paleoclimatology"
+    ]
+  },
+  {
+    "domain": "Economics",
+    "subtopics": [
+      "General",
+      "Microeconomics",
+      "Macroeconomics",
+      "Econometrics",
+      "Behavioral Economics",
+      "Labor Economics",
+      "Public Economics",
+      "International Economics",
+      "Industrial Organization"
+    ]
+  },
+  {
+    "domain": "Education",
+    "subtopics": [
+      "General",
+      "Curriculum & Pedagogy",
+      "Educational Psychology",
+      "Higher Education",
+      "Special Education",
+      "Educational Policy",
+      "STEM Education",
+      "Adult & Lifelong Learning"
+    ]
+  },
+  {
+    "domain": "Engineering",
+    "subtopics": [
+      "General",
+      "Mechanical Engineering",
+      "Electrical & Electronic Engineering",
+      "Civil & Structural Engineering",
+      "Chemical Engineering",
+      "Biomedical Engineering",
+      "Environmental Engineering",
+      "Aerospace Engineering",
+      "Materials Engineering"
+    ]
+  },
+  {
+    "domain": "Environmental Science",
+    "subtopics": [
+      "General",
+      "Ecology",
+      "Conservation Biology",
+      "Environmental Chemistry",
+      "Climate Science",
+      "Environmental Policy",
+      "Toxicology",
+      "Sustainability Science"
+    ]
+  },
+  {
+    "domain": "Epidemiology",
+    "subtopics": [
+      "General",
+      "Infectious Disease Epidemiology",
+      "Chronic Disease Epidemiology",
+      "Genetic Epidemiology",
+      "Social Epidemiology",
+      "Environmental Epidemiology",
+      "Clinical Epidemiology",
+      "Global Health"
+    ]
+  },
+  {
+    "domain": "Ethnography",
+    "subtopics": [
+      "General",
+      "Participant Observation",
+      "Multi-sited Ethnography",
+      "Digital Ethnography",
+      "Institutional Ethnography",
+      "Auto-ethnography"
+    ]
+  },
+  {
+    "domain": "Ethology",
+    "subtopics": [
+      "General",
+      "Behavioral Ecology",
+      "Comparative Ethology",
+      "Neuroethology",
+      "Human Ethology",
+      "Applied Ethology"
+    ]
+  },
+  {
+    "domain": "Evolutionary Biology",
+    "subtopics": [
+      "General",
+      "Phylogenetics",
+      "Population Genetics",
+      "Evolutionary Ecology",
+      "Evolutionary Developmental Biology (Evo-Devo)",
+      "Macroevolution",
+      "Coevolution"
+    ]
+  },
+  {
+    "domain": "Film Studies",
+    "subtopics": [
+      "General",
+      "Film Theory & Criticism",
+      "Film History",
+      "Documentary Studies",
+      "Genre Studies",
+      "National & Transnational Cinema",
+      "Animation Studies"
+    ]
+  },
+  {
+    "domain": "Genetics",
+    "subtopics": [
+      "General",
+      "Molecular Genetics",
+      "Population Genetics",
+      "Genomics",
+      "Epigenetics",
+      "Human Genetics",
+      "Quantitative Genetics",
+      "Plant / Animal Genetics"
+    ]
+  },
+  {
+    "domain": "Geography",
+    "subtopics": [
+      "General",
+      "Human Geography",
+      "Physical Geography",
+      "GIS & Spatial Analysis",
+      "Urban Geography",
+      "Environmental Geography",
+      "Cultural Geography"
+    ]
+  },
+  {
+    "domain": "History",
+    "subtopics": [
+      "General",
+      "Ancient History",
+      "Medieval History",
+      "Early Modern History",
+      "Modern History",
+      "Intellectual History",
+      "Social History",
+      "Economic History",
+      "History of Science",
+      "World / Global History"
+    ]
+  },
+  {
+    "domain": "Immunology",
+    "subtopics": [
+      "General",
+      "Innate Immunity",
+      "Adaptive Immunity",
+      "Immunopathology",
+      "Tumor Immunology",
+      "Vaccinology",
+      "Autoimmunity",
+      "Mucosal Immunology"
+    ]
+  },
+  {
+    "domain": "International Relations",
+    "subtopics": [
+      "General",
+      "International Security",
+      "International Political Economy",
+      "Foreign Policy Analysis",
+      "International Law",
+      "Conflict & Peace Studies",
+      "Global Governance",
+      "Regional Studies"
+    ]
+  },
+  {
+    "domain": "Law",
+    "subtopics": [
+      "General",
+      "Constitutional Law",
+      "Criminal Law",
+      "International Law",
+      "Intellectual Property",
+      "Environmental Law",
+      "Corporate & Commercial Law",
+      "Human Rights Law",
+      "Jurisprudence & Legal Theory"
+    ]
+  },
+  {
+    "domain": "Linguistics",
+    "subtopics": [
+      "General",
+      "Syntax",
+      "Semantics",
+      "Phonology / Phonetics",
+      "Pragmatics",
+      "Sociolinguistics",
+      "Historical / Comparative Linguistics",
+      "Computational Linguistics",
+      "Psycholinguistics",
+      "Applied Linguistics"
+    ]
+  },
+  {
+    "domain": "Literature",
+    "subtopics": [
+      "General",
+      "Comparative Literature",
+      "English Literature",
+      "World Literature",
+      "Poetry Studies",
+      "Narrative Theory",
+      "Literary Theory & Criticism",
+      "Translation Studies"
+    ]
+  },
+  {
+    "domain": "Marine Biology",
+    "subtopics": [
+      "General",
+      "Marine Ecology",
+      "Marine Microbiology",
+      "Marine Mammalogy",
+      "Fisheries Science",
+      "Coral Reef Biology",
+      "Deep-Sea Biology",
+      "Oceanographic Biology"
+    ]
+  },
+  {
+    "domain": "Mathematics",
+    "subtopics": [
+      "General",
+      "Algebra",
+      "Analysis / Calculus",
+      "Topology",
+      "Number Theory",
+      "Combinatorics",
+      "Applied Mathematics",
+      "Statistics & Probability",
+      "Mathematical Logic"
+    ]
+  },
+  {
+    "domain": "Microbiology",
+    "subtopics": [
+      "General",
+      "Bacteriology",
+      "Virology",
+      "Mycology",
+      "Microbial Ecology",
+      "Clinical Microbiology",
+      "Environmental Microbiology"
+    ]
+  },
+  {
+    "domain": "Musicology",
+    "subtopics": [
+      "General",
+      "Music History",
+      "Music Theory",
+      "Ethnomusicology",
+      "Music Psychology",
+      "Music Education",
+      "Popular Music Studies"
+    ]
+  },
+  {
+    "domain": "Neuroscience",
+    "subtopics": [
+      "General",
+      "Cellular & Molecular Neuroscience",
+      "Systems Neuroscience",
+      "Cognitive Neuroscience",
+      "Behavioral Neuroscience",
+      "Clinical Neuroscience",
+      "Computational Neuroscience",
+      "Developmental Neuroscience"
+    ]
+  },
+  {
+    "domain": "Nursing",
+    "subtopics": [
+      "General",
+      "Clinical Nursing Practice",
+      "Community & Public Health Nursing",
+      "Mental Health Nursing",
+      "Nursing Education",
+      "Nursing Research & Theory",
+      "Perioperative Nursing"
+    ]
+  },
+  {
+    "domain": "Paleoanthropology",
+    "subtopics": [
+      "General",
+      "Hominin Evolution",
+      "Paleoecology",
+      "Paleoneurology",
+      "Lithic Analysis",
+      "Comparative Anatomy",
+      "Ancient DNA",
+      "Geochronology"
+    ]
+  },
+  {
+    "domain": "Philosophy",
+    "subtopics": [
+      "General",
+      "Epistemology",
+      "Metaphysics",
+      "Ethics & Moral Philosophy",
+      "Philosophy of Science",
+      "Philosophy of Mind",
+      "Political Philosophy",
+      "Logic",
+      "Aesthetics",
+      "History of Philosophy"
+    ]
+  },
+  {
+    "domain": "Physics",
+    "subtopics": [
+      "General",
+      "Quantum Mechanics",
+      "Condensed Matter Physics",
+      "Particle Physics",
+      "Astrophysics & Cosmology",
+      "Thermodynamics & Statistical Mechanics",
+      "Optics & Photonics",
+      "Nuclear Physics",
+      "Computational Physics"
+    ]
+  },
+  {
+    "domain": "Political Science",
+    "subtopics": [
+      "General",
+      "Comparative Politics",
+      "International Relations",
+      "Political Theory",
+      "Public Policy & Administration",
+      "Electoral Studies",
+      "Political Economy",
+      "Security Studies"
+    ]
+  },
+  {
+    "domain": "Primatology",
+    "subtopics": [
+      "General",
+      "Primate Ecology & Behavior",
+      "Primate Cognition",
+      "Primate Conservation",
+      "Primate Anatomy & Physiology",
+      "Primate Genetics",
+      "Comparative Primatology"
+    ]
+  },
+  {
+    "domain": "Psychology",
+    "subtopics": [
+      "General",
+      "Clinical Psychology",
+      "Cognitive Psychology",
+      "Social Psychology",
+      "Developmental Psychology",
+      "Personality Psychology",
+      "Neuropsychology",
+      "Industrial-Organizational Psychology",
+      "Health Psychology",
+      "Positive Psychology"
+    ]
+  },
+  {
+    "domain": "Public Health",
+    "subtopics": [
+      "General",
+      "Epidemiology",
+      "Health Policy & Management",
+      "Environmental Health",
+      "Biostatistics",
+      "Global Health",
+      "Health Behavior & Promotion",
+      "Occupational Health"
+    ]
+  },
+  {
+    "domain": "Religious Studies",
+    "subtopics": [
+      "General",
+      "Comparative Religion",
+      "Theology",
+      "History of Religions",
+      "Philosophy of Religion",
+      "Religion & Society",
+      "Biblical / Textual Studies",
+      "Religion & Science"
+    ]
+  },
+  {
+    "domain": "Sociology",
+    "subtopics": [
+      "General",
+      "Social Theory",
+      "Political Sociology",
+      "Economic Sociology",
+      "Medical Sociology",
+      "Cultural Sociology",
+      "Criminology",
+      "Gender & Family",
+      "Race & Ethnicity",
+      "Urban Sociology"
+    ]
+  },
+  {
+    "domain": "Statistics",
+    "subtopics": [
+      "General",
+      "Bayesian Statistics",
+      "Frequentist / Classical Statistics",
+      "Biostatistics",
+      "Computational Statistics",
+      "Survey Methodology",
+      "Causal Inference",
+      "Machine Learning (Statistical)"
+    ]
+  },
+  {
+    "domain": "Theology",
+    "subtopics": [
+      "General",
+      "Systematic Theology",
+      "Historical Theology",
+      "Practical Theology",
+      "Ethics & Moral Theology",
+      "Comparative Theology",
+      "Liturgical Studies"
+    ]
+  }
+]

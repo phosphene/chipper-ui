@@ -151,7 +151,7 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
   // Intake stages I–V in accordion
   const stages: StageConfig[] = [
     { id: 'I',   stepNum: 'I',   label: 'Stage I',        title: 'About You',  component: <StageI /> },
-    { id: 'II',  stepNum: 'II',  label: 'Stage II',       title: 'Your Work', component: <StageII /> },
+    { id: 'II',  stepNum: 'II',  label: 'Stage II',       title: 'About Your Work', component: <StageII /> },
     { id: 'III', stepNum: 'III', label: 'Stage III',      title: 'Context', component: <StageIII /> },
     { id: 'IV',  stepNum: 'IV',  label: 'Stage IV',       title: 'Before We Begin',     component: <StageIV onDecline={onDecline} /> },
     { id: 'V',   stepNum: 'V',   label: 'Stage V',        title: 'Ready',               component: <StageV onRested={handleRested} /> },
