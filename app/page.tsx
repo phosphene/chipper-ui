@@ -68,7 +68,7 @@ export default function Home() {
 
   // ── Zone A ────────────────────────────────────────────────────────────────
   if (mode === 'entry') return (
-    <main className="min-h-screen bg-white text-black flex flex-col">
+    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header>
         <button
           data-testid="stage2-jump"
@@ -90,7 +90,7 @@ export default function Home() {
   );
 
   if (mode === 'expectations') return (
-    <main className="min-h-screen bg-white text-black flex flex-col">
+    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header />
       <div className="max-w-2xl mx-auto px-6 py-12 flex-1 w-full">
         <ExpectationsScreen onBegin={() => { acknowledgeExpectations(); setMode('workspace'); }} />
@@ -100,7 +100,7 @@ export default function Home() {
 
   // ── Zone C ────────────────────────────────────────────────────────────────
   if (mode === 'ready-gate') return (
-    <main className="min-h-screen bg-white text-black flex flex-col">
+    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header>
         <button data-testid="ready-gate-back" onClick={() => setMode('workspace')}
           className="text-[0.65rem] text-gray-500 hover:text-gray-400 font-mono transition-colors">
@@ -114,7 +114,7 @@ export default function Home() {
   );
 
   if (mode === 'done') return (
-    <main className="min-h-screen bg-white text-black flex flex-col">
+    <main className="min-h-screen bg-white text-gray-900 flex flex-col">
       <Header />
       <div data-testid="woodchipper-done" className="flex-1 flex items-center justify-center">
         <div className="text-center max-w-sm">
@@ -137,7 +137,7 @@ export default function Home() {
   // Forms LEFT (100-boardPct% when board open, 100% when closed)
   // Board RIGHT (boardPct%, resizable, dismissible)
   return (
-    <main className="h-screen bg-white text-black flex flex-col overflow-hidden">
+    <main className="h-screen bg-white text-gray-900 flex flex-col overflow-hidden">
       {/* Workspace header */}
       <header className="flex items-center justify-between px-5 py-2.5 border-b border-gray-200 flex-shrink-0">
         <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">Woodchipper</span>

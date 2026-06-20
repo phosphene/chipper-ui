@@ -124,7 +124,7 @@ export function OperationPanel({ onReadyGate }: Props) {
         {lastEval && (
           <div
             data-testid="operation-evaluate-result"
-            className="p-4 rounded-lg border border-[#4f8ef5]/30 bg-[#4f8ef5]/05 mb-4"
+            className="p-4 rounded-lg border border-[#4f8ef5]/30 bg-white/05 mb-4"
           >
             <div className="flex items-center justify-between mb-2">
               <span className="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#4f8ef5]">
@@ -169,11 +169,11 @@ export function OperationPanel({ onReadyGate }: Props) {
               disabled={!isAvailable}
               className={`w-full text-left p-4 rounded-lg border transition-all
                 ${isComingSoon
-                  ? 'border-white/05 bg-gray-50 opacity-40 cursor-not-allowed'
+                  ? 'border-gray-200 bg-gray-50 opacity-40 cursor-not-allowed'
                   : isDone
-                  ? 'border-[#4caf80]/30 bg-[#4caf80]/04 cursor-default'
+                  ? 'border-[#4caf80]/30 bg-white/04 cursor-default'
                   : isAvailable
-                  ? 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-[#1e1e1e] cursor-pointer'
+                  ? 'border-gray-200 bg-gray-50 hover:border-gray-400 hover:bg-white cursor-pointer'
                   : 'border-gray-200 bg-gray-50'
                 }`}
             >
@@ -209,7 +209,7 @@ export function OperationPanel({ onReadyGate }: Props) {
           disabled={completedOps.length === 0}
           className="w-full py-3 rounded-lg text-[0.85rem] font-mono tracking-wide transition-all
             disabled:opacity-25 disabled:cursor-not-allowed
-            bg-[#4f8ef5] text-white hover:opacity-85"
+            bg-white text-white hover:opacity-85"
         >
           I am ready — proceed to export →
         </button>
