@@ -193,18 +193,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           placeholder="Title or description of your work…"
           className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-500 outline-none resize-none"
         />
-        {!expanded && (
-          <button
-            data-testid="submit-button-top"
-            onClick={isReady && !isLoading ? handleSubmit : undefined}
-            aria-disabled={!isReady || isLoading}
-            aria-label="Submit"
-            tabIndex={0}
-            className={`px-6 bg-gray-900 text-white text-sm font-mono tracking-wide hover:bg-gray-700 transition-colors ${!isReady || isLoading ? 'opacity-30 cursor-not-allowed' : ''}`}
-          >
-            {isLoading ? '…' : '→'}
-          </button>
-        )}
+
       </div>
 
       {/* ── 2. Upload file (always visible) ── */}
@@ -232,6 +221,25 @@ export function EntryAccordion({ onConfirmed }: Props) {
         >
           + Add more details
         </button>
+      )}
+
+      {/* ── Submit button — appears below, turns black when enough text ── */}
+      {!expanded && (
+        <>
+          <hr className="mt-4 border-gray-200" />
+          <button
+            data-testid="submit-button-top"
+            onClick={isReady && !isLoading ? handleSubmit : undefined}
+            aria-disabled={!isReady || isLoading}
+            aria-label="Submit"
+            className={`mt-3 w-full py-3 rounded-xl text-sm font-medium transition-all
+              ${isReady
+                ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+          >
+            {isLoading ? 'Analysing…' : '→'}
+          </button>
+        </>
       )}
 
       {/* ── Expanded fields ── */}
