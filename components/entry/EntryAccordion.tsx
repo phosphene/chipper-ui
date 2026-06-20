@@ -39,10 +39,8 @@ const WORK_TYPES: { value: WorkType; label: string }[] = [
 ];
 
 const STANDINGS: { value: MakerStanding; label: string }[] = [
-  { value: 'graduate-researcher', label: 'Graduate' },
-  { value: 'postdoctoral-researcher', label: 'Postdoc' },
-  { value: 'professor', label: 'Professor' },
-  { value: 'independent-researcher', label: 'Independent' },
+  { value: 'graduate-researcher', label: 'Student' },
+  { value: 'professor', label: 'Scholar' },
   { value: 'practitioner', label: 'Practitioner' },
 ];
 
@@ -136,7 +134,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           onChange={(e) => handleTextChange(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
-          placeholder="Describe your work, paste a URL or DOI, or drop a file…"
+          placeholder="Title or description of your work…"
           className="flex-1 px-5 py-4 bg-transparent text-[#e2e2e2] text-base placeholder-[#555] italic outline-none min-h-14 resize-none"
         />
 
@@ -209,10 +207,25 @@ export function EntryAccordion({ onConfirmed }: Props) {
       {expanded && (
         <div data-testid="accordion-expanded" className="mt-4 space-y-5">
 
+          {/* Form 3: Share details about the work */}
+          <div>
+            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
+              Share details about the work <span className="text-[#888]">(optional)</span>
+            </p>
+            <textarea
+              data-testid="entry-details"
+              rows={5}
+              value={text}
+              onChange={(e) => handleTextChange(e.target.value)}
+              placeholder="Describe the work in more detail — its argument, method, key findings, context, or anything else that would help evaluate it…"
+              className="w-full bg-[#222] border border-white/08 rounded-md px-4 py-3 text-[0.88rem] text-[#e2e2e2] placeholder-[#555] italic outline-none focus:border-white/20 resize-y"
+            />
+          </div>
+
           {/* Work type button group */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Work type <span className="text-[#888]">(optional)</span>
+              What type of work is this? <span className="text-[#888]">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {WORK_TYPES.map(({ value, label }) => (
@@ -235,7 +248,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Standing button group */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Standing <span className="text-[#888]">(optional)</span>
+              I am a: <span className="text-[#888]">(optional)</span>
             </p>
             <div className="flex flex-wrap gap-2">
               {STANDINGS.map(({ value, label }) => (
@@ -258,13 +271,14 @@ export function EntryAccordion({ onConfirmed }: Props) {
           {/* Field/tradition text input */}
           <div>
             <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#888] mb-2">
-              Field / tradition <span className="text-[#888]">(optional)</span>
+              Domain / Research Area / Discipline <span className="text-[#888]">(optional)</span>
             </p>
             <input
               type="text"
+              data-testid="entry-tradition"
               value={tradition}
               onChange={(e) => handleTraditionChange(e.target.value)}
-              placeholder="e.g. Behavioral ecology, Historical linguistics…"
+              placeholder="e.g. Behavioral ecology, Historical linguistics, Clinical medicine…"
               className="w-full bg-[#222] border border-white/08 rounded-md px-4 py-2.5 text-[0.88rem] text-[#e2e2e2] placeholder-[#555] italic outline-none focus:border-white/20"
             />
           </div>
