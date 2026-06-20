@@ -216,9 +216,9 @@ export function EntryAccordion({ onConfirmed }: Props) {
         className="mt-3 border-2 border-dashed border-gray-200 rounded-xl py-5 text-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
       >
         <p className="text-sm text-gray-600">
-          📁 Upload details
+          📁 Upload
         </p>
-        <p className="text-xs text-gray-500 mt-1">PDF · audio · image · data · any format</p>
+        <p className="text-xs text-gray-500 mt-1">Documents · Audio · Images · Any format</p>
         <input ref={dropFileRef} type="file" className="hidden" onChange={handleFileChange} />
         <input ref={fileRef} type="file" accept=".pdf,.txt,.md,.docx" className="hidden" onChange={handleFileChange} />
       </div>
