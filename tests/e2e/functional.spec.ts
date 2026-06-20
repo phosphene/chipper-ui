@@ -205,9 +205,8 @@ test.describe('EntryAccordion — ceremony pre-population', () => {
     const input = page.locator('[data-testid="entry-text-field"]');
     await input.fill('Original experimental study on cortisol regulation in adult primates. n=84, p=0.003.');
 
-    // Expand and select standing
+    // Expand and submit
     await page.locator('[data-testid="accordion-expander"]').click();
-    await page.locator('[data-testid="standing-graduate-researcher"]').click();
 
     // Submit via Evaluate
     await page.locator('[data-testid="evaluate-button"]').click();
