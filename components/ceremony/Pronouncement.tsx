@@ -130,7 +130,7 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         >
           <div>
             <div className="text-[0.82rem] font-medium text-[#4f8ef5] text-left">Proceed to Recording</div>
-            <div className="text-[0.7rem] text-[#4f8ef5]/60 text-left">Save privately, improve, or publish to boards. WCI indexing available.</div>
+            <div className="text-[0.7rem] text-[#4f8ef5]/60 text-left">Save privately, improve, or publish to boards.</div>
           </div>
           <span className="text-[#4f8ef5]/60 group-hover:text-[#4f8ef5] transition-colors ml-3">→</span>
         </button>

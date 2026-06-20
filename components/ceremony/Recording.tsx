@@ -227,7 +227,7 @@ export function Recording({ onDone }: Props) {
           <div className="flex items-start gap-3">
             <div className="mt-0.5 text-[#4f8ef5] text-[1rem] flex-shrink-0">⚖</div>
             <div>
-              <p className="text-[0.85rem] font-medium text-[#4f8ef5] mb-1">WCI Indexing</p>
+              <p className="text-[0.85rem] font-medium text-[#4f8ef5] mb-1">Credibility Indexing</p>
               <p className="text-[0.75rem] text-[#888] leading-relaxed mb-3">
                 Your score enters the Woodchipper Credibility Index — a permanent, citable record.
                 A URI is minted for this evaluation. The score, dimension profile, rubric version,
