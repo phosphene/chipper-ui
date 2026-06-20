@@ -29,9 +29,9 @@ export const canAdvanceFromCurrent = (state: CeremonyState): boolean => {
   const stage = state.currentStage;
   switch (stage) {
     case 'I':  return !!(state.makerDeclaration?.standing?.value);
-    case 'II': return !!(state.workClassification?.workType?.value && state.workClassification.workType.value !== 'unknown');
+    case 'II': return true; // all fields optional — always can advance
     case 'III': return true; // acknowledged
-    case 'IV': return isConsentComplete(state);
+    case 'IV': return true; // no checkbox — Proceed button always enabled
     case 'V':  return true; // resting — always advanceable
     default:   return false;
   }
