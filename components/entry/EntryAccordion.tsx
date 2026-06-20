@@ -1,27 +1,22 @@
-/**
- * EntryAccordion — progressive single-form entry replacing Simple/Detailed toggle.
- *
- * Two states: collapsed and expanded.
- * - Collapsed: textarea + file attach + → submit + always-visible file drop zone + expander
- * - Expanded: above + work type buttons + standing buttons + field/tradition input + bottom CTA
- *
- * The file drop zone is ALWAYS visible in both states — key UX finding.
- * One CTA per state: top → when collapsed, bottom Evaluate → when expanded.
- *
- * Store connection:
- * - textarea → store.updateMakerDeclaration({ freeText })
- * - work type → store.updateWorkClassification({ workType })
- * - standing → store.updateMakerDeclaration({ standing })
- * - field/tradition → store.updateMakerDeclaration({ tradition })
- */
-
 'use client';
+/**
+ * EntryAccordion — entry form with correct field order and domain dropdown.
+ *
+ * Order (Jan's notes 2026-06-20):
+ * 1. What are you working on? (title/description, always visible)
+ * 2. Upload file (always visible drop zone)
+ * 3. Optional description box (expanded only, larger textarea)
+ * 4. I am a: Student / Scholar / Practitioner (expanded)
+ * 5. Domain / Research Area / Discipline — type-in OR dropdown multi-select (expanded)
+ *
+ * Work type is detected automatically — not user-selected at entry.
+ */
 
 import { useState, useRef, useCallback } from 'react';
 import { useDetection } from '@/hooks/useDetection';
 import { useCeremonyStore } from '@/store/ceremony';
 import { DetectionConfirm } from './DetectionConfirm';
-import type { WorkType, MakerStanding } from '@/store/ceremony.types';
+import type { MakerStanding } from '@/store/ceremony.types';
 
 interface Props {
   onConfirmed: () => void;
@@ -29,28 +24,40 @@ interface Props {
 
 const MIN_CHARS = 15;
 
-const WORK_TYPES: { value: WorkType; label: string }[] = [
-  { value: 'null-result', label: 'Null Result' },
-  { value: 'original-argument', label: 'Original Argument' },
-  { value: 'replication', label: 'Replication' },
-  { value: 'synthesis-review', label: 'Synthesis/Review' },
-  { value: 'methodological-contribution', label: 'Methodological' },
-  { value: 'evidentiary-finding', label: 'Evidentiary' },
-];
-
 const STANDINGS: { value: MakerStanding; label: string }[] = [
   { value: 'graduate-researcher', label: 'Student' },
-  { value: 'professor', label: 'Scholar' },
-  { value: 'practitioner', label: 'Practitioner' },
+  { value: 'professor',           label: 'Scholar' },
+  { value: 'practitioner',        label: 'Practitioner' },
+];
+
+// Common domains for the dropdown — user can also type freely
+const DOMAIN_OPTIONS = [
+  'Anthropology', 'Archaeology', 'Architecture', 'Art History',
+  'Behavioral Biology', 'Biochemistry', 'Business', 'Chemistry',
+  'Clinical Medicine', 'Cognitive Science', 'Communication',
+  'Computer Science', 'Cultural Studies', 'Development Economics',
+  'Earth Sciences', 'Economics', 'Education', 'Engineering',
+  'Environmental Science', 'Epidemiology', 'Ethnography', 'Ethology',
+  'Evolutionary Biology', 'Film Studies', 'Genetics', 'Geography',
+  'History', 'Immunology', 'International Relations', 'Law',
+  'Linguistics', 'Literature', 'Marine Biology', 'Mathematics',
+  'Microbiology', 'Musicology', 'Neuroscience', 'Nursing',
+  'Paleoanthropology', 'Philosophy', 'Physics', 'Political Science',
+  'Primatology', 'Psychology', 'Public Health', 'Public Policy',
+  'Religious Studies', 'Sociology', 'Statistics', 'Theology',
 ];
 
 export function EntryAccordion({ onConfirmed }: Props) {
-  const [text, setText] = useState('');
-  const [expanded, setExpanded] = useState(false);
-  const [selectedWorkType, setSelectedWorkType] = useState<WorkType | null>(null);
+  const [text, setText]                       = useState('');
+  const [description, setDescription]         = useState('');
+  const [expanded, setExpanded]               = useState(false);
   const [selectedStanding, setSelectedStanding] = useState<MakerStanding | null>(null);
-  const [tradition, setTradition] = useState('');
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [domainText, setDomainText]           = useState('');
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+  const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
+  const [domainFilter, setDomainFilter]       = useState('');
+
+  const fileRef     = useRef<HTMLInputElement>(null);
   const dropFileRef = useRef<HTMLInputElement>(null);
 
   const { detect, result, isLoading, error } = useDetection();
@@ -58,37 +65,46 @@ export function EntryAccordion({ onConfirmed }: Props) {
 
   const isReady = text.trim().length >= MIN_CHARS;
 
-  // Sync text to store
   const handleTextChange = useCallback((value: string) => {
     setText(value);
     store.updateMakerDeclaration({ freeText: value });
   }, [store]);
 
-  const handleWorkTypeSelect = useCallback((wt: WorkType) => {
-    setSelectedWorkType(wt);
-    store.updateWorkClassification({ workType: { value: wt, source: 'user' } });
-  }, [store]);
+  const handleDescriptionChange = useCallback((value: string) => {
+    setDescription(value);
+    // Append description to freeText for detection purposes
+    store.updateMakerDeclaration({ freeText: text + (value ? '\n\n' + value : '') });
+  }, [store, text]);
 
   const handleStandingSelect = useCallback((s: MakerStanding) => {
     setSelectedStanding(s);
     store.updateMakerDeclaration({ standing: { value: s, source: 'user' } });
   }, [store]);
 
-  const handleTraditionChange = useCallback((value: string) => {
-    setTradition(value);
-    store.updateMakerDeclaration({ tradition: { value, source: 'user' } });
-  }, [store]);
+  const handleDomainTextChange = useCallback((value: string) => {
+    setDomainText(value);
+    const combined = [...selectedDomains, value].filter(Boolean).join(', ');
+    store.updateMakerDeclaration({ tradition: { value: combined, source: 'user' } });
+  }, [store, selectedDomains]);
+
+  const toggleDomain = useCallback((domain: string) => {
+    setSelectedDomains(prev => {
+      const next = prev.includes(domain)
+        ? prev.filter(d => d !== domain)
+        : [...prev, domain];
+      const combined = [...next, domainText].filter(Boolean).join(', ');
+      store.updateMakerDeclaration({ tradition: { value: combined, source: 'user' } });
+      return next;
+    });
+  }, [store, domainText]);
 
   const handleSubmit = useCallback(async () => {
-    if (text.trim().length < MIN_CHARS || isLoading) return;
-    await detect(text);
-  }, [text, detect, isLoading]);
+    if (!isReady || isLoading) return;
+    await detect(text + (description ? '\n\n' + description : ''));
+  }, [text, description, detect, isLoading, isReady]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
   }, [handleSubmit]);
 
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,153 +130,102 @@ export function EntryAccordion({ onConfirmed }: Props) {
     reader.readAsDataURL(file);
   }, [text, detect]);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-  }, []);
+  const filteredDomains = DOMAIN_OPTIONS.filter(d =>
+    d.toLowerCase().includes(domainFilter.toLowerCase())
+  );
 
   return (
     <div data-testid="entry-accordion" className="w-full max-w-2xl mx-auto">
 
-      {/* ── Input row ── */}
+      {/* ── 1. Title / description ── */}
       <div className={`
-        flex items-stretch rounded-xl border bg-gray-50 overflow-hidden
+        flex items-stretch rounded-xl border bg-white overflow-hidden
         transition-colors duration-200
-        ${isReady ? 'border-gray-300' : 'border-gray-200'}
-        focus-within:border-gray-300
+        ${isReady ? 'border-gray-400' : 'border-gray-200'}
+        focus-within:border-gray-400
       `}>
         <textarea
           data-testid="entry-text-field"
           value={text}
-          onChange={(e) => handleTextChange(e.target.value)}
+          onChange={e => handleTextChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          rows={1}
+          rows={2}
           placeholder="Title or description of your work…"
-          className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-400 italic outline-none min-h-14 resize-none"
+          className="flex-1 px-5 py-4 bg-transparent text-gray-900 text-base placeholder-gray-400 outline-none resize-none"
         />
-
-        {/* Attach */}
-        <button
-          onClick={() => fileRef.current?.click()}
-          className="px-4 border-l border-gray-200 text-gray-500 hover:text-[#ccc] text-lg transition-colors"
-          aria-label="Attach file"
-        >
-          📎
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".pdf,.txt,.md,.docx"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-
-        {/* Submit → (only in collapsed state) */}
         {!expanded && (
           <button
             data-testid="submit-button-top"
             onClick={isReady && !isLoading ? handleSubmit : undefined}
             aria-disabled={!isReady || isLoading}
-            aria-label="Submit"
-            className={`px-6 bg-[#4f8ef5] text-white font-mono text-sm tracking-wide hover:opacity-85 transition-opacity ${
-              !isReady || isLoading ? 'opacity-40 cursor-not-allowed' : ''
-            }`}
+            className={`px-6 bg-gray-900 text-white text-sm font-mono tracking-wide hover:bg-gray-700 transition-colors ${!isReady || isLoading ? 'opacity-30 cursor-not-allowed' : ''}`}
           >
             {isLoading ? '…' : '→'}
           </button>
         )}
       </div>
 
-      {/* ── File drop zone — ALWAYS visible ── */}
+      {/* ── 2. Upload file (always visible) ── */}
       <div
         data-testid="file-drop-zone"
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onDragOver={e => e.preventDefault()}
         onClick={() => dropFileRef.current?.click()}
-        className="mt-3 border border-dashed border-gray-300 rounded-lg py-4 text-center cursor-pointer
-          hover:border-gray-300 hover:bg-white/02 transition-all"
+        className="mt-3 border-2 border-dashed border-gray-200 rounded-xl py-5 text-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
       >
-        <p className="text-[0.82rem] text-gray-500">
-          📁 Add details and context for your work — PDF · audio · image · data · any format
+        <p className="text-sm text-gray-400">
+          📁 Add details and context for your work
         </p>
-        <input
-          ref={dropFileRef}
-          type="file"
-          className="hidden"
-          onChange={handleFileChange}
-        />
+        <p className="text-xs text-gray-300 mt-1">PDF · audio · image · data · any format</p>
+        <input ref={dropFileRef} type="file" className="hidden" onChange={handleFileChange} />
+        <input ref={fileRef} type="file" accept=".pdf,.txt,.md,.docx" className="hidden" onChange={handleFileChange} />
       </div>
 
-      {/* ── Expander trigger ── */}
+      {/* ── Expander ── */}
       {!expanded && (
         <button
           data-testid="accordion-expander"
           onClick={() => setExpanded(true)}
-          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-gray-200
-            text-[0.82rem] text-gray-500 font-mono tracking-wide
-            hover:border-gray-300 hover:text-[#ccc] transition-all"
+          className="mt-3 w-full text-left px-4 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-all"
         >
-          ▼ Add details and context for your work
+          + Add more details
         </button>
       )}
 
-      {/* ── Expanded content ── */}
+      {/* ── Expanded fields ── */}
       {expanded && (
-        <div data-testid="accordion-expanded" className="mt-4 space-y-5">
+        <div data-testid="accordion-expanded" className="mt-4 space-y-6">
 
-          {/* Form 3: Share details about the work */}
+          {/* 3. Optional description */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
-              Share details about the work <span className="text-gray-500">(optional)</span>
-            </p>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+              Description <span className="normal-case font-normal text-gray-400">(optional)</span>
+            </label>
             <textarea
               data-testid="entry-details"
               rows={5}
-              value={text}
-              onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="Describe the work in more detail — its argument, method, key findings, context, or anything else that would help evaluate it…"
-              className="w-full bg-gray-100 border border-gray-200 rounded-md px-4 py-3 text-[0.88rem] text-gray-900 placeholder-gray-400 italic outline-none focus:border-gray-300 resize-y"
+              value={description}
+              onChange={e => handleDescriptionChange(e.target.value)}
+              placeholder="Describe the work in more detail — argument, method, findings, context…"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-gray-400 resize-y"
             />
           </div>
 
-          {/* Work type button group */}
+          {/* 4. I am a: */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
-              What type of work is this? <span className="text-gray-500">(optional)</span>
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {WORK_TYPES.map(({ value, label }) => (
-                <button
-                  key={value}
-                  data-testid={`work-type-${value}`}
-                  onClick={() => handleWorkTypeSelect(value)}
-                  className={`px-3 py-1.5 rounded-full border text-[0.75rem] font-mono transition-all
-                    ${selectedWorkType === value
-                      ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/08'
-                      : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-[#ccc]'
-                    }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Standing button group */}
-          <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
-              I am a: <span className="text-gray-500">(optional)</span>
-            </p>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+              I am a: <span className="normal-case font-normal text-gray-400">(optional)</span>
+            </label>
             <div className="flex flex-wrap gap-2">
               {STANDINGS.map(({ value, label }) => (
                 <button
                   key={value}
                   data-testid={`standing-${value}`}
                   onClick={() => handleStandingSelect(value)}
-                  className={`px-3 py-1.5 rounded-full border text-[0.75rem] font-mono transition-all
+                  className={`px-4 py-2 rounded-full border text-sm transition-all
                     ${selectedStanding === value
-                      ? 'border-[#4f8ef5] text-[#4f8ef5] bg-[#4f8ef5]/08'
-                      : 'border-gray-200 text-gray-500 hover:border-gray-300 hover:text-[#ccc]'
-                    }`}
+                      ? 'border-gray-900 bg-gray-900 text-white'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
                 >
                   {label}
                 </button>
@@ -268,51 +233,95 @@ export function EntryAccordion({ onConfirmed }: Props) {
             </div>
           </div>
 
-          {/* Field/tradition text input */}
+          {/* 5. Domain */}
           <div>
-            <p className="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-gray-500 mb-2">
-              Domain / Research Area / Discipline <span className="text-gray-500">(optional)</span>
-            </p>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+              Domain / Research Area / Discipline <span className="normal-case font-normal text-gray-400">(optional)</span>
+            </label>
+
+            {/* Selected domain chips */}
+            {selectedDomains.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {selectedDomains.map(d => (
+                  <span key={d} className="flex items-center gap-1 px-3 py-1 bg-gray-900 text-white text-xs rounded-full">
+                    {d}
+                    <button onClick={() => toggleDomain(d)} className="ml-1 opacity-60 hover:opacity-100">×</button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Type-in field */}
             <input
               type="text"
               data-testid="entry-tradition"
-              value={tradition}
-              onChange={(e) => handleTraditionChange(e.target.value)}
-              placeholder="e.g. Behavioral ecology, Historical linguistics, Clinical medicine…"
-              className="w-full bg-gray-100 border border-gray-200 rounded-md px-4 py-2.5 text-[0.88rem] text-gray-900 placeholder-gray-400 italic outline-none focus:border-gray-300"
+              value={domainText}
+              onChange={e => handleDomainTextChange(e.target.value)}
+              placeholder="Type a domain, or choose from the list below…"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-gray-400"
             />
+
+            {/* Dropdown toggle */}
+            <button
+              onClick={() => setDomainDropdownOpen(v => !v)}
+              className="mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {domainDropdownOpen ? '▲ Hide list' : '▼ Choose from list'}
+            </button>
+
+            {/* Domain dropdown */}
+            {domainDropdownOpen && (
+              <div className="mt-2 border border-gray-200 rounded-xl overflow-hidden">
+                <div className="p-2 border-b border-gray-100">
+                  <input
+                    type="text"
+                    placeholder="Filter…"
+                    value={domainFilter}
+                    onChange={e => setDomainFilter(e.target.value)}
+                    className="w-full text-sm px-3 py-1.5 border border-gray-200 rounded-lg outline-none focus:border-gray-400"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2 p-3 max-h-48 overflow-y-auto">
+                  {filteredDomains.map(d => (
+                    <button
+                      key={d}
+                      data-testid={`domain-option-${d.toLowerCase().replace(/\s+/g, '-')}`}
+                      onClick={() => toggleDomain(d)}
+                      className={`px-3 py-1.5 rounded-full border text-xs transition-all
+                        ${selectedDomains.includes(d)
+                          ? 'border-gray-900 bg-gray-900 text-white'
+                          : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Collapser */}
+          {/* Collapse */}
           <button
             onClick={() => setExpanded(false)}
-            className="w-full text-left px-4 py-2 rounded-lg border border-gray-200
-              text-[0.82rem] text-gray-500 font-mono tracking-wide
-              hover:border-gray-300 hover:text-[#ccc] transition-all"
+            className="w-full text-left px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-400 hover:border-gray-400 hover:text-gray-600 transition-all"
           >
             ▲ Fewer details
           </button>
 
-          {/* Bottom CTA — only shown when expanded */}
+          {/* Evaluate CTA */}
           <button
             data-testid="evaluate-button"
             onClick={isReady && !isLoading ? handleSubmit : undefined}
             aria-disabled={!isReady || isLoading}
-            className={`w-full py-3 rounded-xl bg-[#4f8ef5] text-white font-mono text-sm tracking-wide
-              hover:opacity-85 transition-opacity
-              ${!isReady || isLoading ? 'opacity-40 cursor-not-allowed' : ''}`}
+            className={`w-full py-3.5 rounded-xl bg-gray-900 text-white text-sm font-medium tracking-wide hover:bg-gray-700 transition-colors ${!isReady || isLoading ? 'opacity-30 cursor-not-allowed' : ''}`}
           >
             {isLoading ? 'Evaluating…' : 'Evaluate →'}
           </button>
         </div>
       )}
 
-      {/* Error */}
-      {error && (
-        <p className="mt-2 text-xs text-[#e05252] font-mono">{error}</p>
-      )}
+      {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
 
-      {/* Detection confirm card */}
       {result && !isLoading && (
         <DetectionConfirm
           result={result}
