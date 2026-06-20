@@ -9,7 +9,7 @@
 import { useCeremonyStore } from '@/store/ceremony';
 
 interface Props {
-  onProceedToRecording: () => void;
+  onProceedToRecording?: () => void;
   onRequestImprovement: () => void;
   onExport: () => void;
 }

@@ -22,7 +22,6 @@ import { Threshold } from './Threshold';
 import { Processing } from './Processing';
 import type { Stage } from '@/store/ceremony.types';
 import { Pronouncement } from './Pronouncement';
-import { Recording } from './Recording';
 
 interface Props {
   onScoreReady: () => void;  // called after processing → reveal score (Stage VIII)
@@ -132,19 +131,10 @@ export function CeremonyFlow({ onScoreReady, onDecline }: Props) {
   if (isActive('VIII')) {
     return (
       <Pronouncement
-        onProceedToRecording={() => store.advanceStage()}
+        onProceedToRecording={() => onScoreReady?.()}
         onRequestImprovement={() => {/* T-276 — improvement rounds */}}
         onExport={() => {/* T-271 — export */}}
       />
-    );
-  }
-
-  // Stage IX: The Recording — maker chooses what becomes of the judgment
-  if (isActive('IX')) {
-    return (
-      <div className="w-full max-w-2xl mx-auto">
-        <Recording onDone={() => store.advanceStage()} />
-      </div>
     );
   }
 
