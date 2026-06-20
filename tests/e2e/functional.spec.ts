@@ -221,7 +221,7 @@ test.describe('EntryAccordion — ceremony pre-population', () => {
     await dismissGates(page);
     await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible({ timeout: 8000 });
     // The workspace should show the operation panel
-    await expect(page.locator('[data-testid="workspace-form"]')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('[data-testid="progressive-form"]')).toBeVisible({ timeout: 5000 });
   });
 
 });
