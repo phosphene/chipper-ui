@@ -23,10 +23,6 @@ export function StageII() {
 
   return (
     <div data-testid="stage-II">
-      <div className="epigraph">
-        The praetor classifies the claim into a formula before it reaches the judge.
-        <span className="attr">— Roman formula system</span>
-      </div>
 
       <div className="field-group">
         <label className="field-label">Describe your work</label>
@@ -65,8 +61,8 @@ export function StageII() {
       </button>
 
       {selected && selected !== 'unknown' && (
-        <div className="p-3 rounded-md bg-[#4f8ef5]/04 border border-[#4f8ef5]/20 mb-2">
-          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-[#4f8ef5] mb-1">What this classification means</p>
+        <div className="p-3 rounded-xl border border-blue-100 bg-blue-50 mb-2">
+          <p className="font-mono text-[0.55rem] tracking-[0.15em] uppercase text-blue-500 mb-1">What this classification means</p>
           <p className="text-[0.88rem] text-[#888]">
             As a <strong className="text-[#e2e2e2]">{selected.replace(/-/g, ' ')}</strong>, this activates the inferential practice whose norms apply.
           </p>

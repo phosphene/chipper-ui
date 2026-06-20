@@ -142,7 +142,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
       {/* ── Work stage selector ── */}
       <div className="mb-4">
         <div className="flex gap-2 flex-wrap">
-          {(['Ideas stage', 'In progress', 'Finished', 'Seeking Review'] as const).map(stage => (
+          {(['Ideas stage', 'In progress', 'Finished Work — Seeking Review'] as const).map(stage => (
             <button
               key={stage}
               data-testid={`stage-${stage.toLowerCase().replace(/\s+/g, '-')}`}
@@ -216,7 +216,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
         className="mt-3 border-2 border-dashed border-gray-200 rounded-xl py-5 text-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
       >
         <p className="text-sm text-gray-600">
-          📁 Add details and context for your work
+          📁 Upload details
         </p>
         <p className="text-xs text-gray-500 mt-1">PDF · audio · image · data · any format</p>
         <input ref={dropFileRef} type="file" className="hidden" onChange={handleFileChange} />
