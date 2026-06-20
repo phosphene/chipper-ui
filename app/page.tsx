@@ -83,7 +83,7 @@ export default function Home() {
           What are you working on?
         </h1>
         <EntryGate
-          onCeremonyStart={() => setMode(expectationsAcknowledged ? 'workspace' : 'expectations')}
+          onCeremonyStart={() => setMode('workspace')}
         />
       </div>
     </main>

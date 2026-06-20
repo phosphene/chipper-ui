@@ -28,7 +28,7 @@ export const canRevealScore = (state: CeremonyState): boolean =>
 export const canAdvanceFromCurrent = (state: CeremonyState): boolean => {
   const stage = state.currentStage;
   switch (stage) {
-    case 'I':  return !!(state.makerDeclaration?.freeText?.trim());
+    case 'I':  return !!(state.makerDeclaration?.standing?.value);
     case 'II': return !!(state.workClassification?.workType?.value && state.workClassification.workType.value !== 'unknown');
     case 'III': return true; // acknowledged
     case 'IV': return isConsentComplete(state);
