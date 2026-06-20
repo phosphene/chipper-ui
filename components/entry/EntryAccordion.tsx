@@ -56,6 +56,8 @@ export function EntryAccordion({ onConfirmed }: Props) {
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
   const [domainFilter, setDomainFilter]       = useState('');
+  const [workStage, setWorkStage]             = useState<string | null>(null);
+  const [workKind, setWorkKind]               = useState<string | null>(null);
 
   const fileRef     = useRef<HTMLInputElement>(null);
   const dropFileRef = useRef<HTMLInputElement>(null);
@@ -137,6 +139,44 @@ export function EntryAccordion({ onConfirmed }: Props) {
   return (
     <div data-testid="entry-accordion" className="w-full max-w-2xl mx-auto">
 
+      {/* ── Work stage selector ── */}
+      <div className="mb-4">
+        <div className="flex gap-2 flex-wrap">
+          {(['Ideas stage', 'In progress', 'Finished', 'Seeking Review'] as const).map(stage => (
+            <button
+              key={stage}
+              data-testid={`stage-${stage.toLowerCase().replace(/\s+/g, '-')}`}
+              onClick={() => { setWorkStage(stage); setWorkKind(null); }}
+              className={`px-4 py-2 rounded-full border text-sm transition-all
+                ${workStage === stage
+                  ? 'border-blue-600 bg-blue-600 text-white'
+                  : 'border-gray-300 text-gray-600 hover:border-gray-500'}`}
+            >
+              {stage}
+            </button>
+          ))}
+        </div>
+
+        {/* Ideas stage sub-options */}
+        {workStage === 'Ideas stage' && (
+          <div className="mt-3 flex gap-2 flex-wrap">
+            {['Concept', 'Observation', 'Daydream', 'Memory', 'Investigation', 'Vision', 'Outline', 'Memo'].map(kind => (
+              <button
+                key={kind}
+                data-testid={`work-kind-${kind.toLowerCase()}`}
+                onClick={() => setWorkKind(kind)}
+                className={`px-3 py-1.5 rounded-full border text-xs transition-all
+                  ${workKind === kind
+                    ? 'border-gray-900 bg-gray-900 text-white'
+                    : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
+              >
+                {kind}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* ── 1. Title / description ── */}
       <div className={`
         flex items-stretch rounded-xl border bg-white overflow-hidden
@@ -158,7 +198,7 @@ export function EntryAccordion({ onConfirmed }: Props) {
             data-testid="submit-button-top"
             onClick={isReady && !isLoading ? handleSubmit : undefined}
             aria-disabled={!isReady || isLoading}
-            aria-label="Evaluate"
+            aria-label="Submit"
             tabIndex={0}
             className={`px-6 bg-gray-900 text-white text-sm font-mono tracking-wide hover:bg-gray-700 transition-colors ${!isReady || isLoading ? 'opacity-30 cursor-not-allowed' : ''}`}
           >
