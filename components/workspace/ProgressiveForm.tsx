@@ -20,6 +20,10 @@ import type { WorkType, MakerStanding } from '@/store/ceremony.types';
 
 type SectionId = 'work' | 'creator-role' | 'hopes' | 'domain' | 'worktype';
 
+interface SubCode { code: string; label: string; }
+interface CodeGroup { code: string; label: string; subtopics: SubCode[]; }
+interface TaxonomyEntry { domain: string; system: string | null; authority: string | null; codes: CodeGroup[]; }
+
 interface SectionState {
   id: SectionId;
   label: string;
@@ -64,27 +68,19 @@ const WORK_TYPES: { value: WorkType; label: string }[] = [
   { value: 'theoretical-framework', label: 'Theoretical Framework' },
 ];
 
-const DOMAIN_OPTIONS = [
-  'Anthropology', 'Archaeology', 'Architecture', 'Art History',
-  'Behavioral Biology', 'Biochemistry', 'Business', 'Chemistry',
-  'Clinical Medicine', 'Cognitive Science', 'Communication',
-  'Computer Science', 'Cultural Studies', 'Development Economics',
-  'Earth Sciences', 'Economics', 'Education', 'Engineering',
-  'Environmental Science', 'Epidemiology', 'Ethnography', 'Ethology',
-  'Evolutionary Biology', 'Film Studies', 'Genetics', 'Geography',
-  'History', 'Immunology', 'International Relations', 'Law',
-  'Linguistics', 'Literature', 'Marine Biology', 'Mathematics',
-  'Microbiology', 'Musicology', 'Neuroscience', 'Nursing',
-  'Paleoanthropology', 'Philosophy', 'Physics', 'Political Science',
-  'Primatology', 'Psychology', 'Public Health', 'Public Policy',
-  'Religious Studies', 'Sociology', 'Statistics', 'Theology',
-];
+// Domain options loaded from /domain-taxonomy.json at runtime
 
 // ── Component ────────────────────────────────────────────────
 
 export function ProgressiveForm() {
   const store = useCeremonyStore();
   const { detect, isLoading: isDetecting } = useDetection();
+
+  // Rich taxonomy with classification codes
+  const [taxonomy, setTaxonomy] = useState<TaxonomyEntry[]>([]);
+  useEffect(() => {
+    fetch('/domain-taxonomy.json').then(r => r.json()).then(setTaxonomy).catch(() => {});
+  }, []);
 
   // Section tracking
   const [activeIndex, setActiveIndex] = useState(1); // Start at creator-role (work is pre-complete)
@@ -256,9 +252,9 @@ export function ProgressiveForm() {
 
   // ── Filter domains ─────────────────────────────────────────
 
-  const filteredDomains = DOMAIN_OPTIONS.filter(d =>
-    d.toLowerCase().includes(domainFilter.toLowerCase())
-  );
+  const filteredDomains = taxonomy
+    .map(t => t.domain)
+    .filter(d => d.toLowerCase().includes(domainFilter.toLowerCase()));
 
   // ── Active section check ───────────────────────────────────
 
@@ -392,6 +388,49 @@ export function ProgressiveForm() {
                     ))}
                   </div>
                 )}
+
+                {/* Sub-discipline codes for each selected domain */}
+                {selectedDomains.map(domain => {
+                  const entry = taxonomy.find(t => t.domain === domain);
+                  if (!entry || entry.codes.length === 0) return null;
+                  return (
+                    <div key={domain} className="border border-gray-200 rounded-xl p-3 bg-gray-50">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-gray-700">{domain}</span>
+                        {entry.system && (
+                          <span className="text-[0.6rem] font-mono text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                            {entry.system}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {entry.codes.map(cg => (
+                          <div key={cg.code} className="relative group">
+                            <button
+                              data-testid={`subcode-${cg.code}`}
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-gray-400 transition-all bg-white"
+                              title={cg.subtopics.map(s => `${s.code}: ${s.label}`).join(' · ')}
+                            >
+                              <span className="font-mono text-[0.6rem] text-gray-400">{cg.code}</span>
+                              <span>{cg.label}</span>
+                            </button>
+                            {/* Subtopic flyout on hover */}
+                            {cg.subtopics.length > 0 && (
+                              <div className="hidden group-hover:block absolute z-10 top-full mt-1 left-0 bg-white border border-gray-200 rounded-xl shadow-lg p-2 min-w-[180px]">
+                                {cg.subtopics.map(s => (
+                                  <div key={s.code} className="flex items-baseline gap-2 py-0.5 px-1">
+                                    <span className="font-mono text-[0.55rem] text-gray-400 shrink-0">{s.code}</span>
+                                    <span className="text-xs text-gray-600">{s.label}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
 
                 <input
                   type="text"
