@@ -678,24 +678,28 @@ export function ProgressiveForm() {
         {evaluated && showExport && (
           <div data-testid="export-strip" className="mt-4 flex gap-2">
             <button
+              data-testid="export-pdf"
               onClick={handleExportPDF}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
             >
               PDF
             </button>
             <button
+              data-testid="export-markdown"
               onClick={handleExportMD}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
             >
               Markdown
             </button>
             <button
+              data-testid="export-json"
               onClick={handleExportJSON}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
             >
               JSON
             </button>
             <button
+              data-testid="export-copy"
               onClick={handleCopy}
               className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
             >

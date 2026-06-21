@@ -32,12 +32,21 @@ async function reachExportStrip(page: any) {
   await page.waitForTimeout(500);
 }
 
+async function assertExportButtonsVisible(page: any) {
+  await expect(page.locator('[data-testid="export-strip"]')).toBeVisible();
+  await expect(page.locator('[data-testid="export-pdf"]')).toBeVisible();
+  await expect(page.locator('[data-testid="export-markdown"]')).toBeVisible();
+  await expect(page.locator('[data-testid="export-json"]')).toBeVisible();
+  await expect(page.locator('[data-testid="export-copy"]')).toBeVisible();
+}
+
 test.describe('Export — Markdown', () => {
   test('Markdown button triggers .md file download', async ({ page }) => {
     await reachExportStrip(page);
+    await assertExportButtonsVisible(page);
     const [download] = await Promise.all([
       page.waitForEvent('download', { timeout: 8_000 }),
-      page.getByRole('button', { name: 'Markdown' }).click(),
+      page.locator('[data-testid="export-markdown"]').click(),
     ]);
     expect(download.suggestedFilename()).toMatch(/\.md$/);
   });
@@ -48,9 +57,10 @@ test.describe('Export — JSON', () => {
     page,
   }) => {
     await reachExportStrip(page);
+    await assertExportButtonsVisible(page);
     const [download] = await Promise.all([
       page.waitForEvent('download', { timeout: 8_000 }),
-      page.getByRole('button', { name: 'JSON' }).click(),
+      page.locator('[data-testid="export-json"]').click(),
     ]);
     expect(download.suggestedFilename()).toMatch(/\.json$/);
     const filePath = await download.path();
@@ -70,9 +80,10 @@ test.describe('Export — PDF', () => {
     context,
   }) => {
     await reachExportStrip(page);
+    await assertExportButtonsVisible(page);
     const [popup] = await Promise.all([
       context.waitForEvent('page', { timeout: 8_000 }),
-      page.getByRole('button', { name: 'PDF' }).click(),
+      page.locator('[data-testid="export-pdf"]').click(),
     ]);
     expect(popup).toBeTruthy();
     await popup.waitForLoadState('load', { timeout: 8_000 }).catch(() => null);
@@ -84,9 +95,10 @@ test.describe('Export — Copy', () => {
     page,
   }) => {
     await reachExportStrip(page);
+    await assertExportButtonsVisible(page);
     // Copy writes to clipboard — can't assert clipboard content in headless
     // but we can assert no error thrown and UI stays intact
-    await page.getByRole('button', { name: 'Copy' }).click();
+    await page.locator('[data-testid="export-copy"]').click();
     await page.waitForTimeout(500);
     await expect(
       page.locator('[data-testid="export-strip"]')
