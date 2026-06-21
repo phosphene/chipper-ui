@@ -212,6 +212,46 @@ export function ProgressiveForm() {
     setEvaluating(true);
     try {
       await detect(text);
+
+      // Chain scoring after successful detection so export handlers have wciResult
+      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://wci-api.fly.dev';
+      const state = useCeremonyStore.getState();
+      try {
+        const scoreRes = await fetch(`${apiBase}/api/score`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text,
+            work_type: state.workClassification?.workType?.value ?? 'original-argument',
+            standing: state.makerDeclaration?.standing?.value ?? 'independent-researcher',
+            domain: state.judgeIdentity?.domain?.value ?? 'general',
+          }),
+        });
+        if (scoreRes.ok) {
+          const data = await scoreRes.json();
+          store.setWCIResult({
+            compositeScore: data.composite_score,
+            band: data.band,
+            dimensionScores: (data.dimension_scores ?? []).map((d: any) => ({
+              dimension: d.dimension,
+              rawScore: d.raw_score,
+              weight: d.weight,
+              weightedScore: d.weighted_score,
+              justification: d.justification,
+              keyPassage: d.key_passage ?? null,
+            })),
+            epistemicLabel: data.epistemic_label ?? '',
+            relativeContext: data.relative_context ?? '',
+            rubricVersion: data.rubric_version ?? '1.0',
+            evaluationDate: new Date().toISOString(),
+            provenance: data.provenance ?? 'cold',
+          });
+        }
+      } catch {
+        // Scoring failure is non-fatal — export strip still appears,
+        // buttons just won't produce output until scoring succeeds
+      }
+
       setEvaluated(true);
       setShowExport(true);
     } catch {
