@@ -7,8 +7,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { buildMarkdown, buildJSON } from './export';
+import type { WCIResult } from '@/store/ceremony.types';
 
-const MOCK_RESULT = {
+const MOCK_RESULT: WCIResult = {
   compositeScore: 74,
   band: 'significant',
   epistemicLabel: 'Original experimental work with adequate methodology',
@@ -17,7 +18,7 @@ const MOCK_RESULT = {
   evaluationDate: '2026-06-21T00:00:00Z',
   provenance: 'cold' as const,
   dimensionScores: [
-    { dimension: 'N', rawScore: 8.2, weight: 0.15, weightedScore: 1.23, justification: 'Novel contribution.', keyPassage: null },
+    { dimension: 'N' as any, rawScore: 8.2, weight: 0.15, weightedScore: 1.23, justification: 'Novel contribution.', keyPassage: null },
     { dimension: 'E', rawScore: 7.5, weight: 0.15, weightedScore: 1.13, justification: 'Strong evidence.', keyPassage: 'n=84, p=0.003' },
   ],
 };
