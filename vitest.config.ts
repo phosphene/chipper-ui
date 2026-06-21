@@ -1,14 +1,20 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// Store tests are pure TypeScript — no React plugin needed.
-// React plugin added when component tests are introduced (T-283).
+// React plugin enables RTL component testing (T-364).
+// React 19 only exports act() from the development CJS build.
+// Force Vite to use development conditions so RTL can find React.act.
 export default defineConfig({
+  plugins: [react()],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('test'),
+  },
   test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
-    include: ['store/**/*.test.ts', 'hooks/**/*.test.ts', 'lib/**/*.test.ts'],
+    include: ['store/**/*.test.ts', 'hooks/**/*.test.ts', 'lib/**/*.test.ts', 'components/**/*.test.tsx'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json'],
