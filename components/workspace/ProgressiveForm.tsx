@@ -220,31 +220,127 @@ export function ProgressiveForm() {
     }
   }, [workText, detect, store]);
 
-  // ── Export stubs ───────────────────────────────────────────
+  // ── Export helpers ──────────────────────────────────────────
+
+  const buildMarkdown = useCallback((): string => {
+    const result = store.wciResult;
+    if (!result) return '';
+    const date = result.evaluationDate
+      ? new Date(result.evaluationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const work = workText.trim();
+    const lines: string[] = [
+      '# Woodchipper Evaluation',
+      '',
+      `**Date:** ${date}`,
+      `**Score:** ${result.compositeScore} / 100 — ${result.band}`,
+      `**Epistemic label:** ${result.epistemicLabel}`,
+      '',
+      '## Work',
+      '',
+      work ? work : '_No work text provided._',
+      '',
+      '## Dimension Scores',
+      '',
+      '| Dimension | Score | Weighted |',
+      '|-----------|-------|----------|',
+      ...result.dimensionScores.map((d: any) =>
+        `| ${d.dimension} | ${d.rawScore.toFixed(1)} | ${d.weightedScore.toFixed(1)} |`
+      ),
+      '',
+      '## Dimension Justifications',
+      '',
+      ...result.dimensionScores.flatMap((d: any) => [
+        `### ${d.dimension}`,
+        '',
+        d.justification,
+        d.keyPassage ? `\n> ${d.keyPassage}` : '',
+        '',
+      ]),
+      '---',
+      `_Evaluated by Woodchipper · ${result.rubricVersion}_`,
+    ];
+    return lines.join('\n');
+  }, [store.wciResult, workText]);
+
+  const buildJSON = useCallback((): string => {
+    const result = store.wciResult;
+    if (!result) return '{}';
+    return JSON.stringify({
+      exportedAt: new Date().toISOString(),
+      work: workText.trim() || null,
+      evaluation: result,
+    }, null, 2);
+  }, [store.wciResult, workText]);
 
   const handleExportPDF = useCallback(() => {
-    console.log('Export: PDF');
-    alert('Export: PDF');
-  }, []);
+    const md = buildMarkdown();
+    if (!md) return;
+    const escaped = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Woodchipper Evaluation</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; color: #111; line-height: 1.6; font-size: 14px; }
+  h1 { font-size: 1.5rem; border-bottom: 2px solid #111; padding-bottom: 8px; }
+  h2 { font-size: 1rem; margin-top: 2rem; text-transform: uppercase; letter-spacing: 0.08em; color: #444; }
+  h3 { font-size: 0.95rem; margin-top: 1.2rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 13px; }
+  th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: left; }
+  th { background: #f5f5f5; }
+  @media print { body { margin: 20px; } }
+</style>
+</head>
+<body><pre style="font-family:inherit;background:none;padding:0;white-space:pre-wrap">${escaped}</pre>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (win) win.focus();
+  }, [buildMarkdown]);
 
   const handleExportMD = useCallback(() => {
-    console.log('Export: Markdown');
-    alert('Export: Markdown');
-  }, []);
+    const md = buildMarkdown();
+    if (!md) return;
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `woodchipper-evaluation-${new Date().toISOString().slice(0, 10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [buildMarkdown]);
 
   const handleExportJSON = useCallback(() => {
-    console.log('Export: JSON');
-    alert('Export: JSON');
-  }, []);
+    const json = buildJSON();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `woodchipper-evaluation-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, [buildJSON]);
 
   const handleCopy = useCallback(() => {
-    const result = store.wciResult;
-    if (result) {
-      navigator.clipboard.writeText(JSON.stringify(result, null, 2));
-    }
-    console.log('Export: Copy');
-    alert('Copied to clipboard');
-  }, [store.wciResult]);
+    const md = buildMarkdown();
+    if (!md) return;
+    navigator.clipboard.writeText(md).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = md;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }, [buildMarkdown]);
 
   // ── Filter domains ─────────────────────────────────────────
 
