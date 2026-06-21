@@ -14,6 +14,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';
 import { useDetection } from '@/hooks/useDetection';
 import { Pronouncement } from '@/components/ceremony/Pronouncement';
+import { buildMarkdown, buildJSON } from '@/lib/export';
 import type { WorkType, MakerStanding } from '@/store/ceremony.types';
 
 // ── Section definitions ──────────────────────────────────────
@@ -222,60 +223,10 @@ export function ProgressiveForm() {
 
   // ── Export helpers ──────────────────────────────────────────
 
-  const buildMarkdown = useCallback((): string => {
-    const result = store.wciResult;
-    if (!result) return '';
-    const date = result.evaluationDate
-      ? new Date(result.evaluationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-      : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const work = workText.trim();
-    const lines: string[] = [
-      '# Woodchipper Evaluation',
-      '',
-      `**Date:** ${date}`,
-      `**Score:** ${result.compositeScore} / 100 — ${result.band}`,
-      `**Epistemic label:** ${result.epistemicLabel}`,
-      '',
-      '## Work',
-      '',
-      work ? work : '_No work text provided._',
-      '',
-      '## Dimension Scores',
-      '',
-      '| Dimension | Score | Weighted |',
-      '|-----------|-------|----------|',
-      ...result.dimensionScores.map((d: any) =>
-        `| ${d.dimension} | ${d.rawScore.toFixed(1)} | ${d.weightedScore.toFixed(1)} |`
-      ),
-      '',
-      '## Dimension Justifications',
-      '',
-      ...result.dimensionScores.flatMap((d: any) => [
-        `### ${d.dimension}`,
-        '',
-        d.justification,
-        d.keyPassage ? `\n> ${d.keyPassage}` : '',
-        '',
-      ]),
-      '---',
-      `_Evaluated by Woodchipper · ${result.rubricVersion}_`,
-    ];
-    return lines.join('\n');
-  }, [store.wciResult, workText]);
-
-  const buildJSON = useCallback((): string => {
-    const result = store.wciResult;
-    if (!result) return '{}';
-    return JSON.stringify({
-      exportedAt: new Date().toISOString(),
-      work: workText.trim() || null,
-      evaluation: result,
-    }, null, 2);
-  }, [store.wciResult, workText]);
-
   const handleExportPDF = useCallback(() => {
-    const md = buildMarkdown();
-    if (!md) return;
+    const result = store.wciResult;
+    if (!result) return;
+    const md = buildMarkdown(result, workText);
     const escaped = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const html = `<!DOCTYPE html>
 <html>
@@ -303,8 +254,9 @@ export function ProgressiveForm() {
   }, [buildMarkdown]);
 
   const handleExportMD = useCallback(() => {
-    const md = buildMarkdown();
-    if (!md) return;
+    const result = store.wciResult;
+    if (!result) return;
+    const md = buildMarkdown(result, workText);
     const blob = new Blob([md], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -317,7 +269,9 @@ export function ProgressiveForm() {
   }, [buildMarkdown]);
 
   const handleExportJSON = useCallback(() => {
-    const json = buildJSON();
+    const result = store.wciResult;
+    if (!result) return;
+    const json = buildJSON(result, workText);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -330,8 +284,9 @@ export function ProgressiveForm() {
   }, [buildJSON]);
 
   const handleCopy = useCallback(() => {
-    const md = buildMarkdown();
-    if (!md) return;
+    const result = store.wciResult;
+    if (!result) return;
+    const md = buildMarkdown(result, workText);
     navigator.clipboard.writeText(md).catch(() => {
       const ta = document.createElement('textarea');
       ta.value = md;
