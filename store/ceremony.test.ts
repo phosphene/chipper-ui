@@ -76,16 +76,18 @@ describe('advanceStage', () => {
     expect(store().completedStages.has('I')).toBe(true);
   });
 
-  it('throws StageAdvanceError when Stage I preconditions not met', () => {
-    // No free text
-    expect(() => store().advanceStage()).toThrow(StageAdvanceError);
+  it('advances from Stage I even without free text (creator role optional)', () => {
+    // Stage I has no preconditions — always advanceable
+    store().advanceStage();
+    expect(store().currentStage).toBe('II');
   });
 
-  it('throws StageAdvanceError when Stage II has unknown work type', () => {
+  it('advances from Stage II even with unknown work type (all fields optional)', () => {
     seedIntake();
     store().advanceStage(); // I → II
     store().updateWorkClassification({ workType: { value: 'unknown', source: 'detected' } });
-    expect(() => store().advanceStage()).toThrow(StageAdvanceError);
+    store().advanceStage(); // II → III
+    expect(store().currentStage).toBe('III');
   });
 
   it('advances from II to III when work type is valid', () => {
@@ -104,12 +106,13 @@ describe('advanceStage', () => {
     expect(store().currentStage).toBe('IV');
   });
 
-  it('throws StageAdvanceError from IV when consent not given', () => {
+  it('advances from IV even without consent (Proceed always enabled)', () => {
     seedIntake();
     store().advanceStage(); // I
     store().advanceStage(); // II
     store().advanceStage(); // III → IV
-    expect(() => store().advanceStage()).toThrow(StageAdvanceError);
+    store().advanceStage(); // IV → V
+    expect(store().currentStage).toBe('V');
   });
 
   it('advances from IV to V when consent given', () => {
@@ -143,12 +146,14 @@ describe('backStage', () => {
 // ── rest ─────────────────────────────────────────────────────
 
 describe('rest', () => {
-  it('throws if intake not complete', () => {
+  it('advances to VI — no intake gate (rest is always available)', () => {
     seedIntake();
-    expect(() => store().rest()).toThrow(StageAdvanceError);
+    store().rest();
+    expect(store().currentStage).toBe('VI');
+    expect(store().completedStages.has('V')).toBe(true);
   });
 
-  it('advances to VI when intake is complete', () => {
+  it('advances to VI when called after full intake progression', () => {
     seedIntake();
     store().advanceStage(); // I → II
     store().advanceStage(); // II → III
@@ -164,11 +169,13 @@ describe('rest', () => {
 // ── crossThreshold ────────────────────────────────────────────
 
 describe('crossThreshold', () => {
-  it('throws if intake not complete', () => {
-    expect(() => store().crossThreshold()).toThrow(StageAdvanceError);
+  it('advances to VII — no intake gate (threshold always crossable)', () => {
+    store().crossThreshold();
+    expect(store().currentStage).toBe('VII');
+    expect(store().completedStages.has('VI')).toBe(true);
   });
 
-  it('advances to VII when threshold conditions met', () => {
+  it('advances to VII after full ceremony progression', () => {
     seedIntake();
     store().advanceStage(); // I
     store().advanceStage(); // II
@@ -273,8 +280,8 @@ describe('selectors', () => {
     expect(chips).toContain('Behavioral Ecology');
   });
 
-  it('canAdvanceFromCurrent — false at I with no free text', () => {
-    expect(canAdvanceFromCurrent(store())).toBe(false);
+  it('canAdvanceFromCurrent — true at I with no free text (creator role optional)', () => {
+    expect(canAdvanceFromCurrent(store())).toBe(true);
   });
 
   it('canAdvanceFromCurrent — true at I with free text', () => {
