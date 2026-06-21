@@ -19,6 +19,13 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: [['html', { open: 'never' }], ['list']],
 
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.02,
+      animations: 'disabled',
+    },
+  },
+
   use: {
     baseURL: BASE_URL,
     screenshot: 'only-on-failure',
