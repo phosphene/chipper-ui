@@ -1,0 +1,205 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Recording > renders correctly 1`] = `
+<div>
+  <div
+    data-testid="recording-beat"
+  >
+    <div
+      class="epigraph"
+    >
+      The examination results were posted on the wall of the Hall of Supreme Harmony. From that moment, they belonged to the public record. But the candidate chose to sit the exam.
+      <span
+        class="attr"
+      >
+        — Chinese imperial examination
+      </span>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <h2
+        class="text-[1.1rem] font-normal text-[#e2e2e2] mb-1"
+      >
+        What Becomes of This Judgment?
+      </h2>
+      <p
+        class="text-[0.82rem] text-[#888] leading-relaxed"
+      >
+        The score has been rendered. Before it enters the record, you choose what happens to it.
+      </p>
+    </div>
+    <div
+      class="space-y-2 mb-5"
+    >
+      <button
+        class="w-full text-left p-4 rounded-md border-[1.5px] transition-all
+              border-white/08 hover:border-white/18 bg-[#191919]"
+        data-testid="recording-choice-view-only"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <div
+            class="mt-0.5 w-4 h-4 rounded-full border-[1.5px] flex-shrink-0 flex items-center justify-center transition-all
+                border-white/20"
+          />
+          <div>
+            <p
+              class="text-[0.88rem] font-medium mb-1 text-[#e2e2e2]"
+            >
+              View Only — Do Not Record
+            </p>
+            <p
+              class="text-[0.75rem] text-[#888] leading-relaxed"
+            >
+              You have seen the score. It will not be saved anywhere. When you leave, the judgment is gone. You may submit for evaluation again at any time.
+            </p>
+          </div>
+        </div>
+      </button>
+      <button
+        class="w-full text-left p-4 rounded-md border-[1.5px] transition-all
+              border-white/08 hover:border-white/18 bg-[#191919]"
+        data-testid="recording-choice-private"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <div
+            class="mt-0.5 w-4 h-4 rounded-full border-[1.5px] flex-shrink-0 flex items-center justify-center transition-all
+                border-white/20"
+          />
+          <div>
+            <p
+              class="text-[0.88rem] font-medium mb-1 text-[#e2e2e2]"
+            >
+              Record to My Account
+            </p>
+            <p
+              class="text-[0.75rem] text-[#888] leading-relaxed"
+            >
+              The score is permanently saved to your private record. It appears in your score history and trajectory. Visible only to you. Never overwritten — future evaluations are added alongside it.
+            </p>
+          </div>
+        </div>
+      </button>
+      <button
+        class="w-full text-left p-4 rounded-md border-[1.5px] transition-all
+              border-white/08 hover:border-white/18 bg-[#191919]"
+        data-testid="recording-choice-public"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <div
+            class="mt-0.5 w-4 h-4 rounded-full border-[1.5px] flex-shrink-0 flex items-center justify-center transition-all
+                border-white/20"
+          />
+          <div>
+            <p
+              class="text-[0.88rem] font-medium mb-1 text-[#e2e2e2]"
+            >
+              Record and Submit to the Boards
+            </p>
+            <p
+              class="text-[0.75rem] text-[#888] leading-relaxed"
+            >
+              The score is saved to your record and submitted to the wider boards — the public corpus where scored work appears alongside comparable evaluations. Your work enters the community of judged work.
+            </p>
+          </div>
+        </div>
+      </button>
+    </div>
+    <div
+      class="mb-6 p-4 bg-[#161616] border border-white/06 rounded-md"
+    >
+      <p
+        class="font-mono text-[0.6rem] tracking-[0.15em] uppercase text-[#555] mb-3"
+      >
+        Export this evaluation
+      </p>
+      <div
+        class="grid grid-cols-4 gap-2"
+      >
+        <button
+          class="p-2.5 border border-white/08 rounded-md hover:border-white/20 hover:bg-[#1e1e1e] transition-all text-center"
+          data-testid="export-pdf"
+        >
+          <p
+            class="font-mono text-[0.65rem] text-[#e2e2e2] mb-0.5"
+          >
+            PDF
+          </p>
+          <p
+            class="text-[0.6rem] text-[#555]"
+          >
+            Full evaluation report
+          </p>
+        </button>
+        <button
+          class="p-2.5 border border-white/08 rounded-md hover:border-white/20 hover:bg-[#1e1e1e] transition-all text-center"
+          data-testid="export-markdown"
+        >
+          <p
+            class="font-mono text-[0.65rem] text-[#e2e2e2] mb-0.5"
+          >
+            Markdown
+          </p>
+          <p
+            class="text-[0.6rem] text-[#555]"
+          >
+            Structured text
+          </p>
+        </button>
+        <button
+          class="p-2.5 border border-white/08 rounded-md hover:border-white/20 hover:bg-[#1e1e1e] transition-all text-center"
+          data-testid="export-json"
+        >
+          <p
+            class="font-mono text-[0.65rem] text-[#e2e2e2] mb-0.5"
+          >
+            JSON
+          </p>
+          <p
+            class="text-[0.6rem] text-[#555]"
+          >
+            Machine-readable record
+          </p>
+        </button>
+        <button
+          class="p-2.5 border border-white/08 rounded-md hover:border-white/20 hover:bg-[#1e1e1e] transition-all text-center"
+          data-testid="export-copy"
+        >
+          <p
+            class="font-mono text-[0.65rem] text-[#e2e2e2] mb-0.5"
+          >
+            Copy
+          </p>
+          <p
+            class="text-[0.6rem] text-[#555]"
+          >
+            To clipboard
+          </p>
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-center justify-between pt-4 border-t border-white/07"
+    >
+      <p
+        class="text-[0.75rem] text-[#555] italic"
+      >
+        Choose how to record this judgment.
+      </p>
+      <button
+        class="px-6 py-2.5 bg-[#4f8ef5] text-white rounded-md text-[0.85rem] font-mono tracking-wide disabled:opacity-30 hover:opacity-85 transition-opacity"
+        data-testid="recording-confirm"
+        disabled=""
+      >
+        Record →
+      </button>
+    </div>
+  </div>
+</div>
+`;

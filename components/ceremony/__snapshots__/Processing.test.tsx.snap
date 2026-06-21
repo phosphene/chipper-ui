@@ -1,0 +1,172 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Processing > renders correctly 1`] = `
+<div>
+  <div
+    class="
+      flex flex-col items-center justify-center min-h-screen text-center
+      bg-[#060606] px-6
+    "
+    data-testid="processing"
+  >
+    <p
+      class="font-mono text-[0.55rem] tracking-[0.35em] uppercase text-white/20 mb-12"
+    >
+      VII · Evaluation in progress
+    </p>
+    <div
+      class="
+        w-14 h-14 rounded-full border-[1.5px] border-[#4f8ef5]/30
+        flex items-center justify-content-center mb-6
+        animate-[pulse_2.5s_ease-in-out_infinite]
+        motion-reduce:animate-none
+      "
+    >
+      <div
+        class="w-7 h-7 rounded-full border border-[#4f8ef5]/30 mx-auto"
+      />
+    </div>
+    <h2
+      class="text-[1.2rem] font-light text-white/55 mb-2"
+    >
+      Case is under assessment.
+    </h2>
+    <p
+      class="text-[0.82rem] italic text-white/25 mb-8"
+    >
+      Nine dimensions are being examined.
+    </p>
+    <div
+      class="flex gap-4 mb-8"
+    >
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          N
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          E
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          P
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          C
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          S
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          Sc
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          L
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          M
+        </span>
+      </div>
+      <div
+        class="flex flex-col items-center gap-1"
+      >
+        <div
+          class="w-[7px] h-[7px] rounded-full transition-all duration-300 bg-white/08"
+        />
+        <span
+          class="font-mono text-[0.48rem] tracking-wide text-white/15"
+        >
+          D
+        </span>
+      </div>
+    </div>
+    <div
+      class="transition-opacity duration-500 opacity-0 pointer-events-none"
+      data-state="waiting"
+      data-testid="score-reveal-container"
+    >
+      <button
+        aria-disabled="true"
+        class="
+            px-7 py-2.5 rounded-md border border-[#4f8ef5]/35
+            text-[#4f8ef5]/75 font-mono text-[0.8rem] tracking-wide
+            hover:border-[#4f8ef5] hover:text-[#4f8ef5] hover:bg-[#4f8ef5]/06
+            transition-all
+          "
+        data-testid="score-reveal"
+        disabled=""
+      >
+        Score Ready — Reveal
+      </button>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StageV > renders correctly 1`] = `
+<div>
+  <div
+    data-testid="stage-V"
+  >
+    <div
+      class="mb-5 p-4 rounded-xl border border-gray-200 space-y-2"
+    >
+      <div
+        class="flex items-center gap-2 text-sm text-gray-700"
+      >
+        <span
+          class="w-4 h-4 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-500 text-[0.5rem] flex-shrink-0"
+        >
+          ✓
+        </span>
+        graduate researcher · Behavioral Ecology
+      </div>
+      <div
+        class="flex items-center gap-2 text-sm text-gray-700"
+      >
+        <span
+          class="w-4 h-4 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-500 text-[0.5rem] flex-shrink-0"
+        >
+          ✓
+        </span>
+        null result
+      </div>
+    </div>
+    <div
+      class="mb-5"
+    >
+      <label
+        class="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-2"
+      >
+        Anything else? 
+        <span
+          class="normal-case font-normal"
+        >
+          (optional)
+        </span>
+      </label>
+      <textarea
+        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400 resize-y"
+        data-testid="stage-V-last-word"
+        placeholder="Is there anything the evaluation should know that isn't in the submitted material?"
+        style="min-height: 72px;"
+      />
+    </div>
+    <div
+      class="text-center py-4"
+    >
+      <button
+        class="px-10 py-3 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-700 transition-colors"
+        data-testid="stage-V-rest"
+      >
+        Begin Evaluation →
+      </button>
+    </div>
+  </div>
+</div>
+`;

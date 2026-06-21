@@ -1,0 +1,98 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StageIII > renders correctly 1`] = `
+<div>
+  <div
+    data-testid="stage-III"
+  >
+    <div
+      class="mb-5 p-4 rounded-xl border border-gray-200 text-sm text-gray-700 leading-relaxed"
+    >
+      <span>
+        You are a 
+        <strong>
+          graduate researcher
+        </strong>
+      </span>
+      <span>
+         bringing a 
+        <strong>
+          null result
+        </strong>
+      </span>
+      <span>
+         in 
+        <strong>
+          Behavioral Ecology
+        </strong>
+      </span>
+      <span>
+        .
+      </span>
+    </div>
+    <div
+      class="mb-5 p-4 rounded-xl border border-gray-200"
+    >
+      <p
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3"
+      >
+        What Woodchipper can help with
+      </p>
+      <ul
+        class="space-y-2 text-sm text-gray-700"
+      >
+        <li
+          class="flex gap-2"
+        >
+          <span
+            class="text-gray-400"
+          >
+            ·
+          </span>
+           Evaluating the clarity and strength of your argument
+        </li>
+        <li
+          class="flex gap-2"
+        >
+          <span
+            class="text-gray-400"
+          >
+            ·
+          </span>
+           Identifying where your evidence and claims align or diverge
+        </li>
+        <li
+          class="flex gap-2"
+        >
+          <span
+            class="text-gray-400"
+          >
+            ·
+          </span>
+           Situating your work in relation to comparable work
+        </li>
+        <li
+          class="flex gap-2"
+        >
+          <span
+            class="text-gray-400"
+          >
+            ·
+          </span>
+           Pointing to areas for development and refinement
+        </li>
+      </ul>
+    </div>
+    <div
+      class="mb-5 p-4 rounded-xl bg-gray-50 text-sm text-gray-600 leading-relaxed"
+    >
+      Woodchipper assists all kinds of intellectual work — but some better than others. The more you engage with it, and the more you share about your work, the more useful the results will be.
+    </div>
+    <div
+      data-testid="stage-III-nav"
+    >
+      StageNav
+    </div>
+  </div>
+</div>
+`;

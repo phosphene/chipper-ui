@@ -1,0 +1,59 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Opening > renders correctly 1`] = `
+<div>
+  <div
+    class="flex flex-col items-center justify-center min-h-screen text-center px-6"
+    data-testid="opening"
+    style="background-color: rgb(245, 240, 232);"
+  >
+    <div
+      class="mb-12"
+      style="background-color: rgb(92, 61, 30); height: 4px; width: 60px;"
+    />
+    <p
+      class="font-mono text-[0.55rem] uppercase mb-10"
+      style="color: rgb(139, 115, 85); letter-spacing: 0.35em;"
+    >
+      Formal Review of Scholarly Work
+    </p>
+    <div
+      class="max-w-lg space-y-6 mb-12"
+    >
+      <p
+        class="text-[1.1rem] leading-relaxed"
+        style="color: rgb(44, 31, 14);"
+      >
+        You have chosen to submit your work for review.
+      </p>
+      <p
+        class="text-[1.05rem] leading-relaxed"
+        style="color: rgb(61, 43, 18);"
+      >
+        That choice is yours. No one required you to be here. The fact that you came — that you brought your work to be examined — is an act this process takes seriously.
+      </p>
+      <p
+        class="text-[1.05rem] leading-relaxed"
+        style="color: rgb(61, 43, 18);"
+      >
+        The evaluation you are about to receive is the product of careful study. The instrument was built with care. The criteria were derived from the scholarly record. What follows will be conducted with the same seriousness you brought to the work itself.
+      </p>
+    </div>
+    <div
+      class="mb-10"
+      style="background-color: rgb(201, 168, 76); height: 1px; width: 120px;"
+    />
+    <button
+      class="px-8 py-3 rounded-sm border font-mono text-[0.82rem] tracking-wide transition-all"
+      data-testid="opening-begin"
+      style="border-color: rgb(201, 168, 76); color: rgb(139, 105, 20); background-color: transparent;"
+    >
+      I am ready to begin →
+    </button>
+    <div
+      class="mt-12"
+      style="background-color: rgb(92, 61, 30); height: 4px; width: 60px;"
+    />
+  </div>
+</div>
+`;

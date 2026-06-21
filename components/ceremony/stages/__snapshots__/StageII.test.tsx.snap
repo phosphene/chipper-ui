@@ -1,0 +1,201 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StageII > renders correctly 1`] = `
+<div>
+  <div
+    data-testid="stage-II"
+  >
+    <div
+      class="mb-6"
+    >
+      <p
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3"
+      >
+        Domain / Research Area / Discipline 
+        <span
+          class="normal-case font-normal text-gray-400"
+        >
+          (optional)
+        </span>
+      </p>
+      <input
+        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400 mb-2"
+        data-testid="entry-tradition"
+        placeholder="Or type a domain freely…"
+        type="text"
+        value=""
+      />
+      <button
+        class="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+      >
+        ▼ Choose from list
+      </button>
+    </div>
+    <div
+      class="mb-4"
+    >
+      <p
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3"
+      >
+        What type of work is this? 
+        <span
+          class="normal-case font-normal text-gray-400"
+        >
+          (optional)
+        </span>
+      </p>
+      <div
+        class="grid grid-cols-2 gap-2"
+      >
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-original-argument"
+        >
+          <div
+            class="font-medium"
+          >
+            Original Argument
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            New claim with supporting evidence
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-synthesis-review"
+        >
+          <div
+            class="font-medium"
+          >
+            Synthesis
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Argument from accumulated evidence
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-synthesis-review"
+        >
+          <div
+            class="font-medium"
+          >
+            Review
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Survey of a field or topic
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-evidentiary-finding"
+        >
+          <div
+            class="font-medium"
+          >
+            Summary
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Overview or synopsis of a body of work
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-evidentiary-finding"
+        >
+          <div
+            class="font-medium"
+          >
+            Evidentiary Finding
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Contribution to the evidence base
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-replication"
+        >
+          <div
+            class="font-medium"
+          >
+            Replication of Results
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Testing whether prior findings hold
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-null-result"
+        >
+          <div
+            class="font-medium"
+          >
+            Null Result
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            Evidence of absence or non-finding
+          </div>
+        </button>
+        <button
+          aria-pressed="false"
+          class="text-left p-3 rounded-xl border text-sm transition-all
+                border-gray-200 text-gray-700 hover:border-gray-400"
+          data-testid="work-type-methodological-contribution"
+        >
+          <div
+            class="font-medium"
+          >
+            Methodological
+          </div>
+          <div
+            class="text-xs mt-0.5 text-gray-400"
+          >
+            New procedure, instrument, or method
+          </div>
+        </button>
+      </div>
+      <button
+        class="mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+        data-testid="work-type-none"
+      >
+        None of these describe my work
+      </button>
+    </div>
+    <div
+      data-testid="stage-II-nav"
+    >
+      StageNav
+    </div>
+  </div>
+</div>
+`;

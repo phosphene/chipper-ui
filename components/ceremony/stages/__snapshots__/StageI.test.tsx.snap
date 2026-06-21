@@ -1,0 +1,231 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StageI > renders correctly 1`] = `
+<div>
+  <div
+    data-testid="stage-I"
+  >
+    <div
+      class="mb-6"
+    >
+      <p
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3"
+      >
+        I am the: 
+        <span
+          class="normal-case font-normal text-gray-400"
+        >
+          (optional)
+        </span>
+      </p>
+      <div
+        class="flex flex-wrap gap-2"
+      >
+        <button
+          aria-pressed="false"
+          class="px-5 py-2 rounded-full border text-sm transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="creator-role-sole"
+        >
+          Sole creator
+        </button>
+        <button
+          aria-pressed="false"
+          class="px-5 py-2 rounded-full border text-sm transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="creator-role-co-creator"
+        >
+          Co-creator
+        </button>
+        <button
+          aria-pressed="false"
+          class="px-5 py-2 rounded-full border text-sm transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="creator-role-llm"
+        >
+          LLM
+        </button>
+        <button
+          aria-pressed="false"
+          class="px-5 py-2 rounded-full border text-sm transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="creator-role-llm-assisted"
+        >
+          LLM-assisted creator
+        </button>
+      </div>
+    </div>
+    <div
+      class="mb-6"
+    >
+      <p
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3"
+      >
+        What do you want Woodchipper to do for you?
+         
+        <span
+          class="normal-case font-normal text-gray-400"
+        >
+          (optional)
+        </span>
+      </p>
+      <div
+        class="flex flex-wrap gap-2 mb-3"
+      >
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-analysis"
+        >
+          Analysis
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-review"
+        >
+          Review
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-summary"
+        >
+          Summary
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-edit"
+        >
+          Edit
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-development"
+        >
+          Development
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-comparison"
+        >
+          Comparison
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-fact-checking"
+        >
+          Fact-checking
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-clarity-check"
+        >
+          Clarity check
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-argument-strengthening"
+        >
+          Argument strengthening
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-gap-identification"
+        >
+          Gap identification
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-literature-context"
+        >
+          Literature context
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-methodology-review"
+        >
+          Methodology review
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-impact-assessment"
+        >
+          Impact assessment
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-simplification"
+        >
+          Simplification
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-expansion"
+        >
+          Expansion
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-translation-guidance"
+        >
+          Translation guidance
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-citation-check"
+        >
+          Citation check
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-structure-review"
+        >
+          Structure review
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-audience-alignment"
+        >
+          Audience alignment
+        </button>
+        <button
+          class="px-3 py-1.5 rounded-full border text-xs transition-all
+                border-gray-200 text-gray-600 hover:border-gray-400"
+          data-testid="hope-abstract-writing"
+        >
+          Abstract writing
+        </button>
+      </div>
+      <input
+        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400"
+        data-testid="hope-freetext"
+        placeholder="Or describe what you're looking for…"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      data-testid="stage-I-nav"
+    >
+      StageNav
+    </div>
+  </div>
+</div>
+`;
