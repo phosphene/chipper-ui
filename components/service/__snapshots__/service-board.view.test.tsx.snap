@@ -1,0 +1,323 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServiceBoardView > renders all_complete state with ResultsPanel 1`] = `
+<div>
+  <div
+    data-testid="service-board"
+    style="background-color: rgb(245, 240, 232); min-height: 100vh; padding: 32px; color: rgb(61, 43, 31);"
+  >
+    <div>
+      <div
+        data-testid="results-panel"
+        style="color: rgb(61, 43, 31);"
+      >
+        <div
+          style="margin-bottom: 24px;"
+        >
+          <p
+            style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+          >
+            Services Complete
+          </p>
+          <div
+            style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+          />
+        </div>
+        <div
+          style="display: flex; gap: 12px; margin-bottom: 24px;"
+        >
+          <button
+            data-testid="results-download-paper"
+            style="flex: 1 1 0%; padding: 12px; border-radius: 8px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; font-weight: 600; cursor: pointer;"
+          >
+            Download corrected paper
+          </button>
+          <button
+            data-testid="results-download-receipt"
+            style="flex: 1 1 0%; padding: 12px; border-radius: 8px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; font-weight: 600; cursor: pointer;"
+          >
+            Download receipt
+          </button>
+        </div>
+        <div
+          style="margin-bottom: 24px;"
+        >
+          <p
+            style="font-size: 13px; font-weight: 600; margin-bottom: 12px; opacity: 0.7;"
+          >
+            Individual service outputs
+          </p>
+          <div
+            style="display: flex; flex-direction: column; gap: 8px;"
+          >
+            <div
+              data-testid="results-service-spellcheck"
+              style="padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242);"
+            >
+              <div
+                style="display: flex; align-items: center; justify-content: space-between;"
+              >
+                <span
+                  style="font-size: 13px; font-weight: 600; color: rgb(61, 43, 31);"
+                >
+                  Spellcheck
+                </span>
+                <div
+                  style="display: flex; gap: 8px;"
+                >
+                  <button
+                    data-testid="results-service-spellcheck-view"
+                    style="padding: 4px 10px; border-radius: 4px; border: 1px solid rgb(139, 105, 20); background-color: transparent; color: rgb(61, 43, 31); font-size: 12px; cursor: pointer;"
+                  >
+                    View
+                  </button>
+                  <button
+                    data-testid="results-service-spellcheck-copy"
+                    style="padding: 4px 10px; border-radius: 4px; border: 1px solid rgb(139, 105, 20); background-color: transparent; color: rgb(61, 43, 31); font-size: 12px; cursor: pointer;"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          data-testid="receipt"
+          style="background-color: rgb(250, 247, 242); border: 1px solid rgb(139, 105, 20); border-radius: 8px; padding: 24px; color: rgb(61, 43, 31);"
+        >
+          <div
+            style="margin-bottom: 20px; border-bottom: 1px solid rgb(139, 105, 20); padding-bottom: 16px;"
+          >
+            <p
+              style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;"
+            >
+              Woodchipper Service Receipt
+            </p>
+            <p
+              style="font-size: 13px; opacity: 0.7;"
+            >
+              Date: 
+              2026-06-22
+            </p>
+            <p
+              style="font-size: 13px; opacity: 0.7;"
+            >
+              Evaluation Band: 
+              strong
+            </p>
+          </div>
+          <div
+            style="margin-bottom: 0px; padding-bottom: 0px; border-bottom: medium;"
+          >
+            <p
+              style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;"
+            >
+              Spellcheck
+            </p>
+            <p
+              style="font-size: 13px; line-height: 1.6; white-space: pre-wrap;"
+            >
+              Fixed 3 errors.
+            </p>
+            <p
+              style="font-size: 12px; opacity: 0.6; margin-top: 4px;"
+            >
+              Changes applied: 
+              3
+            </p>
+          </div>
+          <div
+            style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgb(139, 105, 20); font-size: 11px; opacity: 0.5;"
+          >
+            Generated by Woodchipper · 
+            2026-06-22
+          </div>
+        </div>
+      </div>
+      <div
+        style="margin-top: 24px;"
+      >
+        <button
+          style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid rgb(139, 105, 20); background-color: rgb(245, 240, 232); color: rgb(61, 43, 31); font-size: 14px; font-weight: 600; cursor: pointer;"
+        >
+          Done — View Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceBoardView > renders idle state with ServiceOptions 1`] = `
+<div>
+  <div
+    data-testid="service-board"
+    style="background-color: rgb(245, 240, 232); min-height: 100vh; padding: 32px; color: rgb(61, 43, 31);"
+  >
+    <div
+      style="color: rgb(61, 43, 31);"
+    >
+      <div
+        style="margin-bottom: 24px;"
+      >
+        <p
+          style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+        >
+          Woodchipper Services
+        </p>
+        <div
+          style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+        />
+        <p
+          style="font-size: 14px; opacity: 0.8;"
+        >
+          Your work has been evaluated. Select the services you need.
+        </p>
+      </div>
+      <div
+        style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+      >
+        <label
+          data-testid="service-option-edit-abstract"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+        >
+          <input
+            style="accent-color: rgb(201, 168, 76);"
+            type="checkbox"
+          />
+          Edit abstract
+        </label>
+        <label
+          data-testid="service-option-check-citations"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+        >
+          <input
+            style="accent-color: rgb(201, 168, 76);"
+            type="checkbox"
+          />
+          Check citations
+        </label>
+        <label
+          data-testid="service-option-spellcheck"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+        >
+          <input
+            style="accent-color: rgb(201, 168, 76);"
+            type="checkbox"
+          />
+          Spellcheck and grammar
+        </label>
+        <label
+          data-testid="service-option-doi-metadata"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+        >
+          <input
+            style="accent-color: rgb(201, 168, 76);"
+            type="checkbox"
+          />
+          Draft DOI metadata record
+        </label>
+        <label
+          data-testid="service-option-zenodo-record"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+        >
+          <input
+            style="accent-color: rgb(201, 168, 76);"
+            type="checkbox"
+          />
+          Draft Zenodo deposit record
+        </label>
+      </div>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <div
+        style="margin-bottom: 24px;"
+      >
+        <p
+          style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+        >
+          Supply your full paper (optional)
+        </p>
+        <textarea
+          data-testid="service-paper-input"
+          placeholder="Drop paper here or paste text"
+          rows="6"
+          style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+        />
+      </div>
+      <button
+        data-testid="service-request-btn"
+        disabled=""
+        style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(204, 204, 204); color: rgb(136, 136, 136); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: not-allowed; opacity: 0.5;"
+      >
+        Request Services
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceBoardView > renders processing state with ServiceNodes 1`] = `
+<div>
+  <div
+    data-testid="service-board"
+    style="background-color: rgb(245, 240, 232); min-height: 100vh; padding: 32px; color: rgb(61, 43, 31);"
+  >
+    <div>
+      <div
+        style="margin-bottom: 24px;"
+      >
+        <p
+          style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+        >
+          Processing Services
+        </p>
+        <div
+          style="height: 1px; background-color: rgb(139, 105, 20);"
+        />
+      </div>
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;"
+      >
+        <div
+          class="animate-pulse"
+          data-state="active"
+          data-testid="service-node-spellcheck"
+          style="border: 2px solid rgb(201, 168, 76); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+        >
+          <p
+            style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+          >
+            Spellcheck
+          </p>
+          <p
+            data-testid="service-node-spellcheck-status"
+            style="font-size: 13px; color: rgb(61, 43, 31); font-style: normal; opacity: 1;"
+          >
+            Running spellcheck…
+          </p>
+        </div>
+        <div
+          data-state="pending"
+          data-testid="service-node-edit-abstract"
+          style="border: 1px solid rgb(245, 240, 232); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+        >
+          <p
+            style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+          >
+            Abstract Edit
+          </p>
+          <p
+            data-testid="service-node-edit-abstract-status"
+            style="font-size: 13px; color: rgb(61, 43, 31); font-style: normal; opacity: 0.6;"
+          >
+            Queued
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

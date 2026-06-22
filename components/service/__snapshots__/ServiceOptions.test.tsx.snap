@@ -1,0 +1,518 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServiceOptions > hides zenodo-record for independent-researcher standing 1`] = `
+<div>
+  <div
+    style="color: rgb(61, 43, 31);"
+  >
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+      >
+        Woodchipper Services
+      </p>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <p
+        style="font-size: 14px; opacity: 0.8;"
+      >
+        Your work has been evaluated. Select the services you need.
+      </p>
+    </div>
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+    >
+      <label
+        data-testid="service-option-edit-abstract"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Edit abstract
+      </label>
+      <label
+        data-testid="service-option-check-citations"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Check citations
+      </label>
+      <label
+        data-testid="service-option-spellcheck"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Spellcheck and grammar
+      </label>
+      <label
+        data-testid="service-option-doi-metadata"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft DOI metadata record
+      </label>
+    </div>
+    <div
+      style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+    />
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+      >
+        Supply your full paper (optional)
+      </p>
+      <textarea
+        data-testid="service-paper-input"
+        placeholder="Drop paper here or paste text"
+        rows="6"
+        style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+      />
+    </div>
+    <button
+      data-testid="service-request-btn"
+      disabled=""
+      style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(204, 204, 204); color: rgb(136, 136, 136); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: not-allowed; opacity: 0.5;"
+    >
+      Request Services
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ServiceOptions > renders with multiple services selected 1`] = `
+<div>
+  <div
+    style="color: rgb(61, 43, 31);"
+  >
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+      >
+        Woodchipper Services
+      </p>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <p
+        style="font-size: 14px; opacity: 0.8;"
+      >
+        Your work has been evaluated. Select the services you need.
+      </p>
+    </div>
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+    >
+      <label
+        data-testid="service-option-edit-abstract"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          checked=""
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Edit abstract
+      </label>
+      <label
+        data-testid="service-option-check-citations"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          checked=""
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Check citations
+      </label>
+      <label
+        data-testid="service-option-spellcheck"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          checked=""
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Spellcheck and grammar
+      </label>
+      <label
+        data-testid="service-option-doi-metadata"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft DOI metadata record
+      </label>
+      <label
+        data-testid="service-option-zenodo-record"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft Zenodo deposit record
+      </label>
+    </div>
+    <div
+      style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+    />
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+      >
+        Supply your full paper (optional)
+      </p>
+      <textarea
+        data-testid="service-paper-input"
+        placeholder="Drop paper here or paste text"
+        rows="6"
+        style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+      />
+    </div>
+    <button
+      data-testid="service-request-btn"
+      style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(139, 105, 20); color: rgb(250, 247, 242); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; opacity: 1;"
+    >
+      Request Services
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ServiceOptions > renders with no selection — request button disabled 1`] = `
+<div>
+  <div
+    style="color: rgb(61, 43, 31);"
+  >
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+      >
+        Woodchipper Services
+      </p>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <p
+        style="font-size: 14px; opacity: 0.8;"
+      >
+        Your work has been evaluated. Select the services you need.
+      </p>
+    </div>
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+    >
+      <label
+        data-testid="service-option-edit-abstract"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Edit abstract
+      </label>
+      <label
+        data-testid="service-option-check-citations"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Check citations
+      </label>
+      <label
+        data-testid="service-option-spellcheck"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Spellcheck and grammar
+      </label>
+      <label
+        data-testid="service-option-doi-metadata"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft DOI metadata record
+      </label>
+      <label
+        data-testid="service-option-zenodo-record"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft Zenodo deposit record
+      </label>
+    </div>
+    <div
+      style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+    />
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+      >
+        Supply your full paper (optional)
+      </p>
+      <textarea
+        data-testid="service-paper-input"
+        placeholder="Drop paper here or paste text"
+        rows="6"
+        style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+      />
+    </div>
+    <button
+      data-testid="service-request-btn"
+      disabled=""
+      style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(204, 204, 204); color: rgb(136, 136, 136); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: not-allowed; opacity: 0.5;"
+    >
+      Request Services
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ServiceOptions > renders with one service selected — request button enabled 1`] = `
+<div>
+  <div
+    style="color: rgb(61, 43, 31);"
+  >
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+      >
+        Woodchipper Services
+      </p>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <p
+        style="font-size: 14px; opacity: 0.8;"
+      >
+        Your work has been evaluated. Select the services you need.
+      </p>
+    </div>
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+    >
+      <label
+        data-testid="service-option-edit-abstract"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Edit abstract
+      </label>
+      <label
+        data-testid="service-option-check-citations"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Check citations
+      </label>
+      <label
+        data-testid="service-option-spellcheck"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          checked=""
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Spellcheck and grammar
+      </label>
+      <label
+        data-testid="service-option-doi-metadata"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft DOI metadata record
+      </label>
+      <label
+        data-testid="service-option-zenodo-record"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft Zenodo deposit record
+      </label>
+    </div>
+    <div
+      style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+    />
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+      >
+        Supply your full paper (optional)
+      </p>
+      <textarea
+        data-testid="service-paper-input"
+        placeholder="Drop paper here or paste text"
+        rows="6"
+        style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+      />
+    </div>
+    <button
+      data-testid="service-request-btn"
+      style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(139, 105, 20); color: rgb(250, 247, 242); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; opacity: 1;"
+    >
+      Request Services
+    </button>
+  </div>
+</div>
+`;
+
+exports[`ServiceOptions > shows zenodo-record for institutional standing 1`] = `
+<div>
+  <div
+    style="color: rgb(61, 43, 31);"
+  >
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;"
+      >
+        Woodchipper Services
+      </p>
+      <div
+        style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+      />
+      <p
+        style="font-size: 14px; opacity: 0.8;"
+      >
+        Your work has been evaluated. Select the services you need.
+      </p>
+    </div>
+    <div
+      style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;"
+    >
+      <label
+        data-testid="service-option-edit-abstract"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Edit abstract
+      </label>
+      <label
+        data-testid="service-option-check-citations"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Check citations
+      </label>
+      <label
+        data-testid="service-option-spellcheck"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Spellcheck and grammar
+      </label>
+      <label
+        data-testid="service-option-doi-metadata"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft DOI metadata record
+      </label>
+      <label
+        data-testid="service-option-zenodo-record"
+        style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px;"
+      >
+        <input
+          style="accent-color: rgb(201, 168, 76);"
+          type="checkbox"
+        />
+        Draft Zenodo deposit record
+      </label>
+    </div>
+    <div
+      style="height: 1px; background-color: rgb(139, 105, 20); margin-bottom: 16px;"
+    />
+    <div
+      style="margin-bottom: 24px;"
+    >
+      <p
+        style="font-size: 13px; margin-bottom: 8px; opacity: 0.7;"
+      >
+        Supply your full paper (optional)
+      </p>
+      <textarea
+        data-testid="service-paper-input"
+        placeholder="Drop paper here or paste text"
+        rows="6"
+        style="width: 100%; padding: 12px; border-radius: 6px; border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); color: rgb(61, 43, 31); font-size: 13px; resize: vertical; font-family: inherit;"
+      />
+    </div>
+    <button
+      data-testid="service-request-btn"
+      disabled=""
+      style="width: 100%; padding: 14px; border-radius: 8px; border: medium; background-color: rgb(204, 204, 204); color: rgb(136, 136, 136); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; cursor: not-allowed; opacity: 0.5;"
+    >
+      Request Services
+    </button>
+  </div>
+</div>
+`;

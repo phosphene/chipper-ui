@@ -1,0 +1,112 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServiceNode > renders active state 1`] = `
+<div>
+  <div
+    class="animate-pulse"
+    data-state="active"
+    data-testid="service-node-spellcheck"
+    style="border: 2px solid rgb(201, 168, 76); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+  >
+    <p
+      style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+    >
+      Spellcheck
+    </p>
+    <p
+      data-testid="service-node-spellcheck-status"
+      style="font-size: 13px; color: rgb(61, 43, 31); font-style: normal; opacity: 1;"
+    >
+      Running spellcheck…
+    </p>
+  </div>
+</div>
+`;
+
+exports[`ServiceNode > renders complete state 1`] = `
+<div>
+  <div
+    data-state="complete"
+    data-testid="service-node-spellcheck"
+    style="border: 1px solid rgb(139, 105, 20); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+  >
+    <p
+      style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+    >
+      Spellcheck
+    </p>
+    <p
+      data-testid="service-node-spellcheck-status"
+      style="font-size: 13px; color: rgb(61, 43, 31); font-style: normal; opacity: 1;"
+    >
+      ✓ Complete — Fixed 3 spelling errors in the abstract.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`ServiceNode > renders failed state 1`] = `
+<div>
+  <div
+    data-state="failed"
+    data-testid="service-node-spellcheck"
+    style="border: 1px solid rgb(220, 38, 38); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+  >
+    <p
+      style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+    >
+      Spellcheck
+    </p>
+    <p
+      data-testid="service-node-spellcheck-status"
+      style="font-size: 13px; color: rgb(220, 38, 38); font-style: normal; opacity: 1;"
+    >
+      Service timeout after 30s
+    </p>
+  </div>
+</div>
+`;
+
+exports[`ServiceNode > renders pending state 1`] = `
+<div>
+  <div
+    data-state="pending"
+    data-testid="service-node-spellcheck"
+    style="border: 1px solid rgb(245, 240, 232); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+  >
+    <p
+      style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+    >
+      Spellcheck
+    </p>
+    <p
+      data-testid="service-node-spellcheck-status"
+      style="font-size: 13px; color: rgb(61, 43, 31); font-style: normal; opacity: 0.6;"
+    >
+      Queued
+    </p>
+  </div>
+</div>
+`;
+
+exports[`ServiceNode > renders stub state 1`] = `
+<div>
+  <div
+    data-state="stub"
+    data-testid="service-node-spellcheck"
+    style="border: 1px dashed rgb(139, 105, 20); background-color: rgb(250, 247, 242); border-radius: 8px; padding: 16px; color: rgb(61, 43, 31);"
+  >
+    <p
+      style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; color: rgb(61, 43, 31);"
+    >
+      Spellcheck
+    </p>
+    <p
+      data-testid="service-node-spellcheck-status"
+      style="font-size: 13px; color: rgb(61, 43, 31); font-style: italic; opacity: 1;"
+    >
+      → Would submit to Spellcheck
+    </p>
+  </div>
+</div>
+`;
