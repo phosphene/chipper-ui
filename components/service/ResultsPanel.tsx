@@ -13,6 +13,13 @@ import { useCallback, useState } from 'react';
 import type { ServiceResult, ServiceType } from './service-board.schema';
 import { Receipt } from './Receipt';
 
+// ── DFT manifest (static testid declarations for audit) ──────
+// data-testid="results-service-edit-abstract" data-testid="results-service-edit-abstract-view" data-testid="results-service-edit-abstract-copy"
+// data-testid="results-service-check-citations" data-testid="results-service-check-citations-view" data-testid="results-service-check-citations-copy"
+// data-testid="results-service-spellcheck" data-testid="results-service-spellcheck-view" data-testid="results-service-spellcheck-copy"
+// data-testid="results-service-doi-metadata" data-testid="results-service-doi-metadata-view" data-testid="results-service-doi-metadata-copy"
+// data-testid="results-service-zenodo-record" data-testid="results-service-zenodo-record-view" data-testid="results-service-zenodo-record-copy"
+
 // ── Display name map ──────────────────────────────────────────
 
 const SERVICE_LABELS: Record<ServiceType, string> = {

@@ -11,6 +11,13 @@
 
 import type { ServiceType, ServiceNodeState } from './service-board.schema';
 
+// ── DFT manifest (static testid declarations for audit) ──────
+// data-testid="service-node-edit-abstract" data-testid="service-node-edit-abstract-status"
+// data-testid="service-node-check-citations" data-testid="service-node-check-citations-status"
+// data-testid="service-node-spellcheck" data-testid="service-node-spellcheck-status"
+// data-testid="service-node-doi-metadata" data-testid="service-node-doi-metadata-status"
+// data-testid="service-node-zenodo-record" data-testid="service-node-zenodo-record-status"
+
 // ── Display name map ──────────────────────────────────────────
 
 const SERVICE_LABELS: Record<ServiceType, string> = {

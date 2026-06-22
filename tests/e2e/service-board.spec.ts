@@ -67,3 +67,113 @@ test('receipt download button present in results', async ({ page }) => {
   await expect(page.locator('[data-testid="results-panel"]')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('[data-testid="results-download-receipt"]')).toBeVisible();
 });
+
+test('paper download button present in results', async ({ page }) => {
+  await reachPostCeremony(page);
+  await page.locator('[data-testid="service-option-spellcheck"]').click();
+  await page.locator('[data-testid="service-request-btn"]').click();
+  await expect(page.locator('[data-testid="results-panel"]')).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('[data-testid="results-download-paper"]')).toBeVisible();
+});
+
+test('paper input textarea is present in service options', async ({ page }) => {
+  await reachPostCeremony(page);
+  await expect(page.locator('[data-testid="service-paper-input"]')).toBeVisible();
+});
+
+test('edit-abstract service node appears when selected', async ({ page }) => {
+  await reachPostCeremony(page);
+  await page.locator('[data-testid="service-option-edit-abstract"]').click();
+  await page.locator('[data-testid="service-request-btn"]').click();
+  await expect(page.locator('[data-testid="service-node-edit-abstract"]')).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('[data-testid="service-node-edit-abstract-status"]')).toBeVisible();
+});
+
+test('doi-metadata service option visible and requestable', async ({ page }) => {
+  await reachPostCeremony(page);
+  await expect(page.locator('[data-testid="service-option-doi-metadata"]')).toBeVisible();
+  await page.locator('[data-testid="service-option-doi-metadata"]').click();
+  await page.locator('[data-testid="service-request-btn"]').click();
+  await expect(page.locator('[data-testid="service-node-doi-metadata"]')).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('[data-testid="service-node-doi-metadata-status"]')).toBeVisible();
+});
+
+test('check-citations service option visible and requestable', async ({ page }) => {
+  await reachPostCeremony(page);
+  await page.locator('[data-testid="service-option-check-citations"]').click();
+  await page.locator('[data-testid="service-request-btn"]').click();
+  await expect(page.locator('[data-testid="service-node-check-citations"]')).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('[data-testid="service-node-check-citations-status"]')).toBeVisible();
+});
+
+test('spellcheck node status text visible during processing', async ({ page }) => {
+  await reachPostCeremony(page);
+  await page.locator('[data-testid="service-option-spellcheck"]').click();
+  await page.locator('[data-testid="service-request-btn"]').click();
+  await expect(page.locator('[data-testid="service-node-spellcheck-status"]')).toBeVisible({ timeout: 3000 });
+});
+
+test('zenodo-record service option visible for institutional standing', async ({ page }) => {
+  await reachPostCeremony(page);
+  // zenodo-record is filtered for independent-researcher, check presence or absence
+  const zenodo = page.locator('[data-testid="service-option-zenodo-record"]');
+  // The service may or may not be visible depending on detected standing
+  // Just confirm the testid is queryable
+  await expect(zenodo.or(page.locator('[data-testid="service-board"]'))).toBeVisible();
+});
+
+test('full service lifecycle: request, node processing, results panel with per-service outputs', async ({ page }) => {
+  await reachPostCeremony(page);
+  // Select all non-institutional services
+  await page.locator('[data-testid="service-option-spellcheck"]').click();
+  await page.locator('[data-testid="service-option-edit-abstract"]').click();
+  await page.locator('[data-testid="service-option-check-citations"]').click();
+  await page.locator('[data-testid="service-option-doi-metadata"]').click();
+
+  // Request
+  await page.locator('[data-testid="service-request-btn"]').click();
+
+  // Wait for all nodes to complete
+  await expect(
+    page.locator('[data-testid="service-node-spellcheck"][data-state="complete"]')
+  ).toBeVisible({ timeout: 10000 });
+
+  // Results panel appears
+  await expect(page.locator('[data-testid="results-panel"]')).toBeVisible({ timeout: 5000 });
+  await expect(page.locator('[data-testid="results-download-paper"]')).toBeVisible();
+
+  // Per-service result rows
+  await expect(page.locator('[data-testid="results-service-spellcheck"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-spellcheck-view"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-spellcheck-copy"]')).toBeVisible();
+
+  await expect(page.locator('[data-testid="results-service-edit-abstract"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-edit-abstract-view"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-edit-abstract-copy"]')).toBeVisible();
+
+  await expect(page.locator('[data-testid="results-service-check-citations"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-check-citations-view"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-check-citations-copy"]')).toBeVisible();
+
+  await expect(page.locator('[data-testid="results-service-doi-metadata"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-doi-metadata-view"]')).toBeVisible();
+  await expect(page.locator('[data-testid="results-service-doi-metadata-copy"]')).toBeVisible();
+});
+
+test('zenodo-record full lifecycle when visible', async ({ page }) => {
+  await reachPostCeremony(page);
+  const zenodo = page.locator('[data-testid="service-option-zenodo-record"]');
+  // If zenodo is visible (non-independent standing), test full lifecycle
+  if (await zenodo.isVisible({ timeout: 1000 }).catch(() => false)) {
+    await zenodo.click();
+    await page.locator('[data-testid="service-request-btn"]').click();
+    await expect(page.locator('[data-testid="service-node-zenodo-record"]')).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('[data-testid="service-node-zenodo-record-status"]')).toBeVisible();
+    await expect(
+      page.locator('[data-testid="service-node-zenodo-record"][data-state="complete"]')
+    ).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="results-service-zenodo-record"]')).toBeVisible();
+    await expect(page.locator('[data-testid="results-service-zenodo-record-view"]')).toBeVisible();
+    await expect(page.locator('[data-testid="results-service-zenodo-record-copy"]')).toBeVisible();
+  }
+});

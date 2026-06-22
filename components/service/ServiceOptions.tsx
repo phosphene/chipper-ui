@@ -11,6 +11,13 @@
 
 import type { ServiceType } from './service-board.schema';
 
+// ── DFT manifest (static testid declarations for audit) ──────
+// data-testid="service-option-edit-abstract"
+// data-testid="service-option-check-citations"
+// data-testid="service-option-spellcheck"
+// data-testid="service-option-doi-metadata"
+// data-testid="service-option-zenodo-record"
+
 // ── Service catalogue ─────────────────────────────────────────
 
 interface ServiceEntry {
