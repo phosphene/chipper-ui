@@ -78,6 +78,54 @@ const REQUIRED_TESTIDS: { id: string; note: string; required: boolean }[] = [
   { id: 'recording-confirm',      note: 'Recording confirm (ceremony)',     required: false },
   { id: 'opening',                note: 'Opening screen (ceremony)',         required: false },
   { id: 'opening-begin',          note: 'Opening begin (ceremony)',          required: false },
+
+  // ── Service Board (T-377 — components not yet written) ─────────────────
+  { id: 'service-board',              note: 'Service board container',          required: true },
+  { id: 'service-paper-input',        note: 'Paper paste/drop area',            required: true },
+  { id: 'service-request-btn',        note: 'Request services button',          required: true },
+  { id: 'results-panel',              note: 'Post-completion results surface',  required: true },
+  { id: 'results-download-paper',     note: 'Corrected paper download',         required: true },
+  { id: 'results-download-receipt',   note: 'Receipt download',                 required: true },
+
+  // ── Service Board: per-service testids (edit-abstract) ─────────────────
+  { id: 'service-option-edit-abstract',         note: 'Service checkbox: edit-abstract',          required: true },
+  { id: 'service-node-edit-abstract',           note: 'Board node card: edit-abstract',           required: true },
+  { id: 'service-node-edit-abstract-status',    note: 'Status text in node: edit-abstract',       required: true },
+  { id: 'results-service-edit-abstract',        note: 'Individual service result: edit-abstract',  required: true },
+  { id: 'results-service-edit-abstract-view',   note: 'View button: edit-abstract',               required: true },
+  { id: 'results-service-edit-abstract-copy',   note: 'Copy button: edit-abstract',               required: true },
+
+  // ── Service Board: per-service testids (check-citations) ───────────────
+  { id: 'service-option-check-citations',       note: 'Service checkbox: check-citations',        required: true },
+  { id: 'service-node-check-citations',         note: 'Board node card: check-citations',         required: true },
+  { id: 'service-node-check-citations-status',  note: 'Status text in node: check-citations',     required: true },
+  { id: 'results-service-check-citations',      note: 'Individual service result: check-citations', required: true },
+  { id: 'results-service-check-citations-view', note: 'View button: check-citations',             required: true },
+  { id: 'results-service-check-citations-copy', note: 'Copy button: check-citations',             required: true },
+
+  // ── Service Board: per-service testids (spellcheck) ────────────────────
+  { id: 'service-option-spellcheck',            note: 'Service checkbox: spellcheck',             required: true },
+  { id: 'service-node-spellcheck',              note: 'Board node card: spellcheck',              required: true },
+  { id: 'service-node-spellcheck-status',       note: 'Status text in node: spellcheck',          required: true },
+  { id: 'results-service-spellcheck',           note: 'Individual service result: spellcheck',    required: true },
+  { id: 'results-service-spellcheck-view',      note: 'View button: spellcheck',                  required: true },
+  { id: 'results-service-spellcheck-copy',      note: 'Copy button: spellcheck',                  required: true },
+
+  // ── Service Board: per-service testids (doi-metadata) ──────────────────
+  { id: 'service-option-doi-metadata',          note: 'Service checkbox: doi-metadata',           required: true },
+  { id: 'service-node-doi-metadata',            note: 'Board node card: doi-metadata',            required: true },
+  { id: 'service-node-doi-metadata-status',     note: 'Status text in node: doi-metadata',        required: true },
+  { id: 'results-service-doi-metadata',         note: 'Individual service result: doi-metadata',  required: true },
+  { id: 'results-service-doi-metadata-view',    note: 'View button: doi-metadata',                required: true },
+  { id: 'results-service-doi-metadata-copy',    note: 'Copy button: doi-metadata',                required: true },
+
+  // ── Service Board: per-service testids (zenodo-record) ─────────────────
+  { id: 'service-option-zenodo-record',         note: 'Service checkbox: zenodo-record',          required: true },
+  { id: 'service-node-zenodo-record',           note: 'Board node card: zenodo-record',           required: true },
+  { id: 'service-node-zenodo-record-status',    note: 'Status text in node: zenodo-record',       required: true },
+  { id: 'results-service-zenodo-record',        note: 'Individual service result: zenodo-record',  required: true },
+  { id: 'results-service-zenodo-record-view',   note: 'View button: zenodo-record',               required: true },
+  { id: 'results-service-zenodo-record-copy',   note: 'Copy button: zenodo-record',               required: true },
 ];
 
 // ── File scanner ─────────────────────────────────────────────────────────────
