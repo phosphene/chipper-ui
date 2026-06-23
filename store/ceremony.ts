@@ -1,9 +1,32 @@
 /**
- * Zustand ceremony store — pure TypeScript, no React imports.
- * All business logic lives here. Invariants throw, not silent no-ops.
+ * Ceremony store — Zustand state notebook for the dikaiopompeia.
  *
- * T-265: Zustand ceremony store
- * T-282: Store testability-first implementation
+ * The ceremony is a directed path $s_0 \to s_1 \to \cdots \to s_{\text{IX}}$
+ * through eleven beats of judgment. This store owns all state transitions.
+ * It is written in pure TypeScript with zero React imports so it is testable
+ * in Node without JSDOM — `createActor` in Vitest, never `renderHook`.
+ *
+ * Invariants are enforced by throwing rather than silently no-oping. The
+ * failure mode of silent no-ops is state corruption that surfaces three
+ * stages later as an inexplicable rendering bug. `StageAdvanceError` and
+ * `ConsentError` are the instruments of academic indignation.
+ *
+ * @behavior
+ * Manages the full ceremony lifecycle: maker declaration, work classification,
+ * judge identification, frame agreement, threshold crossing, scoring, pronouncement,
+ * and recording. Every state transition is an explicit action with a named contract.
+ *
+ * @invariants
+ * - The stage sequence is strictly ordered: $s_i$ cannot advance to $s_{i+2}$ without $s_{i+1}$.
+ * - `wciResult` is immutable after `setWCIResult` — scores are never overwritten.
+ * - All actions that can fail throw explicitly; they do not return null or silently abort.
+ *
+ * @remarks
+ * The store is the single source of truth for ceremony state. Components observe it
+ * via `useCeremonyStore`; they do not own state. This separation means the ceremony
+ * logic can be fully tested without mounting any React component.
+ *
+ * @ticket T-265, T-282
  */
 
 import { create } from 'zustand';
@@ -125,6 +148,13 @@ const initialState = {
 export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
   ...initialState,
 
+  /**
+   * Seed ceremony state from automatic content detection.
+   *
+   * @param result - Detection output carrying `standing`, `domain`, `workType`,
+   * and `confidence`. User-set values (source `'user'`) are preserved;
+   * only unset or detected-source fields are overwritten.
+   */
   initFromDetection: (result: DetectionResult) => set((state) => {
     // Preserve user-set values from accordion; only fill in detected values where
     // the user hasn't already specified something.
@@ -206,6 +236,18 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
       : null,
   })),
 
+  /**
+   * Advance the ceremony to the next stage.
+   *
+   * @throws {StageAdvanceError} If $\text{canAdvanceFromCurrent}(s) = \text{false}$ —
+   * the current stage's preconditions are unmet.
+   *
+   * @remarks
+   * The ceremony is a directed acyclic sequence $s_0 \to s_1 \to \cdots \to s_{\text{IX}}$.
+   * Back-navigation is supported; forward-jumping is not. Precondition checking
+   * is delegated to `canAdvanceFromCurrent` in `ceremony.selectors.ts` to keep
+   * the action pure and the guard logic independently testable.
+   */
   advanceStage: () => {
     const state = get();
     if (!canAdvanceFromCurrent(state)) {
@@ -256,6 +298,18 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
     }));
   },
 
+  /**
+   * Reveal the WCI score, transitioning from processing (VII) to pronouncement (VIII).
+   *
+   * @throws {StageAdvanceError} If $\text{canRevealScore}(s) = \text{false}$ —
+   * dimension processing has not completed for all $d \in D$.
+   *
+   * @remarks
+   * The score reveal is gated on `processingComplete`, not on the number of
+   * completed dimensions. The `setWCIResult` action sets `processingComplete`
+   * atomically with the result — there is no window where the score exists
+   * but is not yet revealable.
+   */
   revealScore: () => {
     const state = get();
     if (!canRevealScore(state)) {
@@ -280,6 +334,13 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
 
   acknowledgeExpectations: () => set({ expectationsAcknowledged: true }),
 
+  /**
+   * Record the WCI evaluation result. Immutable after first call —
+   * subsequent calls overwrite, but the contract is write-once.
+   *
+   * @param result - The complete WCI scoring result with composite score
+   * $s \in [0, 100]$, band, dimension scores, and provenance.
+   */
   setWCIResult: (result) => set({
     wciResult: result,
     processingComplete: true,
