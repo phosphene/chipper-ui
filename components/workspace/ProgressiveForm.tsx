@@ -30,6 +30,9 @@ import { IntentSelection } from '@/components/entry/IntentSelection';
 import type { IntentValue } from '@/components/entry/IntentSelection';
 import { RouteSelection } from '@/components/entry/RouteSelection';
 import type { RouteValue } from '@/components/entry/RouteSelection';
+import { ConfirmationScreen } from '@/components/entry/ConfirmationScreen';
+import type { ConfirmationData } from '@/components/entry/ConfirmationScreen';
+import { ReviewScreen } from '@/components/entry/ReviewScreen';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -255,13 +258,16 @@ export function ProgressiveForm() {
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3'>('stage1');
+  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3' | 'layer4' | 'layer5'>('stage1');
 
   // ── Layer 2: selected intents (T-393) ──────────────────────
   const [selectedIntents, setSelectedIntents] = useState<IntentValue[]>([]);
 
   // ── Layer 3: selected routes (T-394) ───────────────────────
   const [selectedRoutes, setSelectedRoutes] = useState<RouteValue[]>([]);
+
+  // ── Stage 2 data for Layer 4 confirmation (T-395) ──────────
+  const [stage2Data, setStage2Data] = useState<{ makerRole: string; creatorType: string; workType: string } | null>(null);
 
 
   // ── Derived state ──────────────────────────────────────────
@@ -292,6 +298,12 @@ export function ProgressiveForm() {
         workType: { value: data.workType as any, source: 'user' },
       });
     }
+    // Store Stage 2 data for Layer 4 confirmation (T-395)
+    setStage2Data({
+      makerRole: data.makerRole,
+      creatorType: data.creatorType,
+      workType: data.workType,
+    });
     // Advance to Layer 2 intent selection (T-393)
     setCurrentStage('layer2');
     console.log('[ProgressiveForm] Stage 2 complete, advancing to Layer 2', data);
@@ -309,9 +321,48 @@ export function ProgressiveForm() {
 
   const handleRouteProceed = useCallback((routes: RouteValue[]) => {
     setSelectedRoutes(routes);
-    // TODO: advance to Layer 4 (T-395)
-    console.log('[ProgressiveForm] Layer 3 complete, routes:', routes);
+    setCurrentStage('layer4');
+    console.log('[ProgressiveForm] Layer 3 complete, advancing to Layer 4, routes:', routes);
   }, []);
+
+  // ── Layer 4: Confirmation change handler (T-395) ───────────
+
+  const handleConfirmationChange = useCallback((field: keyof ConfirmationData) => {
+    // Navigate back to the relevant stage based on field
+    switch (field) {
+      case 'description':
+        reopenSection('description');
+        setCurrentStage('stage1');
+        break;
+      case 'role':
+      case 'creatorType':
+      case 'workType':
+        setCurrentStage('stage2');
+        break;
+      case 'domains':
+        reopenSection('domain');
+        setCurrentStage('stage1');
+        break;
+      default:
+        break;
+    }
+    console.log('[ProgressiveForm] Layer 4 change requested:', field);
+  }, [reopenSection]);
+
+  // ── Layer 4: Confirmation proceed handler (T-395) ──────────
+
+  const handleConfirmationConfirm = useCallback(() => {
+    setCurrentStage('layer5');
+    console.log('[ProgressiveForm] Layer 4 confirmed, advancing to Layer 5');
+  }, []);
+
+  // ── Layer 5: Begin handler (T-395) ─────────────────────────
+
+  const handleBegin = useCallback(() => {
+    // Trigger evaluation/ceremony flow
+    store.advanceStage();
+    console.log('[ProgressiveForm] Layer 5 begin — launching evaluation');
+  }, [store]);
 
   return (
     <div data-testid="progressive-form" className="h-full flex flex-col px-5 py-6 overflow-hidden">
@@ -381,6 +432,36 @@ export function ProgressiveForm() {
           <RouteSelection
             selectedIntents={selectedIntents}
             onProceed={handleRouteProceed}
+          />
+        </div>
+      )}
+
+      {/* ── Layer 4: Confirmation (T-395) ── */}
+      {currentStage === 'layer4' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <ConfirmationScreen
+            data={{
+              description: descriptionText,
+              uploadFilename: uploadedFiles.length > 0 ? uploadedFiles[0].name : null,
+              role: (stage2Data?.makerRole ?? selectedRole ?? 'scholar') as any,
+              creatorType: (stage2Data?.creatorType ?? 'sole') as any,
+              workType: (stage2Data?.workType ?? 'none') as any,
+              domains: selectedDomains,
+              intents: selectedIntents,
+              routes: selectedRoutes,
+            }}
+            onChangeField={handleConfirmationChange}
+            onConfirm={handleConfirmationConfirm}
+          />
+        </div>
+      )}
+
+      {/* ── Layer 5: Review (T-395) ── */}
+      {currentStage === 'layer5' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <ReviewScreen
+            selectedRoutes={selectedRoutes}
+            onBegin={handleBegin}
           />
         </div>
       )}
