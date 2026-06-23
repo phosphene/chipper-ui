@@ -1,0 +1,174 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Stage2 > matches snapshot 1`] = `
+<div>
+  <div
+    class="space-y-8"
+    data-testid="stage2"
+  >
+    <section
+      class="space-y-5"
+    >
+      <h2
+        class="text-xl font-light text-black leading-tight"
+      >
+        About you
+      </h2>
+      <div
+        class="space-y-2"
+      >
+        <p
+          class="text-sm text-gray-600"
+        >
+          I am a:
+        </p>
+        <div
+          class="flex flex-wrap gap-2"
+        >
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-role-student"
+          >
+            Student
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-role-scholar"
+          >
+            Scholar
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-role-practitioner"
+          >
+            Practitioner
+          </button>
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <p
+          class="text-sm text-gray-600"
+        >
+          I am the:
+        </p>
+        <div
+          class="flex flex-wrap gap-2"
+        >
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-creator-sole"
+          >
+            Sole creator
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-creator-co-creator"
+          >
+            Co-creator
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-creator-llm"
+          >
+            LLM
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="maker-creator-llm-assisted"
+          >
+            LLM-assisted creator
+          </button>
+        </div>
+      </div>
+    </section>
+    <section
+      class="space-y-5"
+    >
+      <h2
+        class="text-xl font-light text-black leading-tight"
+      >
+        About your work
+      </h2>
+      <div
+        class="space-y-2"
+      >
+        <p
+          class="text-sm text-gray-600"
+        >
+          What type of work is this?
+        </p>
+        <div
+          class="flex flex-wrap gap-2"
+        >
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-original-argument"
+          >
+            Original Argument
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-null-result"
+          >
+            Null Result
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-replication"
+          >
+            Replication
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-synthesis-review"
+          >
+            Synthesis or Review
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-methodological"
+          >
+            Methodological Contribution
+          </button>
+          <button
+            class="px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                  border-gray-200 text-gray-600 hover:border-gray-400"
+            data-testid="work-type-evidentiary"
+          >
+            Evidentiary Finding
+          </button>
+        </div>
+        <button
+          class="mt-1 px-4 py-2 rounded-lg border text-xs transition-all
+              border-gray-200 text-gray-500 hover:border-gray-400"
+          data-testid="work-type-none"
+        >
+          None of these describe my work
+        </button>
+      </div>
+    </section>
+    <button
+      class="w-full py-4 rounded-xl text-sm font-medium transition-all
+          bg-gray-200 text-gray-400 cursor-not-allowed"
+      data-testid="stage2-proceed"
+      disabled=""
+    >
+      Proceed →
+    </button>
+  </div>
+</div>
+`;

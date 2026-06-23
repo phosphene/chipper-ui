@@ -1,0 +1,136 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DetectionChips > renders all three detection chips 1`] = `
+<div>
+  <div
+    class="py-6 space-y-4"
+    data-testid="detection-chips-container"
+  >
+    <p
+      class="text-xs font-mono tracking-widest uppercase text-gray-500 mb-3"
+    >
+      We detected:
+    </p>
+    <div
+      class="flex flex-wrap gap-3"
+    >
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
+        data-state="pending"
+        data-testid="detection-chip-work-type"
+        role="button"
+        tabindex="0"
+      >
+        <span
+          class="text-gray-500"
+        >
+          We think this is: 
+          Original Argument
+        </span>
+        <span
+          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
+        >
+          High
+        </span>
+        <button
+          aria-label="Edit Work type"
+          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
+          data-testid="detection-chip-work-type-edit"
+        >
+          ✎
+        </button>
+      </div>
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
+        data-state="pending"
+        data-testid="detection-chip-domain"
+        role="button"
+        tabindex="0"
+      >
+        <span
+          class="text-gray-500"
+        >
+          We think this is: 
+          Evolutionary Biology
+        </span>
+        <span
+          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
+        >
+          High
+        </span>
+        <button
+          aria-label="Edit Domain"
+          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
+          data-testid="detection-chip-domain-edit"
+        >
+          ✎
+        </button>
+      </div>
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
+        data-state="pending"
+        data-testid="detection-chip-standing"
+        role="button"
+        tabindex="0"
+      >
+        <span
+          class="text-gray-500"
+        >
+          We think this is: 
+          Professor
+        </span>
+        <span
+          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
+        >
+          High
+        </span>
+        <button
+          aria-label="Edit Standing"
+          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
+          data-testid="detection-chip-standing-edit"
+        >
+          ✎
+        </button>
+      </div>
+    </div>
+    <p
+      class="text-xs text-gray-400 mt-2"
+    >
+      Click to confirm, or click the edit icon to correct.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`DetectionChips > renders error state 1`] = `
+<div>
+  <div
+    class="py-8 text-center"
+    data-testid="detection-chips-container"
+  >
+    <p
+      class="text-sm text-red-500"
+    >
+      Detection failed
+    </p>
+  </div>
+</div>
+`;
+
+exports[`DetectionChips > renders loading state 1`] = `
+<div>
+  <div
+    class="flex flex-col items-center justify-center py-12 space-y-3"
+    data-testid="detection-chips-container"
+  >
+    <div
+      class="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"
+    />
+    <p
+      class="text-sm text-gray-500 font-light"
+    >
+      Reading your work…
+    </p>
+  </div>
+</div>
+`;

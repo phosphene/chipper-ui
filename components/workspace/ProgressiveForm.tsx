@@ -667,7 +667,7 @@ export function ProgressiveForm() {
 
             {/* ── 5. Domain [optional] — DomainPicker (T-390) ── */}
             {activeSection.id === 'domain' && (
-              <div className="space-y-3">
+              <div data-testid="entry-domain-input" className="space-y-3">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
                   Domain <span className="normal-case font-normal text-gray-400">(optional)</span>
                 </p>

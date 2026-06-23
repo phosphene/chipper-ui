@@ -1,0 +1,157 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`IntentSelection > matches snapshot 1`] = `
+<div>
+  <div
+    class="space-y-6"
+    data-testid="layer-2-intent"
+  >
+    <div
+      class="space-y-1"
+    >
+      <h2
+        class="text-xl font-light text-black leading-tight"
+      >
+        What would you like to do with this work?
+      </h2>
+      <p
+        class="text-sm text-gray-500"
+      >
+        You can select more than one.
+      </p>
+    </div>
+    <div
+      class="grid gap-3"
+    >
+      <button
+        class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+        data-testid="intent-assess"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <span
+            aria-hidden="true"
+            class="text-xl flex-shrink-0 mt-0.5"
+          >
+            ⚖
+          </span>
+          <div
+            class="min-w-0"
+          >
+            <p
+              class="text-sm font-semibold text-gray-900"
+            >
+              Assess
+            </p>
+            <p
+              class="text-xs mt-0.5 text-gray-500"
+            >
+              Get an evaluation of your work’s credibility and contribution
+            </p>
+          </div>
+        </div>
+      </button>
+      <button
+        class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+        data-testid="intent-develop"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <span
+            aria-hidden="true"
+            class="text-xl flex-shrink-0 mt-0.5"
+          >
+            ⚙
+          </span>
+          <div
+            class="min-w-0"
+          >
+            <p
+              class="text-sm font-semibold text-gray-900"
+            >
+              Develop
+            </p>
+            <p
+              class="text-xs mt-0.5 text-gray-500"
+            >
+              Improve your work through guided iteration and feedback
+            </p>
+          </div>
+        </div>
+      </button>
+      <button
+        class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+        data-testid="intent-publish"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <span
+            aria-hidden="true"
+            class="text-xl flex-shrink-0 mt-0.5"
+          >
+            📤
+          </span>
+          <div
+            class="min-w-0"
+          >
+            <p
+              class="text-sm font-semibold text-gray-900"
+            >
+              Publish
+            </p>
+            <p
+              class="text-xs mt-0.5 text-gray-500"
+            >
+              Submit to a registry, journal, or Observatory
+            </p>
+          </div>
+        </div>
+      </button>
+      <button
+        class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+        data-testid="intent-register"
+      >
+        <div
+          class="flex items-start gap-3"
+        >
+          <span
+            aria-hidden="true"
+            class="text-xl flex-shrink-0 mt-0.5"
+          >
+            🗗
+          </span>
+          <div
+            class="min-w-0"
+          >
+            <p
+              class="text-sm font-semibold text-gray-900"
+            >
+              Register & Index
+            </p>
+            <p
+              class="text-xs mt-0.5 text-gray-500"
+            >
+              Assign a permanent identifier and index your work
+            </p>
+          </div>
+        </div>
+      </button>
+    </div>
+    <button
+      class="w-full py-4 rounded-xl text-sm font-medium transition-all
+          bg-gray-200 text-gray-400 cursor-not-allowed"
+      data-testid="intent-proceed"
+      disabled=""
+    >
+      Proceed \\u2192
+    </button>
+  </div>
+</div>
+`;

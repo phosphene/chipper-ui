@@ -297,4 +297,12 @@ describe('RouteSelection', () => {
     expect(queryByTestId('route-registry')).toBeNull();
     expect(queryByTestId('route-uri')).toBeNull();
   });
+
+  it('matches snapshot with all intents', () => {
+    const allIntents: IntentValue[] = ['assess', 'develop', 'publish', 'register'];
+    const { container } = render(
+      <RouteSelection selectedIntents={allIntents} onProceed={vi.fn()} />
+    );
+    expect(container).toMatchSnapshot();
+  });
 });

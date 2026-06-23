@@ -175,4 +175,11 @@ describe('Stage2', () => {
     fireEvent.click(getByTestId('stage2-proceed'));
     expect(onProceed.mock.calls[0][0].creatorType).toBe('sole');
   });
+
+  it('matches snapshot', () => {
+    const { container } = render(
+      <Stage2 selectedDomains={[]} onProceed={vi.fn()} />
+    );
+    expect(container).toMatchSnapshot();
+  });
 });

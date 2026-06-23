@@ -164,4 +164,11 @@ describe('IntentSelection', () => {
     expect(card.className).toContain('border-gray-200');
     expect(card.className).toContain('bg-white');
   });
+
+  it('matches snapshot', () => {
+    const { container } = render(
+      <IntentSelection onProceed={vi.fn()} />
+    );
+    expect(container).toMatchSnapshot();
+  });
 });

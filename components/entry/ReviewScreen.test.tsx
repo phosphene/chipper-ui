@@ -126,4 +126,11 @@ describe('ReviewScreen', () => {
       expect(el.textContent!.length).toBeGreaterThan(10);
     }
   });
+
+  it('matches snapshot', () => {
+    const { container } = render(
+      <ReviewScreen selectedRoutes={routes} onBegin={vi.fn()} />
+    );
+    expect(container).toMatchSnapshot();
+  });
 });

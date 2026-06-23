@@ -1,0 +1,325 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RouteSelection > matches snapshot with all intents 1`] = `
+<div>
+  <div
+    class="space-y-6"
+    data-testid="layer-3-routes"
+  >
+    <div
+      class="space-y-1"
+    >
+      <h2
+        class="text-xl font-light text-black leading-tight"
+      >
+        Select what you’d like to do
+      </h2>
+      <p
+        class="text-sm text-gray-500"
+      >
+        Based on what you told us, these are available.
+      </p>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        Assess
+      </h3>
+      <div
+        class="grid gap-2"
+      >
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-quick-review"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Quick summary review
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Plain-language account, no score
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-wci"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Credibility evaluation
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            A structured evaluation across nine dimensions of intellectual contribution
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-full-eval"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Full evaluation + recommendations
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Evaluation plus improvement set
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-impact"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Impact assessment
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Who this work would reach
+          </p>
+        </button>
+      </div>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        Develop
+      </h3>
+      <div
+        class="grid gap-2"
+      >
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-title-framing"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Title and framing
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Improve title, abstract, and opening frame
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-improvement"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Improvement rounds
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Evaluate, recommend, revise, re-evaluate
+          </p>
+        </button>
+      </div>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        Publish
+      </h3>
+      <div
+        class="grid gap-2"
+      >
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-registry"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Woodchipper registry
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Permanent URI assigned to your work
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-journal"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Journal submission export
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Pre-filled for EditFlow, ScholarOne, or direct journal API
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-observatory"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Submit to Observatory.wiki
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Editorial review for public-facing article
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-export"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Print / export
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            PDF, structured markdown, citation-ready export
+          </p>
+        </button>
+      </div>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        Register & Index
+      </h3>
+      <div
+        class="grid gap-2"
+      >
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-uri"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            Woodchipper URI
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Permanent, citable identifier assigned immediately
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-orcid"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            ORCID work record
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Push to your ORCID profile
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-doi"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            DOI via Zenodo
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Mint a citable DOI for preprints and reports
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-arxiv"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            arXiv deposit
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            Domain-filtered; available when work type is compatible
+          </p>
+        </button>
+        <button
+          class="w-full text-left px-5 py-4 rounded-xl border-2 transition-all
+                    border-gray-200 bg-white text-gray-900 hover:border-gray-400"
+          data-testid="route-sherpa"
+        >
+          <p
+            class="text-sm font-semibold text-gray-900"
+          >
+            SHERPA/RoMEO check
+          </p>
+          <p
+            class="text-xs mt-0.5 text-gray-500"
+          >
+            What self-archiving is permitted under your publication terms
+          </p>
+        </button>
+      </div>
+    </div>
+    <button
+      class="w-full py-4 rounded-xl text-sm font-medium transition-all
+          bg-gray-200 text-gray-400 cursor-not-allowed"
+      data-testid="layer-3-proceed"
+      disabled=""
+    >
+      Proceed →
+    </button>
+  </div>
+</div>
+`;

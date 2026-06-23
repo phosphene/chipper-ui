@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ReviewScreen > matches snapshot 1`] = `
+<div>
+  <div
+    class="space-y-6"
+    data-testid="layer-5-review"
+  >
+    <div
+      class="space-y-1"
+    >
+      <h2
+        class="text-xl font-light text-black leading-tight"
+      >
+        Ready to begin
+      </h2>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        What happens next
+      </h3>
+      <div
+        class="space-y-2"
+      >
+        <p
+          class="text-sm text-gray-700 leading-relaxed"
+          data-testid="review-route-wci"
+        >
+          We’ll provide a structured evaluation of your work across nine dimensions of intellectual contribution.
+        </p>
+        <p
+          class="text-sm text-gray-700 leading-relaxed"
+          data-testid="review-route-uri"
+        >
+          We’ll assign a permanent, citable identifier to your work.
+        </p>
+      </div>
+    </div>
+    <div
+      class="space-y-3"
+    >
+      <h3
+        class="text-xs font-medium text-gray-500 uppercase tracking-widest"
+      >
+        What this does not cover
+      </h3>
+      <div
+        class="space-y-2"
+      >
+        <p
+          class="text-sm text-gray-500 leading-relaxed"
+          data-testid="review-limitation-0"
+        >
+          This is not peer review. It does not certify publication readiness.
+        </p>
+        <p
+          class="text-sm text-gray-500 leading-relaxed"
+          data-testid="review-limitation-1"
+        >
+          Scores reflect the instrument’s criteria — they are not the field’s verdict.
+        </p>
+        <p
+          class="text-sm text-gray-500 leading-relaxed"
+          data-testid="review-limitation-2"
+        >
+          Automated evaluation cannot replace human expert judgment in all cases.
+        </p>
+      </div>
+    </div>
+    <button
+      class="w-full py-4 rounded-xl text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 cursor-pointer transition-all"
+      data-testid="layer-5-begin"
+    >
+      Begin
+    </button>
+  </div>
+</div>
+`;

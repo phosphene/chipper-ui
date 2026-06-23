@@ -184,4 +184,11 @@ describe('ConfirmationScreen', () => {
     fireEvent.click(getByTestId('layer-4-confirm-btn'));
     expect(onConfirm).toHaveBeenCalledOnce();
   });
+
+  it('matches snapshot', () => {
+    const { container } = render(
+      <ConfirmationScreen data={baseData} onChangeField={vi.fn()} onConfirm={vi.fn()} />
+    );
+    expect(container).toMatchSnapshot();
+  });
 });
