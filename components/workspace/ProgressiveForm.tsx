@@ -23,6 +23,9 @@ import { DomainPicker } from '@/components/entry/DomainPicker';
 import type { SelectedDomain } from '@/components/entry/DomainPicker';
 import { Stage2 } from '@/components/entry/Stage2';
 import type { Stage2Data } from '@/components/entry/Stage2';
+import { DetectionChips } from '@/components/entry/DetectionChips';
+import type { DetectionChipsResult } from '@/components/entry/DetectionChips';
+import { useDetection } from '@/hooks/useDetection';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -60,6 +63,9 @@ const ROLE_OPTIONS: { value: RoleValue; label: string; testId: string }[] = [
 
 export function ProgressiveForm() {
   const store = useCeremonyStore();
+
+  // ── Detection hook (T-392) — must be before callbacks that use detect ──
+  const { detect, result: detectionResult, isLoading: isDetecting, error: detectionError, hasAcademicMarkers } = useDetection();
 
   // Section tracking — description starts active
   const [sections, setSections] = useState<SectionState[]>(() =>
@@ -222,14 +228,31 @@ export function ProgressiveForm() {
       store.updateMakerDeclaration({ tradition: { value: domainParts.join(', '), source: 'user' } });
     }
 
-    // Advance to Stage 2
+    // Detection-first flow (T-392): call /api/detect before showing Stage 2
+    setCurrentStage('detecting');
+    detect(descriptionText);
+    console.log('[ProgressiveForm] Proceed — Stage 1 complete, detecting...');
+  }, [descriptionText, selectedRole, selectedDomains, domainText, store, detect]);
+
+  // ── Detection complete handler (T-392) ─────────────────────
+
+  const handleDetectionComplete = useCallback((chipResult: DetectionChipsResult) => {
+    // Cascade: confirmed work_type pre-selects matching work-type in Stage 2
+    // Cascade: confirmed domain pre-fills domain in Stage 1 if not already set
+    if (chipResult.domain && pickerDomains.length === 0) {
+      // Domain cascade: update store tradition from detection
+      store.updateMakerDeclaration({ tradition: { value: chipResult.domain, source: 'detected' } });
+    }
+
+    // Advance to Stage 2 with detected values available in store
     setCurrentStage('stage2');
-    console.log('[ProgressiveForm] Proceed — Stage 1 complete, advancing to Stage 2');
-  }, [descriptionText, selectedRole, selectedDomains, domainText, store]);
+    console.log('[ProgressiveForm] Detection confirmed, advancing to Stage 2', chipResult);
+  }, [pickerDomains.length, store]);
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'stage1' | 'stage2'>('stage1');
+  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2'>('stage1');
+
 
   // ── Derived state ──────────────────────────────────────────
 
@@ -290,6 +313,19 @@ export function ProgressiveForm() {
       {/* ── Divider ── */}
       {completedSections.length > 0 && (
         <hr className="border-gray-200 mb-4 flex-shrink-0" />
+      )}
+
+      {/* ── Detection chips (T-392) — between Stage 1 and Stage 2 ── */}
+      {currentStage === 'detecting' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <DetectionChips
+            result={detectionResult!}
+            isLoading={isDetecting}
+            error={detectionError}
+            onComplete={handleDetectionComplete}
+            hasAcademicMarkers={hasAcademicMarkers}
+          />
+        </div>
       )}
 
       {/* ── Stage 2 ── */}
