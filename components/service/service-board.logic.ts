@@ -1,11 +1,21 @@
 /**
- * Service Board — Effect logic stub with dependency injection.
+ * Service board logic — pure functions with injectable dependencies.
  *
- * Pure logic module. No DOM, no React.
- * All I/O is injected via the HttpClient interface so the module
- * can run in tests with MockHttpClient and swap to real HTTP later.
+ * All I/O is injectable via the `httpClient` parameter so this module
+ * is testable in Node without a browser or running API. Swap in
+ * `MockHttpClient` for unit tests; the real woodchipper-services client
+ * (T-371) replaces it when the API is deployed — no function body changes.
  *
- * @module service-board.logic
+ * Pacing is deliberate: a frontier service returning in 200ms signals
+ * that nothing was actually evaluated. Minimum times are
+ * $t_{\text{small}} \geq 2\ \text{s}$, $t_{\text{frontier}} \geq 4\ \text{s}$.
+ *
+ * @remarks
+ * This module owns the service execution contract. The XState machine in
+ * service-board.machine.ts owns the lifecycle state. The view in
+ * service-board.view.tsx observes the machine. None of these layers
+ * need to know about the others' internals.
+ *
  * @ticket T-380
  */
 
@@ -25,10 +35,7 @@ export interface HttpClient {
   post(url: string, body: unknown): Promise<unknown>;
 }
 
-/**
- * Mock HTTP client that returns canned responses.
- * Used for testing and stub-tier development.
- */
+/** DI stub — returns canned responses for testing without a real API. */
 export const MockHttpClient: HttpClient = {
   async post(_url: string, body: unknown): Promise<unknown> {
     return { ok: true, body };
@@ -103,15 +110,20 @@ function delay(ms: number): Promise<void> {
 // ── requestService ────────────────────────────────────────────
 
 /**
- * Execute a single service request against the given (or mock) HTTP client.
+ * Execute a single service request and return the result after tier-appropriate pacing.
  *
- * - Stub-tier services resolve immediately with a note.
- * - Other tiers delay by their configured PACING_MS to simulate latency.
- * - Returns a fully typed ServiceResult.
+ * @param request - Service request carrying `service` type, `workText`, `evaluation`
+ *   (WCIResult), and maker `context` (standing, workType, domain).
+ * @param httpClient - Injectable HTTP client. Defaults to `MockHttpClient` for tests;
+ *   replaced by the real woodchipper-services client (T-371) in production.
+ * @returns `ServiceResult` containing the output text, output type, and optional
+ *   change count. Returned after a minimum delay of `PACING_MS[tier]`.
  *
- * @param request - The service request payload
- * @param httpClient - Injectable HTTP client (defaults to MockHttpClient)
- * @returns Promise resolving to a ServiceResult
+ * @remarks
+ * Stub-tier services ($t_{\text{stub}} = 0\ \text{s}$) return immediately with a
+ * descriptive note explaining what would happen with real infrastructure.
+ * This is the correct behaviour: the user sees the shape of the future service
+ * without being misled about its current availability.
  */
 export async function requestService(
   request: ServiceRequest,
@@ -161,17 +173,25 @@ export type OnAllComplete = () => void;
 // ── requestAllServices ────────────────────────────────────────
 
 /**
- * Execute multiple service requests in parallel, reporting progress
- * via callbacks as each node transitions through its lifecycle.
+ * Fire all requested services in parallel and report results via callbacks.
  *
- * Fires onNodeUpdate(serviceType, {status:'active'}) before each request,
- * then onNodeUpdate(serviceType, {status:'complete', result}) after resolution.
- * Once all services resolve, fires onAllComplete().
+ * Services execute concurrently via `Promise.all`. For each service:
+ * 1. `onNodeUpdate(type, { status: 'active', statusText: '...' })` fires immediately
+ * 2. The service runs (see `requestService`)
+ * 3. `onNodeUpdate(type, { status: 'complete', result })` fires on completion
+ * After all services complete: `onAllComplete()` fires once.
  *
- * @param selectedServices - Array of service types to execute
- * @param baseRequest - Base request data (workText, evaluation, context)
- * @param callbacks - Progress reporting callbacks
- * @param httpClient - Injectable HTTP client (defaults to MockHttpClient)
+ * The invariant $\forall s \in \text{services}: s\ \text{reaches terminal state}$
+ * is guaranteed by `Promise.all` — `onAllComplete` cannot fire until every
+ * service has resolved or rejected.
+ *
+ * @param selectedServices - Array of `ServiceType` values to execute.
+ * @param baseRequest - Base request data shared across all services (workText, evaluation, context).
+ * @param callbacks - Object containing `onNodeUpdate` (called on each node state transition:
+ *   active → complete/failed) and `onAllComplete` (called exactly once when all services
+ *   have reached terminal state).
+ * @param httpClient - Injectable HTTP client (see `requestService`).
+ * @returns `ServiceResult[]` in the same order as the input `selectedServices` array.
  */
 export async function requestAllServices(
   selectedServices: ServiceType[],
