@@ -21,6 +21,8 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';
 import { DomainPicker } from '@/components/entry/DomainPicker';
 import type { SelectedDomain } from '@/components/entry/DomainPicker';
+import { Stage2 } from '@/components/entry/Stage2';
+import type { Stage2Data } from '@/components/entry/Stage2';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -220,9 +222,14 @@ export function ProgressiveForm() {
       store.updateMakerDeclaration({ tradition: { value: domainParts.join(', '), source: 'user' } });
     }
 
-    // TODO: Stage 2 navigation will be wired in T-390+
-    console.log('[ProgressiveForm] Proceed — Stage 1 complete');
+    // Advance to Stage 2
+    setCurrentStage('stage2');
+    console.log('[ProgressiveForm] Proceed — Stage 1 complete, advancing to Stage 2');
   }, [descriptionText, selectedRole, selectedDomains, domainText, store]);
+
+  // ── Stage navigation ───────────────────────────────────────
+
+  const [currentStage, setCurrentStage] = useState<'stage1' | 'stage2'>('stage1');
 
   // ── Derived state ──────────────────────────────────────────
 
@@ -232,6 +239,28 @@ export function ProgressiveForm() {
 
 
   // ── Render ─────────────────────────────────────────────────
+
+  // ── Stage 2 proceed handler ────────────────────────────────
+
+  const handleStage2Proceed = useCallback((data: Stage2Data) => {
+    // Write Stage 2 data to store
+    if (data.makerRole) {
+      const standingMap: Record<string, string> = {
+        student: 'graduate-researcher',
+        scholar: 'professor',
+        practitioner: 'practitioner',
+      };
+      store.updateMakerDeclaration({
+        standing: { value: standingMap[data.makerRole] as any, source: 'user' },
+      });
+    }
+    if (data.workType && data.workType !== 'none') {
+      store.updateWorkClassification({
+        workType: { value: data.workType as any, source: 'user' },
+      });
+    }
+    console.log('[ProgressiveForm] Stage 2 complete', data);
+  }, [store]);
 
   return (
     <div data-testid="progressive-form" className="h-full flex flex-col px-5 py-6 overflow-hidden">
@@ -263,7 +292,18 @@ export function ProgressiveForm() {
         <hr className="border-gray-200 mb-4 flex-shrink-0" />
       )}
 
-      {/* ── Active section (below the line) ── */}
+      {/* ── Stage 2 ── */}
+      {currentStage === 'stage2' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <Stage2
+            selectedDomains={pickerDomains}
+            onProceed={handleStage2Proceed}
+          />
+        </div>
+      )}
+
+      {/* ── Active section (below the line) — Stage 1 only ── */}
+      {currentStage === 'stage1' && (
       <div className="flex-1 overflow-y-auto">
 
         {activeSection && (
@@ -531,6 +571,7 @@ export function ProgressiveForm() {
         </div>
 
       </div>
+      )}
     </div>
   );
 }
