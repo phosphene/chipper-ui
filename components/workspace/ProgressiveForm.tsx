@@ -28,6 +28,8 @@ import type { DetectionChipsResult } from '@/components/entry/DetectionChips';
 import { useDetection } from '@/hooks/useDetection';
 import { IntentSelection } from '@/components/entry/IntentSelection';
 import type { IntentValue } from '@/components/entry/IntentSelection';
+import { RouteSelection } from '@/components/entry/RouteSelection';
+import type { RouteValue } from '@/components/entry/RouteSelection';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -253,10 +255,13 @@ export function ProgressiveForm() {
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2'>('stage1');
+  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3'>('stage1');
 
   // ── Layer 2: selected intents (T-393) ──────────────────────
   const [selectedIntents, setSelectedIntents] = useState<IntentValue[]>([]);
+
+  // ── Layer 3: selected routes (T-394) ───────────────────────
+  const [selectedRoutes, setSelectedRoutes] = useState<RouteValue[]>([]);
 
 
   // ── Derived state ──────────────────────────────────────────
@@ -296,8 +301,16 @@ export function ProgressiveForm() {
 
   const handleIntentProceed = useCallback((intents: IntentValue[]) => {
     setSelectedIntents(intents);
-    // TODO: advance to Layer 3 (T-394)
-    console.log('[ProgressiveForm] Layer 2 complete, intents:', intents);
+    setCurrentStage('layer3');
+    console.log('[ProgressiveForm] Layer 2 complete, advancing to Layer 3, intents:', intents);
+  }, []);
+
+  // ── Layer 3: Route selection proceed handler (T-394) ───────
+
+  const handleRouteProceed = useCallback((routes: RouteValue[]) => {
+    setSelectedRoutes(routes);
+    // TODO: advance to Layer 4 (T-395)
+    console.log('[ProgressiveForm] Layer 3 complete, routes:', routes);
   }, []);
 
   return (
@@ -358,6 +371,16 @@ export function ProgressiveForm() {
         <div className="flex-1 overflow-y-auto animate-rise">
           <IntentSelection
             onProceed={handleIntentProceed}
+          />
+        </div>
+      )}
+
+      {/* ── Layer 3: Route selection (T-394) ── */}
+      {currentStage === 'layer3' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <RouteSelection
+            selectedIntents={selectedIntents}
+            onProceed={handleRouteProceed}
           />
         </div>
       )}
