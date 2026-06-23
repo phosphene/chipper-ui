@@ -13,6 +13,21 @@
  *
  * Academic marker highlight: if academic markers are detected, briefly
  * flashes the domain chip (0.5s animation, never forced).
+ *
+ * @invariants
+ * - `onComplete` fires only when every chip has reached `confirmed` or `edited` state —
+ *   never while any chip remains `pending`.
+ * - Correcting the work-type chip cascades to Stage 2 pre-fill — detection flows
+ *   forward into classification; it cannot be undone by returning to Stage 1.
+ * - The academic marker highlight is $\leq 0.5\ \text{s}$ — a suggestion,
+ *   never a forced mode change. Per INTERFACE-ALIGNMENT.md §11.
+ *
+ * @remarks
+ * The creation-first failure mode: presenting an empty form to the maker
+ * puts the cognitive burden of classification on them before the system has
+ * even tried. Per INTERFACE-ALIGNMENT.md §3: "An empty accordion is a worse
+ * multi-step form." The chip flow inverts this — the system commits to a guess
+ * first, the maker confirms or corrects. The blank page is never the starting point.
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';

@@ -14,6 +14,18 @@
  * WCI first appears, described as "A structured evaluation across nine
  * dimensions of intellectual contribution."
  *
+ * @remarks
+ * WCI containment: the "Credibility evaluation" route is described in plain
+ * language here — no "WCI" acronym in the user-facing label. This is the
+ * architecturally correct first appearance of the evaluation instrument:
+ * the maker has declared intent (Assess) and explicitly navigated to this
+ * screen. WCI arriving earlier — in Layers 1-5 — would violate the two-entity
+ * architecture in woodchipper-and-wci-portal.md: Woodchipper routes to WCI;
+ * WCI does not contaminate Woodchipper's entry layer.
+ *
+ * The route value `'wci'` is an internal identifier only. The rendered label
+ * and description are what the maker sees.
+ *
  * T-394
  */
 

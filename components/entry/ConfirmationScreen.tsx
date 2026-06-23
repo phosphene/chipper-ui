@@ -6,6 +6,16 @@
  * All entered data shown as key-value pairs with Change links.
  * Change links navigate back to the relevant stage via callbacks.
  *
+ * @see {@link https://design-system.service.gov.uk/patterns/check-answers/} GOV.UK Design System.
+ *   "Check answers pattern." The canonical implementation this component follows.
+ *
+ * @remarks
+ * Change links navigate to specific stages rather than a generic "edit mode"
+ * because precision reduces cognitive load at the moment of highest stakes.
+ * The maker should land exactly where the data lives — not hunt for it.
+ * Confirmation is already high-load; routing shortcuts are not a kindness,
+ * they are a necessity.
+ *
  * T-395
  */
 
