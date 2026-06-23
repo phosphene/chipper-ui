@@ -37,23 +37,31 @@ const REQUIRED_TESTIDS: { id: string; note: string; required: boolean }[] = [
   { id: 'board-toggle',           note: 'Board show/hide toggle',           required: true },
   { id: 'live-board-canvas',      note: 'Board canvas element',             required: true },
 
-  // ── Live app: ProgressiveForm ──────────────────────────────────────────
+  // ── Live app: ProgressiveForm — Stage 1 (T-389) ────────────────────────
   { id: 'progressive-form',       note: 'Progressive form container',       required: true },
   { id: 'entry-text-field',       note: 'Main entry textarea',              required: true },
-  { id: 'evaluate-progressive',   note: 'Primary evaluate button',          required: true },
-  { id: 'reading-panel',          note: 'Reading/results panel',            required: true },
-  { id: 'detection-confirm',      note: 'Detection confirmation panel',     required: true },
+  { id: 'entry-proceed-btn',      note: 'Proceed button (Stage 1)',         required: true },
+  { id: 'entry-upload-zone',      note: 'Upload drop zone',                 required: true },
+  { id: 'entry-details-expander', note: 'Details expander toggle',           required: true },
+  { id: 'entry-details-text',     note: 'Details expanded textarea',         required: true },
+  { id: 'entry-role-student',     note: 'Role pill: Student',               required: true },
+  { id: 'entry-role-scholar',     note: 'Role pill: Scholar',               required: true },
+  { id: 'entry-role-practitioner',note: 'Role pill: Practitioner',          required: true },
+  { id: 'entry-domain-input',     note: 'Domain type-in input',             required: true },
+  { id: 'as-you-proceed',         note: 'As you proceed info section',      required: true },
 
-  // ── Live app: Pronouncement (rendered inside ProgressiveForm) ──────────
-  { id: 'pronouncement',          note: 'Pronouncement container',          required: true },
-  { id: 'pronouncement-proceed',  note: 'Pronouncement proceed button',     required: true },
+  // ── Post-ceremony (deferred — wired in T-390+) ────────────────────────
+  { id: 'reading-panel',          note: 'Reading/results panel (T-390+)',   required: false },
+  { id: 'detection-confirm',      note: 'Detection confirmation (T-390+)', required: false },
+  { id: 'pronouncement',          note: 'Pronouncement container (T-390+)',required: false },
+  { id: 'pronouncement-proceed',  note: 'Pronouncement proceed (T-390+)',  required: false },
 
-  // ── Live app: Export strip ─────────────────────────────────────────────
-  { id: 'export-strip',           note: 'Export button strip container',    required: true },
-  { id: 'export-pdf',             note: 'Export PDF button',                required: true },
-  { id: 'export-markdown',        note: 'Export Markdown button',           required: true },
-  { id: 'export-json',            note: 'Export JSON button',               required: true },
-  { id: 'export-copy',            note: 'Export Copy button',               required: true },
+  // ── Export strip (deferred — wired in T-390+) ─────────────────────────
+  { id: 'export-strip',           note: 'Export strip container (T-390+)', required: false },
+  { id: 'export-pdf',             note: 'Export PDF button (T-390+)',      required: false },
+  { id: 'export-markdown',        note: 'Export Markdown (T-390+)',        required: false },
+  { id: 'export-json',            note: 'Export JSON (T-390+)',            required: false },
+  { id: 'export-copy',            note: 'Export Copy (T-390+)',            required: false },
 
   // ── Ceremony stages (CeremonyFlow — not yet mounted in app route) ─────
   // These testids exist in component source but CeremonyFlow is not

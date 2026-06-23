@@ -1,9 +1,11 @@
 /**
  * Functional E2E tests — chipper-ui
  *
- * Single-page architecture: no mode swaps. ProgressiveForm owns everything.
- * Entry text (section 0) is always visible. Evaluate → turns black at 15+ chars.
- * Subsequent sections rise up after evaluation — no page jumps.
+ * Single-page architecture: no mode swaps. ProgressiveForm owns Stage 1.
+ * Entry text (description) is always visible first. Proceed → turns black at 15+ chars.
+ * Subsequent sections rise up — no page jumps.
+ *
+ * T-389: Updated for Stage 1 field order (description, upload, details, role, domain).
  */
 
 import { test, expect } from '@playwright/test';
@@ -37,61 +39,69 @@ test.describe('Entry — page loads', () => {
 
 });
 
-test.describe('Entry — Evaluate button', () => {
+test.describe('Entry — Proceed button', () => {
 
-  test('Evaluate button disabled before 15 chars', async ({ page }) => {
+  test('Proceed button disabled before 15 chars', async ({ page }) => {
     await page.goto('/');
-    const btn = page.locator('[data-testid="evaluate-progressive"]');
+    const btn = page.locator('[data-testid="entry-proceed-btn"]');
     await expect(btn).toBeDisabled();
   });
 
-  test('Evaluate button enables after 15+ chars', async ({ page }) => {
+  test('Proceed button enables after 15+ chars', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-testid="entry-text-field"]').fill(LONG_TEXT);
-    const btn = page.locator('[data-testid="evaluate-progressive"]');
+    const btn = page.locator('[data-testid="entry-proceed-btn"]');
     await expect(btn).not.toBeDisabled();
   });
 
-  test('short text keeps Evaluate disabled', async ({ page }) => {
+  test('short text keeps Proceed disabled', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-testid="entry-text-field"]').fill(SHORT_TEXT);
-    const btn = page.locator('[data-testid="evaluate-progressive"]');
+    const btn = page.locator('[data-testid="entry-proceed-btn"]');
     await expect(btn).toBeDisabled();
   });
 
 });
 
-test.describe('Entry — evaluation flow', () => {
+test.describe('Entry — Stage 1 field order', () => {
 
-  test('Evaluate fires and reading panel appears inline (no page jump)', async ({ page }) => {
+  test('description section is active on load', async ({ page }) => {
     await page.goto('/');
-    await page.locator('[data-testid="entry-text-field"]').fill(LONG_TEXT);
-    await page.locator('[data-testid="evaluate-progressive"]').click();
-    // Reading panel should appear on same page — no navigation
-    await expect(page.locator('[data-testid="reading-panel"]')).toBeVisible({ timeout: 15_000 });
-    // workspace-panels still visible — no mode swap
-    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible();
+    await expect(page.locator('[data-testid="section-description"]')).toBeVisible();
+    await expect(page.locator('[data-testid="entry-text-field"]')).toBeVisible();
   });
 
-  test('no page navigation on evaluate — URL stays at /', async ({ page }) => {
+  test('"As you proceed..." section visible', async ({ page }) => {
     await page.goto('/');
-    await page.locator('[data-testid="entry-text-field"]').fill(LONG_TEXT);
-    await page.locator('[data-testid="evaluate-progressive"]').click();
-    await page.waitForTimeout(2000);
-    expect(page.url()).toMatch(/\/$/);
+    await expect(page.locator('[data-testid="as-you-proceed"]')).toBeVisible();
+    const text = await page.locator('[data-testid="as-you-proceed"]').textContent();
+    expect(text).toContain('Woodchipper facilitates development');
+    expect(text).toContain('Each phase of your work will be saved');
+    expect(text).toContain('open about its capabilities');
+  });
+
+  test('Proceed button text says "Proceed →"', async ({ page }) => {
+    await page.goto('/');
+    const btn = page.locator('[data-testid="entry-proceed-btn"]');
+    await expect(btn).toHaveText('Proceed →');
   });
 
 });
 
-test.describe('EntryAccordion — ceremony pre-population', () => {
+test.describe('Entry — no page navigation', () => {
 
-  test('accordion work type selection survives detection and appears in ceremony', async ({ page }) => {
+  test('URL stays at / during form interaction', async ({ page }) => {
     await page.goto('/');
     await page.locator('[data-testid="entry-text-field"]').fill(LONG_TEXT);
-    await page.locator('[data-testid="evaluate-progressive"]').click();
-    // workspace still present, progressive form still present
-    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible({ timeout: 8000 });
-    await expect(page.locator('[data-testid="progressive-form"]')).toBeVisible({ timeout: 5000 });
+    await page.waitForTimeout(500);
+    expect(page.url()).toMatch(/\/$/);
+  });
+
+  test('workspace-panels stays visible during interaction', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('[data-testid="entry-text-field"]').fill(LONG_TEXT);
+    await expect(page.locator('[data-testid="workspace-panels"]')).toBeVisible();
+    await expect(page.locator('[data-testid="progressive-form"]')).toBeVisible();
   });
 
 });

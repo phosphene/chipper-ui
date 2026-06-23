@@ -11,15 +11,18 @@ import { test, expect } from '@playwright/test';
 const BASE = process.env.BASE_URL ?? 'https://chipper-ui.fly.dev';
 const EVAL_TEXT = 'Original experimental study on cortisol regulation in adult primates. n=84, p=0.003.';
 
+/**
+ * reachPostCeremony — navigates through Stage 1 + evaluation to the service board.
+ *
+ * T-389: Stage 1 now uses Proceed → instead of Evaluate. Post-ceremony flow
+ * (evaluation, reading-panel, service-board) is wired in T-390+.
+ * This helper uses the dev jump shortcut to skip directly to post-ceremony.
+ */
 async function reachPostCeremony(page: any) {
   await page.goto(BASE);
   await page.locator('[data-testid="entry-text-field"]').fill(EVAL_TEXT);
-  const doneBtn = page.locator('[data-testid="btn-done-work"]');
-  if (await doneBtn.isVisible()) await doneBtn.click();
-  await page.locator('[data-testid="evaluate-progressive"]').click();
-  await expect(page.locator('[data-testid="reading-panel"]')).toBeVisible({ timeout: 20000 });
-  const proceed = page.getByRole('button', { name: /proceed to export/i });
-  if (await proceed.isVisible()) await proceed.click();
+  // Use dev shortcut to jump past entry to post-ceremony state
+  await page.locator('[data-testid="stage2-jump"]').click();
   await page.waitForTimeout(500);
 }
 

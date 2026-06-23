@@ -1,110 +1,103 @@
 'use client';
 /**
- * ProgressiveForm — rising form where completed sections animate upward.
+ * ProgressiveForm — Stage 1 entry form.
  *
- * The user never scrolls. The content moves to them. Completed sections
- * compress into a single-line summary above a divider; the active section
- * lives below it at full visual weight. The Evaluate button is always
- * present at the bottom of the active area.
+ * One combined form with a single "Proceed →" button.
+ * Completed sections compress into summary lines above a divider;
+ * the active section sits below at full visual weight.
+ * The user never scrolls — content rises to them.
  *
- * Post-evaluation: Pronouncement and export strip render inline.
+ * Field order (Jan, June 20):
+ *   1. "What are you working on?" — description textarea
+ *   2. Upload zone — documents / audio / images / any format
+ *   3. "+ Add more details" expander
+ *   4. "I am a:" — Student / Scholar / Practitioner pills
+ *   5. Domain [optional] — type-in autocomplete or multi-select
+ *
+ * T-389
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';
-import { useDetection } from '@/hooks/useDetection';
-import { Pronouncement } from '@/components/ceremony/Pronouncement';
-import { ServiceBoardView } from '@/components/service/service-board.view';
-import { buildMarkdown, buildJSON } from '@/lib/export';
-import type { WorkType } from '@/store/ceremony.types';
 
 // ── Section definitions ──────────────────────────────────────
 
-type SectionId = 'work' | 'hopes' | 'domain' | 'worktype';
-
-interface SubCode { code: string; label: string; }
-interface CodeGroup { code: string; label: string; subtopics: SubCode[]; }
-interface TaxonomyEntry { domain: string; system: string | null; authority: string | null; codes: CodeGroup[]; }
+type SectionId = 'description' | 'upload' | 'details' | 'role' | 'domain';
 
 interface SectionState {
   id: SectionId;
   label: string;
-  status: 'complete' | 'active' | 'pending' | 'skipped';
+  status: 'complete' | 'active' | 'pending';
   summary: string;
 }
 
-const SECTION_ORDER: SectionId[] = ['work', 'hopes', 'domain', 'worktype'];
+const SECTION_ORDER: SectionId[] = ['description', 'upload', 'details', 'role', 'domain'];
 
 const SECTION_LABELS: Record<SectionId, string> = {
-  'work': 'Work',
-  'hopes': 'What do you want Woodchipper to do?',
-  'domain': 'Domain',
-  'worktype': 'What type of work is this?',
+  description: 'What are you working on?',
+  upload: 'Upload',
+  details: 'Additional details',
+  role: 'Role',
+  domain: 'Domain',
 };
 
-// ── Data constants ───────────────────────────────────────────
+// ── Role options ─────────────────────────────────────────────
 
-const HOPE_OPTIONS = [
-  'Analysis', 'Review', 'Summary', 'Edit', 'Development', 'Comparison',
-  'Fact-checking', 'Clarity check', 'Argument strengthening', 'Gap identification',
-  'Literature context', 'Methodology review', 'Impact assessment', 'Simplification',
-  'Expansion', 'Translation guidance', 'Citation check', 'Structure review',
-  'Audience alignment', 'Abstract writing',
+type RoleValue = 'student' | 'scholar' | 'practitioner';
+
+const ROLE_OPTIONS: { value: RoleValue; label: string; testId: string }[] = [
+  { value: 'student', label: 'Student', testId: 'entry-role-student' },
+  { value: 'scholar', label: 'Scholar', testId: 'entry-role-scholar' },
+  { value: 'practitioner', label: 'Practitioner', testId: 'entry-role-practitioner' },
 ];
 
-const WORK_TYPES: { value: WorkType; label: string }[] = [
-  { value: 'original-argument', label: 'Original Argument' },
-  { value: 'synthesis-review', label: 'Synthesis' },
-  { value: 'evidentiary-finding', label: 'Evidentiary Finding' },
-  { value: 'replication', label: 'Replication of Results' },
-  { value: 'null-result', label: 'Null Result' },
-  { value: 'methodological-contribution', label: 'Methodological' },
-  { value: 'theoretical-framework', label: 'Theoretical Framework' },
-];
-
-// Domain options loaded from /domain-taxonomy.json at runtime
+// Domain taxonomy loaded at runtime
+interface SubCode { code: string; label: string; }
+interface CodeGroup { code: string; label: string; subtopics: SubCode[]; }
+interface TaxonomyEntry { domain: string; system: string | null; authority: string | null; codes: CodeGroup[]; }
 
 // ── Component ────────────────────────────────────────────────
 
 export function ProgressiveForm() {
   const store = useCeremonyStore();
-  const { detect, isLoading: isDetecting } = useDetection();
 
-  // Rich taxonomy with classification codes
+  // Taxonomy for domain picker
   const [taxonomy, setTaxonomy] = useState<TaxonomyEntry[]>([]);
   useEffect(() => {
     fetch('/domain-taxonomy.json').then(r => r.json()).then(setTaxonomy).catch(() => {});
   }, []);
 
-  // Section tracking
-  const [activeIndex, setActiveIndex] = useState(0); // Start at work (entry text)
+  // Section tracking — description starts active
   const [sections, setSections] = useState<SectionState[]>(() =>
     SECTION_ORDER.map((id, i) => ({
       id,
       label: SECTION_LABELS[id],
-      status: i === 0 ? 'active' : 'pending',
+      status: i === 0 ? 'active' as const : 'pending' as const,
       summary: '',
     }))
   );
 
-  // Section-local state
-  const [workText, setWorkText] = useState('');
-  const [workFile, setWorkFile] = useState<string | null>(null);
-  const [selectedHopes, setSelectedHopes] = useState<string[]>([]);
-  const [hopeText, setHopeText] = useState('');
-  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+  // ── Field state ────────────────────────────────────────────
+
+  // 1. Description
+  const [descriptionText, setDescriptionText] = useState('');
+
+  // 2. Upload
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 3. Details expander
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const [detailsText, setDetailsText] = useState('');
+
+  // 4. Role
+  const [selectedRole, setSelectedRole] = useState<RoleValue | null>(null);
+
+  // 5. Domain
   const [domainText, setDomainText] = useState('');
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
   const [domainFilter, setDomainFilter] = useState('');
-  const [selectedWorkType, setSelectedWorkType] = useState<WorkType | null>(null);
-
-  // Post-evaluation state
-  const [evaluated, setEvaluated] = useState(false);
-  const [evaluating, setEvaluating] = useState(false);
-  const [showExport, setShowExport] = useState(false);
-
-  // Animation ref for the active area
-  const activeAreaRef = useRef<HTMLDivElement>(null);
 
   // ── Section navigation ─────────────────────────────────────
 
@@ -112,51 +105,69 @@ export function ProgressiveForm() {
     setSections(prev => {
       const idx = prev.findIndex(s => s.id === sectionId);
       if (idx === -1) return prev;
-
-      const next = prev.map((s, i) => {
+      return prev.map((s, i) => {
         if (i === idx) return { ...s, status: 'complete' as const, summary };
         if (i === idx + 1 && s.status === 'pending') return { ...s, status: 'active' as const };
         return s;
       });
-      return next;
     });
-    setActiveIndex(prev => Math.min(prev + 1, SECTION_ORDER.length));
   }, []);
 
-  const skipSection = useCallback((sectionId: SectionId) => {
+  const advanceToNext = useCallback((afterId: SectionId) => {
     setSections(prev => {
-      const idx = prev.findIndex(s => s.id === sectionId);
+      const idx = prev.findIndex(s => s.id === afterId);
       if (idx === -1) return prev;
-
+      // Find next pending
+      const nextIdx = prev.findIndex((s, i) => i > idx && s.status === 'pending');
+      if (nextIdx === -1) return prev;
       return prev.map((s, i) => {
-        if (i === idx) return { ...s, status: 'skipped' as const, summary: '(skipped)' };
-        if (i === idx + 1 && s.status === 'pending') return { ...s, status: 'active' as const };
+        if (i === nextIdx) return { ...s, status: 'active' as const };
         return s;
       });
     });
-    setActiveIndex(prev => Math.min(prev + 1, SECTION_ORDER.length));
   }, []);
 
   const reopenSection = useCallback((sectionId: SectionId) => {
-    if (evaluated) return; // Don't reopen after evaluation
     const idx = SECTION_ORDER.indexOf(sectionId);
-    if (idx === -1 || idx === 0) return; // Can't reopen work
-
+    if (idx === -1) return;
     setSections(prev => prev.map((s, i) => {
       if (i === idx) return { ...s, status: 'active' as const };
-      if (i > idx && (s.status === 'active')) return { ...s, status: 'pending' as const };
+      if (i > idx && s.status === 'active') return { ...s, status: 'pending' as const };
       return s;
     }));
-    setActiveIndex(idx);
-  }, [evaluated]);
+  }, []);
 
   // ── Section done handlers ──────────────────────────────────
 
-  const handleHopesDone = useCallback(() => {
-    const parts = [...selectedHopes];
-    if (hopeText.trim()) parts.push(hopeText.trim());
-    completeSection('hopes', parts.length > 0 ? parts.join(', ') : '(none selected)');
-  }, [selectedHopes, hopeText, completeSection]);
+  const handleDescriptionDone = useCallback(() => {
+    if (descriptionText.trim().length < 15) return;
+    store.updateMakerDeclaration({ freeText: descriptionText });
+    const summary = descriptionText.trim().length > 80
+      ? descriptionText.trim().slice(0, 80) + '…'
+      : descriptionText.trim();
+    completeSection('description', summary);
+  }, [descriptionText, store, completeSection]);
+
+  const handleUploadDone = useCallback(() => {
+    const summary = uploadedFiles.length > 0
+      ? `${uploadedFiles.length} file${uploadedFiles.length > 1 ? 's' : ''}`
+      : '(no files)';
+    completeSection('upload', summary);
+  }, [uploadedFiles, completeSection]);
+
+  const handleDetailsDone = useCallback(() => {
+    const summary = detailsText.trim()
+      ? (detailsText.trim().length > 60 ? detailsText.trim().slice(0, 60) + '…' : detailsText.trim())
+      : '(none)';
+    completeSection('details', summary);
+  }, [detailsText, completeSection]);
+
+  const handleRoleDone = useCallback(() => {
+    const summary = selectedRole
+      ? ROLE_OPTIONS.find(r => r.value === selectedRole)?.label ?? selectedRole
+      : '(none selected)';
+    completeSection('role', summary);
+  }, [selectedRole, completeSection]);
 
   const handleDomainDone = useCallback(() => {
     const parts = [...selectedDomains];
@@ -168,121 +179,61 @@ export function ProgressiveForm() {
     completeSection('domain', combined || '(none selected)');
   }, [selectedDomains, domainText, store, completeSection]);
 
-  const handleWorkTypeDone = useCallback(() => {
-    if (selectedWorkType) {
-      const label = WORK_TYPES.find(w => w.value === selectedWorkType)?.label ?? selectedWorkType;
-      store.updateWorkClassification({ workType: { value: selectedWorkType, source: 'user' } });
-      completeSection('worktype', label);
+  // ── Upload handlers ────────────────────────────────────────
+
+  const handleFileDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      setUploadedFiles(prev => [...prev, ...files]);
     }
-  }, [selectedWorkType, store, completeSection]);
+  }, []);
 
-  // ── Evaluate ───────────────────────────────────────────────
-
-  const handleEvaluate = useCallback(async () => {
-    const text = workText.trim();
-    if (!text || text.length < 15) return;
-    // Write to store so downstream components can read it
-    store.updateMakerDeclaration({ freeText: text });
-
-    setEvaluating(true);
-    try {
-      await detect(text);
-      setEvaluated(true);
-      setShowExport(true);
-    } catch {
-      // Error handled by useDetection
-    } finally {
-      setEvaluating(false);
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length > 0) {
+      setUploadedFiles(prev => [...prev, ...files]);
     }
-  }, [workText, detect, store]);
+  }, []);
 
-  // ── Export helpers ──────────────────────────────────────────
+  const removeFile = useCallback((idx: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== idx));
+  }, []);
 
-  const handleExportPDF = useCallback(() => {
-    const result = store.wciResult;
-    if (!result) return;
-    const md = buildMarkdown(result, workText);
-    const escaped = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Woodchipper Evaluation</title>
-<style>
-  body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; color: #111; line-height: 1.6; font-size: 14px; }
-  h1 { font-size: 1.5rem; border-bottom: 2px solid #111; padding-bottom: 8px; }
-  h2 { font-size: 1rem; margin-top: 2rem; text-transform: uppercase; letter-spacing: 0.08em; color: #444; }
-  h3 { font-size: 0.95rem; margin-top: 1.2rem; }
-  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 13px; }
-  th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: left; }
-  th { background: #f5f5f5; }
-  @media print { body { margin: 20px; } }
-</style>
-</head>
-<body><pre style="font-family:inherit;background:none;padding:0;white-space:pre-wrap">${escaped}</pre>
-<script>window.onload=function(){window.print();}<\/script>
-</body></html>`;
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const win = window.open(url, '_blank');
-    if (win) win.focus();
-  }, [buildMarkdown]);
+  // ── Proceed handler ────────────────────────────────────────
 
-  const handleExportMD = useCallback(() => {
-    const result = store.wciResult;
-    if (!result) return;
-    const md = buildMarkdown(result, workText);
-    const blob = new Blob([md], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `woodchipper-evaluation-${new Date().toISOString().slice(0, 10)}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [buildMarkdown]);
+  const handleProceed = useCallback(() => {
+    // Write all data to store
+    store.updateMakerDeclaration({ freeText: descriptionText });
+    if (selectedRole) {
+      // Map role to standing for store compatibility
+      const standingMap: Record<RoleValue, string> = {
+        student: 'graduate-researcher',
+        scholar: 'professor',
+        practitioner: 'practitioner',
+      };
+      store.updateMakerDeclaration({
+        standing: { value: standingMap[selectedRole] as any, source: 'user' },
+      });
+    }
+    const domainParts = [...selectedDomains];
+    if (domainText.trim()) domainParts.push(domainText.trim());
+    if (domainParts.length > 0) {
+      store.updateMakerDeclaration({ tradition: { value: domainParts.join(', '), source: 'user' } });
+    }
 
-  const handleExportJSON = useCallback(() => {
-    const result = store.wciResult;
-    if (!result) return;
-    const json = buildJSON(result, workText);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `woodchipper-evaluation-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [buildJSON]);
+    // TODO: Stage 2 navigation will be wired in T-390+
+    console.log('[ProgressiveForm] Proceed — Stage 1 complete');
+  }, [descriptionText, selectedRole, selectedDomains, domainText, store]);
 
-  const handleCopy = useCallback(() => {
-    const result = store.wciResult;
-    if (!result) return;
-    const md = buildMarkdown(result, workText);
-    navigator.clipboard.writeText(md).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = md;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    });
-  }, [buildMarkdown]);
+  // ── Derived state ──────────────────────────────────────────
 
-  // ── Filter domains ─────────────────────────────────────────
-
+  const hasEnoughText = descriptionText.trim().length >= 15;
+  const activeSection = sections.find(s => s.status === 'active');
+  const completedSections = sections.filter(s => s.status === 'complete');
   const filteredDomains = taxonomy
     .map(t => t.domain)
     .filter(d => d.toLowerCase().includes(domainFilter.toLowerCase()));
-
-  // ── Active section check ───────────────────────────────────
-
-  const activeSection = sections.find(s => s.status === 'active');
-  const allDone = sections.every(s => s.status === 'complete' || s.status === 'skipped');
-  const hasWorkText = workText.trim().length >= 15;
 
   // ── Render ─────────────────────────────────────────────────
 
@@ -291,16 +242,12 @@ export function ProgressiveForm() {
 
       {/* ── Completed stack (above the line) ── */}
       <div className="flex-shrink-0 space-y-1 mb-3">
-        {sections.filter(s => s.status === 'complete' || s.status === 'skipped').map(section => (
+        {completedSections.map(section => (
           <button
             key={section.id}
             data-testid={`section-${section.id}-complete`}
             onClick={() => reopenSection(section.id)}
-            disabled={section.id === 'work' || evaluated}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all duration-350 ease-out hover:bg-gray-50 disabled:hover:bg-transparent group"
-            style={{
-              transition: 'transform 0.35s ease, opacity 0.35s ease',
-            }}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all duration-350 ease-out hover:bg-gray-50 group"
           >
             <span className="text-xs text-gray-400 font-medium uppercase tracking-widest whitespace-nowrap">
               {section.label}
@@ -308,85 +255,223 @@ export function ProgressiveForm() {
             <span className="text-xs text-gray-400 truncate flex-1">
               {section.summary}
             </span>
-            {section.id !== 'work' && !evaluated && (
-              <span className="text-[0.6rem] text-gray-300 group-hover:text-gray-500 transition-colors">
-                edit
-              </span>
-            )}
+            <span className="text-[0.6rem] text-gray-300 group-hover:text-gray-500 transition-colors">
+              edit
+            </span>
           </button>
         ))}
       </div>
 
-      {/* ── Divider line ── */}
-      {sections.some(s => s.status === 'complete' || s.status === 'skipped') && (
+      {/* ── Divider ── */}
+      {completedSections.length > 0 && (
         <hr className="border-gray-200 mb-4 flex-shrink-0" />
       )}
 
       {/* ── Active section (below the line) ── */}
-      <div
-        ref={activeAreaRef}
-        className="flex-1 overflow-y-auto"
-        style={{ transition: 'transform 0.35s ease, opacity 0.35s ease' }}
-      >
-        {!evaluated && activeSection && (
+      <div className="flex-1 overflow-y-auto">
+
+        {activeSection && (
           <div
             key={activeSection.id}
             data-testid={`section-${activeSection.id}`}
             className="animate-rise"
           >
-            {/* Section header */}
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-4">
-              {activeSection.label}{' '}
-              <span className="normal-case font-normal text-gray-400">(optional)</span>
-            </p>
-
-            {/* Section content */}
-            {activeSection.id === 'work' && (
-              <div className="space-y-3" data-testid="section-work-input">
-                <h1 className="text-2xl font-light text-black leading-tight">What are you working on?</h1>
+            {/* ── 1. Description ── */}
+            {activeSection.id === 'description' && (
+              <div className="space-y-3" data-testid="section-description-input">
+                <h1 className="text-2xl font-light text-black leading-tight">
+                  What are you working on?
+                </h1>
                 <textarea
                   data-testid="entry-text-field"
                   rows={5}
-                  value={workText}
-                  onChange={e => setWorkText(e.target.value)}
-                  placeholder="Describe your work — a research paper, a finding, an argument, a null result…"
+                  value={descriptionText}
+                  onChange={e => setDescriptionText(e.target.value)}
+                  placeholder="Describe your work — a research paper, a finding, an argument, a null result..."
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-gray-400 resize-none"
                   autoFocus
                 />
-              </div>
-            )}
-            {activeSection.id === 'hopes' && (
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
-                  {HOPE_OPTIONS.map(hope => (
-                    <button
-                      key={hope}
-                      data-testid={`hope-${hope.toLowerCase().replace(/\s+/g, '-')}`}
-                      onClick={() => setSelectedHopes(prev =>
-                        prev.includes(hope) ? prev.filter(h => h !== hope) : [...prev, hope]
-                      )}
-                      className={`px-3 py-1.5 rounded-full border text-xs transition-all
-                        ${selectedHopes.includes(hope)
-                          ? 'border-gray-900 bg-gray-900 text-white'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
-                    >
-                      {hope}
-                    </button>
-                  ))}
+                <div className="flex justify-end">
+                  <button
+                    data-testid="btn-done-description"
+                    onClick={handleDescriptionDone}
+                    disabled={!hasEnoughText}
+                    className={`px-4 py-2 text-xs font-medium rounded-lg transition-colors
+                      ${hasEnoughText
+                        ? 'text-gray-900 border border-gray-300 hover:bg-gray-50 cursor-pointer'
+                        : 'text-gray-300 border border-gray-100 cursor-not-allowed'}`}
+                  >
+                    Done
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  data-testid="hope-freetext"
-                  value={hopeText}
-                  onChange={e => setHopeText(e.target.value)}
-                  placeholder="Or describe what you're looking for…"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400"
-                />
               </div>
             )}
 
+            {/* ── 2. Upload zone ── */}
+            {activeSection.id === 'upload' && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+                  Upload
+                </p>
+                <div
+                  data-testid="entry-upload-zone"
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={handleFileDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
+                >
+                  <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                  <span className="text-sm text-gray-500">
+                    Upload — Documents / Audio / Images / Any format
+                  </span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    data-testid="entry-file-input"
+                  />
+                </div>
+
+                {/* Uploaded file list */}
+                {uploadedFiles.length > 0 && (
+                  <div className="space-y-1">
+                    {uploadedFiles.map((file, idx) => (
+                      <div key={`${file.name}-${idx}`} className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg text-xs text-gray-600">
+                        <span className="truncate flex-1">{file.name}</span>
+                        <span className="text-gray-400">{(file.size / 1024).toFixed(0)} KB</span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    data-testid="btn-skip-upload"
+                    onClick={() => { completeSection('upload', '(no files)'); }}
+                    className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    Skip →
+                  </button>
+                  <button
+                    data-testid="btn-done-upload"
+                    onClick={handleUploadDone}
+                    className="px-4 py-2 text-xs font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── 3. Details expander ── */}
+            {activeSection.id === 'details' && (
+              <div className="space-y-3">
+                {!detailsExpanded ? (
+                  <button
+                    data-testid="entry-details-expander"
+                    onClick={() => setDetailsExpanded(true)}
+                    className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                  >
+                    Optional: + Add more details
+                  </button>
+                ) : (
+                  <div>
+                    <button
+                      data-testid="entry-details-expander"
+                      onClick={() => setDetailsExpanded(false)}
+                      className="text-sm text-gray-500 hover:text-gray-700 transition-colors mb-2"
+                    >
+                      − Hide details
+                    </button>
+                    <textarea
+                      data-testid="entry-details-text"
+                      rows={6}
+                      value={detailsText}
+                      onChange={e => setDetailsText(e.target.value)}
+                      placeholder="Share additional context about your work..."
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-gray-400 resize-none"
+                      autoFocus
+                    />
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    data-testid="btn-skip-details"
+                    onClick={() => { completeSection('details', '(none)'); }}
+                    className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    Skip →
+                  </button>
+                  <button
+                    data-testid="btn-done-details"
+                    onClick={handleDetailsDone}
+                    className="px-4 py-2 text-xs font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── 4. Role pills ── */}
+            {activeSection.id === 'role' && (
+              <div className="space-y-3">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+                  I am a:
+                </p>
+                <div className="flex gap-2">
+                  {ROLE_OPTIONS.map(({ value, label, testId }) => (
+                    <button
+                      key={value}
+                      data-testid={testId}
+                      onClick={() => setSelectedRole(prev => prev === value ? null : value)}
+                      className={`px-5 py-2.5 rounded-full border text-sm font-medium transition-all
+                        ${selectedRole === value
+                          ? 'border-gray-900 bg-gray-900 text-white'
+                          : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    data-testid="btn-skip-role"
+                    onClick={() => { completeSection('role', '(none selected)'); }}
+                    className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    Skip →
+                  </button>
+                  <button
+                    data-testid="btn-done-role"
+                    onClick={handleRoleDone}
+                    className="px-4 py-2 text-xs font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── 5. Domain [optional] ── */}
             {activeSection.id === 'domain' && (
               <div className="space-y-3">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+                  Domain <span className="normal-case font-normal text-gray-400">(optional)</span>
+                </p>
+
                 {/* Selected domain pills */}
                 {selectedDomains.length > 0 && (
                   <div className="flex flex-wrap gap-2">
@@ -404,55 +489,12 @@ export function ProgressiveForm() {
                   </div>
                 )}
 
-                {/* Sub-discipline codes for each selected domain */}
-                {selectedDomains.map(domain => {
-                  const entry = taxonomy.find(t => t.domain === domain);
-                  if (!entry || entry.codes.length === 0) return null;
-                  return (
-                    <div key={domain} className="border border-gray-200 rounded-xl p-3 bg-gray-50">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-gray-700">{domain}</span>
-                        {entry.system && (
-                          <span className="text-[0.6rem] font-mono text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-                            {entry.system}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {entry.codes.map(cg => (
-                          <div key={cg.code} className="relative group">
-                            <button
-                              data-testid={`subcode-${cg.code}`}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-gray-200 text-xs text-gray-600 hover:border-gray-400 transition-all bg-white"
-                              title={cg.subtopics.map(s => `${s.code}: ${s.label}`).join(' · ')}
-                            >
-                              <span className="font-mono text-[0.6rem] text-gray-400">{cg.code}</span>
-                              <span>{cg.label}</span>
-                            </button>
-                            {/* Subtopic flyout on hover */}
-                            {cg.subtopics.length > 0 && (
-                              <div className="hidden group-hover:block absolute z-10 top-full mt-1 left-0 bg-white border border-gray-200 rounded-xl shadow-lg p-2 min-w-[180px]">
-                                {cg.subtopics.map(s => (
-                                  <div key={s.code} className="flex items-baseline gap-2 py-0.5 px-1">
-                                    <span className="font-mono text-[0.55rem] text-gray-400 shrink-0">{s.code}</span>
-                                    <span className="text-xs text-gray-600">{s.label}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-
                 <input
                   type="text"
-                  data-testid="entry-tradition"
+                  data-testid="entry-domain-input"
                   value={domainText}
                   onChange={e => setDomainText(e.target.value)}
-                  placeholder="Type a domain freely…"
+                  placeholder="Type or select a domain..."
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400"
                 />
 
@@ -495,150 +537,65 @@ export function ProgressiveForm() {
                     </div>
                   </div>
                 )}
-              </div>
-            )}
 
-            {activeSection.id === 'worktype' && (
-              <div className="grid grid-cols-2 gap-2">
-                {WORK_TYPES.map(({ value, label }) => (
+                <div className="flex justify-end gap-2">
                   <button
-                    key={`${value}-${label}`}
-                    data-testid={`work-type-${value}`}
-                    onClick={() => setSelectedWorkType(value)}
-                    aria-pressed={selectedWorkType === value}
-                    className={`text-left p-3 rounded-xl border text-sm transition-all
-                      ${selectedWorkType === value
-                        ? 'border-gray-900 bg-gray-900 text-white'
-                        : 'border-gray-200 text-gray-700 hover:border-gray-400'}`}
+                    data-testid="btn-skip-domain"
+                    onClick={() => { completeSection('domain', '(none selected)'); }}
+                    className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {label}
+                    Skip →
                   </button>
-                ))}
+                  <button
+                    data-testid="btn-done-domain"
+                    onClick={handleDomainDone}
+                    className="px-4 py-2 text-xs font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
               </div>
             )}
-
-            {/* Done / Skip buttons */}
-            <div className="flex justify-end gap-2 mt-4">
-              <button
-                data-testid={`btn-skip-${activeSection.id}`}
-                onClick={() => skipSection(activeSection.id)}
-                className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                Skip →
-              </button>
-              <button
-                data-testid={`btn-done-${activeSection.id}`}
-                onClick={() => {
-                  switch (activeSection.id) {
-                    case 'work': {
-                      store.updateMakerDeclaration({ freeText: workText });
-                      completeSection('work', workText.slice(0, 80) + (workText.length > 80 ? '…' : ''));
-                      break;
-                    }
-                    case 'hopes': handleHopesDone(); break;
-                    case 'domain': handleDomainDone(); break;
-                    case 'worktype': handleWorkTypeDone(); break;
-                  }
-                }}
-                className="px-4 py-2 text-xs font-medium text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Done
-              </button>
-            </div>
           </div>
         )}
 
-        {/* ── All sections done, pre-eval: show gentle prompt ── */}
-        {!evaluated && !activeSection && allDone && (
-          <div className="text-center py-8">
-            <p className="text-sm text-gray-500">
-              All set. Hit Evaluate when you&apos;re ready.
-            </p>
-          </div>
-        )}
+        {/* ── Proceed button — always visible ── */}
+        <div className="mt-6">
+          <button
+            data-testid="entry-proceed-btn"
+            onClick={handleProceed}
+            disabled={!hasEnoughText}
+            className={`w-full py-4 rounded-xl text-sm font-medium transition-all
+              ${hasEnoughText
+                ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+          >
+            Proceed →
+          </button>
+        </div>
 
-        {/* ── Evaluate button — always visible when not evaluated ── */}
-        {!evaluated && (
-          <div className="mt-6">
-            <button
-              data-testid="evaluate-progressive"
-              onClick={handleEvaluate}
-              disabled={!hasWorkText || evaluating || isDetecting}
-              className={`w-full py-4 rounded-xl text-sm font-medium transition-all
-                ${hasWorkText && !evaluating && !isDetecting
-                  ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-            >
-              {evaluating || isDetecting ? 'Evaluating…' : 'Evaluate →'}
-            </button>
-          </div>
-        )}
+        {/* ── "As you proceed..." section ── */}
+        <div className="mt-8 px-1" data-testid="as-you-proceed">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
+            As you proceed…
+          </p>
+          <ul className="space-y-1.5 text-xs text-gray-500 leading-relaxed">
+            <li className="flex gap-2">
+              <span className="text-gray-400">•</span>
+              <span>Woodchipper facilitates development, evaluation, review, editing, of your work. You can loop the process.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-gray-400">•</span>
+              <span>Each phase of your work will be saved, and you can revisit earlier versions.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-gray-400">•</span>
+              <span>Woodchipper is designed to be open about its capabilities and its limits.</span>
+            </li>
+          </ul>
+        </div>
 
-        {/* ── Post-evaluation: Reading ── */}
-        {evaluated && (
-          <div data-testid="reading-panel" className="mt-2">
-            <Pronouncement
-              onRequestImprovement={() => {
-                setEvaluated(false);
-                setShowExport(false);
-              }}
-              onExport={() => setShowExport(true)}
-            />
-          </div>
-        )}
-
-        {/* ── Service Board (post-export phase) ── */}
-        {evaluated && showExport && (
-          <div className="mt-4">
-            <ServiceBoardView
-              wciResult={store.wciResult}
-              workText={workText}
-              workType={store.makerDeclaration?.standing?.value ? (store.workClassification?.workType?.value ?? 'original-argument') : 'original-argument'}
-              standing={store.makerDeclaration?.standing?.value ?? 'independent-researcher'}
-            />
-
-            {/* Export strip — below service board */}
-            <div data-testid="export-strip" className="mt-4 flex gap-2">
-              <button
-                data-testid="export-pdf"
-                onClick={handleExportPDF}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
-              >
-                PDF
-              </button>
-              <button
-                data-testid="export-markdown"
-                onClick={handleExportMD}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
-              >
-                Markdown
-              </button>
-              <button
-                data-testid="export-json"
-                onClick={handleExportJSON}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
-              >
-                JSON
-              </button>
-              <button
-                data-testid="export-copy"
-                onClick={handleCopy}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 hover:border-gray-400 transition-colors"
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
-}
-
-// ── Helpers ──────────────────────────────────────────────────
-
-function buildWorkSummary(text: string): string {
-  if (!text) return '(no text)';
-  const clean = text.replace(/\n/g, ' ').trim();
-  return clean.length > 80 ? `"${clean.slice(0, 80)}…"` : `"${clean}"`;
 }
