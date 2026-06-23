@@ -26,6 +26,8 @@ import type { Stage2Data } from '@/components/entry/Stage2';
 import { DetectionChips } from '@/components/entry/DetectionChips';
 import type { DetectionChipsResult } from '@/components/entry/DetectionChips';
 import { useDetection } from '@/hooks/useDetection';
+import { IntentSelection } from '@/components/entry/IntentSelection';
+import type { IntentValue } from '@/components/entry/IntentSelection';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -251,7 +253,10 @@ export function ProgressiveForm() {
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2'>('stage1');
+  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2'>('stage1');
+
+  // ── Layer 2: selected intents (T-393) ──────────────────────
+  const [selectedIntents, setSelectedIntents] = useState<IntentValue[]>([]);
 
 
   // ── Derived state ──────────────────────────────────────────
@@ -282,8 +287,18 @@ export function ProgressiveForm() {
         workType: { value: data.workType as any, source: 'user' },
       });
     }
-    console.log('[ProgressiveForm] Stage 2 complete', data);
+    // Advance to Layer 2 intent selection (T-393)
+    setCurrentStage('layer2');
+    console.log('[ProgressiveForm] Stage 2 complete, advancing to Layer 2', data);
   }, [store]);
+
+  // ── Layer 2: Intent selection proceed handler (T-393) ──────
+
+  const handleIntentProceed = useCallback((intents: IntentValue[]) => {
+    setSelectedIntents(intents);
+    // TODO: advance to Layer 3 (T-394)
+    console.log('[ProgressiveForm] Layer 2 complete, intents:', intents);
+  }, []);
 
   return (
     <div data-testid="progressive-form" className="h-full flex flex-col px-5 py-6 overflow-hidden">
@@ -334,6 +349,15 @@ export function ProgressiveForm() {
           <Stage2
             selectedDomains={pickerDomains}
             onProceed={handleStage2Proceed}
+          />
+        </div>
+      )}
+
+      {/* ── Layer 2: Intent selection (T-393) ── */}
+      {currentStage === 'layer2' && (
+        <div className="flex-1 overflow-y-auto animate-rise">
+          <IntentSelection
+            onProceed={handleIntentProceed}
           />
         </div>
       )}
