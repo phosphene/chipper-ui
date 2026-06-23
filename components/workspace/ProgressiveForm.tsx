@@ -19,6 +19,8 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';
+import { DomainPicker } from '@/components/entry/DomainPicker';
+import type { SelectedDomain } from '@/components/entry/DomainPicker';
 
 // ── Section definitions ──────────────────────────────────────
 
@@ -51,21 +53,11 @@ const ROLE_OPTIONS: { value: RoleValue; label: string; testId: string }[] = [
   { value: 'practitioner', label: 'Practitioner', testId: 'entry-role-practitioner' },
 ];
 
-// Domain taxonomy loaded at runtime
-interface SubCode { code: string; label: string; }
-interface CodeGroup { code: string; label: string; subtopics: SubCode[]; }
-interface TaxonomyEntry { domain: string; system: string | null; authority: string | null; codes: CodeGroup[]; }
 
 // ── Component ────────────────────────────────────────────────
 
 export function ProgressiveForm() {
   const store = useCeremonyStore();
-
-  // Taxonomy for domain picker
-  const [taxonomy, setTaxonomy] = useState<TaxonomyEntry[]>([]);
-  useEffect(() => {
-    fetch('/domain-taxonomy.json').then(r => r.json()).then(setTaxonomy).catch(() => {});
-  }, []);
 
   // Section tracking — description starts active
   const [sections, setSections] = useState<SectionState[]>(() =>
@@ -93,11 +85,17 @@ export function ProgressiveForm() {
   // 4. Role
   const [selectedRole, setSelectedRole] = useState<RoleValue | null>(null);
 
-  // 5. Domain
+  // 5. Domain (DomainPicker)
   const [domainText, setDomainText] = useState('');
+  const [pickerDomains, setPickerDomains] = useState<SelectedDomain[]>([]);
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
   const [domainFilter, setDomainFilter] = useState('');
+
+  // Sync pickerDomains → selectedDomains for backward compatibility
+  useEffect(() => {
+    setSelectedDomains(pickerDomains.map(d => d.entry.label));
+  }, [pickerDomains]);
 
   // ── Section navigation ─────────────────────────────────────
 
@@ -231,9 +229,7 @@ export function ProgressiveForm() {
   const hasEnoughText = descriptionText.trim().length >= 15;
   const activeSection = sections.find(s => s.status === 'active');
   const completedSections = sections.filter(s => s.status === 'complete');
-  const filteredDomains = taxonomy
-    .map(t => t.domain)
-    .filter(d => d.toLowerCase().includes(domainFilter.toLowerCase()));
+
 
   // ── Render ─────────────────────────────────────────────────
 
@@ -465,78 +461,17 @@ export function ProgressiveForm() {
               </div>
             )}
 
-            {/* ── 5. Domain [optional] ── */}
+            {/* ── 5. Domain [optional] — DomainPicker (T-390) ── */}
             {activeSection.id === 'domain' && (
               <div className="space-y-3">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-2">
                   Domain <span className="normal-case font-normal text-gray-400">(optional)</span>
                 </p>
 
-                {/* Selected domain pills */}
-                {selectedDomains.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {selectedDomains.map(d => (
-                      <span key={d} className="flex items-center gap-1 px-3 py-1 bg-gray-900 text-white text-xs rounded-full">
-                        {d}
-                        <button
-                          onClick={() => setSelectedDomains(prev => prev.filter(x => x !== d))}
-                          className="ml-1 opacity-60 hover:opacity-100"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <input
-                  type="text"
-                  data-testid="entry-domain-input"
-                  value={domainText}
-                  onChange={e => setDomainText(e.target.value)}
-                  placeholder="Type or select a domain..."
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-400"
+                <DomainPicker
+                  selected={pickerDomains}
+                  onChange={setPickerDomains}
                 />
-
-                <button
-                  onClick={() => setDomainDropdownOpen(v => !v)}
-                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
-                >
-                  {domainDropdownOpen ? '▲ Hide list' : '▼ Choose from list'}
-                </button>
-
-                {domainDropdownOpen && (
-                  <div className="border border-gray-200 rounded-xl overflow-hidden">
-                    <div className="p-2 border-b border-gray-100">
-                      <input
-                        type="text"
-                        placeholder="Filter…"
-                        value={domainFilter}
-                        onChange={e => setDomainFilter(e.target.value)}
-                        className="w-full text-sm px-3 py-1.5 border border-gray-200 rounded-lg outline-none focus:border-gray-400"
-                      />
-                    </div>
-                    <div className="flex flex-wrap gap-2 p-3 max-h-48 overflow-y-auto">
-                      {filteredDomains.map(domain => (
-                        <button
-                          key={domain}
-                          data-testid={`domain-option-${domain.toLowerCase().replace(/\s+/g, '-')}`}
-                          onClick={() => {
-                            setSelectedDomains(prev =>
-                              prev.includes(domain) ? prev.filter(d => d !== domain) : [...prev, domain]
-                            );
-                          }}
-                          className={`px-3 py-1.5 rounded-full border text-xs transition-all
-                            ${selectedDomains.includes(domain)
-                              ? 'border-gray-900 bg-gray-900 text-white'
-                              : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
-                        >
-                          {domain}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div className="flex justify-end gap-2">
                   <button
