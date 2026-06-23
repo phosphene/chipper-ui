@@ -16,11 +16,11 @@ import { useDetection } from '@/hooks/useDetection';
 import { Pronouncement } from '@/components/ceremony/Pronouncement';
 import { ServiceBoardView } from '@/components/service/service-board.view';
 import { buildMarkdown, buildJSON } from '@/lib/export';
-import type { WorkType, MakerStanding } from '@/store/ceremony.types';
+import type { WorkType } from '@/store/ceremony.types';
 
 // ── Section definitions ──────────────────────────────────────
 
-type SectionId = 'work' | 'creator-role' | 'hopes' | 'domain' | 'worktype';
+type SectionId = 'work' | 'hopes' | 'domain' | 'worktype';
 
 interface SubCode { code: string; label: string; }
 interface CodeGroup { code: string; label: string; subtopics: SubCode[]; }
@@ -33,24 +33,16 @@ interface SectionState {
   summary: string;
 }
 
-const SECTION_ORDER: SectionId[] = ['work', 'creator-role', 'hopes', 'domain', 'worktype'];
+const SECTION_ORDER: SectionId[] = ['work', 'hopes', 'domain', 'worktype'];
 
 const SECTION_LABELS: Record<SectionId, string> = {
   'work': 'Work',
-  'creator-role': 'I am the',
   'hopes': 'What do you want Woodchipper to do?',
   'domain': 'Domain',
   'worktype': 'What type of work is this?',
 };
 
 // ── Data constants ───────────────────────────────────────────
-
-const CREATOR_ROLES = [
-  { value: 'sole', label: 'Sole creator' },
-  { value: 'co-creator', label: 'Co-creator' },
-  { value: 'llm', label: 'LLM' },
-  { value: 'llm-assisted', label: 'LLM-assisted creator' },
-];
 
 const HOPE_OPTIONS = [
   'Analysis', 'Review', 'Summary', 'Edit', 'Development', 'Comparison',
@@ -98,7 +90,6 @@ export function ProgressiveForm() {
   // Section-local state
   const [workText, setWorkText] = useState('');
   const [workFile, setWorkFile] = useState<string | null>(null);
-  const [creatorRole, setCreatorRole] = useState<string | null>(null);
   const [selectedHopes, setSelectedHopes] = useState<string[]>([]);
   const [hopeText, setHopeText] = useState('');
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
@@ -161,23 +152,6 @@ export function ProgressiveForm() {
 
   // ── Section done handlers ──────────────────────────────────
 
-  const handleCreatorDone = useCallback(() => {
-    if (creatorRole) {
-      const label = CREATOR_ROLES.find(r => r.value === creatorRole)?.label ?? creatorRole;
-      // Map to store standing
-      const standingMap: Record<string, MakerStanding> = {
-        'sole': 'independent-researcher',
-        'co-creator': 'independent-researcher',
-        'llm': 'independent-researcher',
-        'llm-assisted': 'independent-researcher',
-      };
-      store.updateMakerDeclaration({
-        standing: { value: standingMap[creatorRole] ?? 'independent-researcher', source: 'user' },
-      });
-      completeSection('creator-role', label);
-    }
-  }, [creatorRole, store, completeSection]);
-
   const handleHopesDone = useCallback(() => {
     const parts = [...selectedHopes];
     if (hopeText.trim()) parts.push(hopeText.trim());
@@ -213,46 +187,6 @@ export function ProgressiveForm() {
     setEvaluating(true);
     try {
       await detect(text);
-
-      // Chain scoring after successful detection so export handlers have wciResult
-      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? 'https://wci-api.fly.dev';
-      const state = useCeremonyStore.getState();
-      try {
-        const scoreRes = await fetch(`${apiBase}/api/score`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text,
-            work_type: state.workClassification?.workType?.value ?? 'original-argument',
-            standing: state.makerDeclaration?.standing?.value ?? 'independent-researcher',
-            domain: state.judgeIdentity?.domain?.value ?? 'general',
-          }),
-        });
-        if (scoreRes.ok) {
-          const data = await scoreRes.json();
-          store.setWCIResult({
-            compositeScore: data.composite_score,
-            band: data.band,
-            dimensionScores: (data.dimension_scores ?? []).map((d: any) => ({
-              dimension: d.dimension,
-              rawScore: d.raw_score,
-              weight: d.weight,
-              weightedScore: d.weighted_score,
-              justification: d.justification,
-              keyPassage: d.key_passage ?? null,
-            })),
-            epistemicLabel: data.epistemic_label ?? '',
-            relativeContext: data.relative_context ?? '',
-            rubricVersion: data.rubric_version ?? '1.0',
-            evaluationDate: new Date().toISOString(),
-            provenance: data.provenance ?? 'cold',
-          });
-        }
-      } catch {
-        // Scoring failure is non-fatal — export strip still appears,
-        // buttons just won't produce output until scoring succeeds
-      }
-
       setEvaluated(true);
       setShowExport(true);
     } catch {
@@ -421,27 +355,6 @@ export function ProgressiveForm() {
                 />
               </div>
             )}
-            {activeSection.id === 'creator-role' && (
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
-                  {CREATOR_ROLES.map(({ value, label }) => (
-                    <button
-                      key={value}
-                      data-testid={`creator-role-${value}`}
-                      onClick={() => setCreatorRole(value)}
-                      aria-pressed={creatorRole === value}
-                      className={`px-4 py-2 rounded-full border text-sm transition-all
-                        ${creatorRole === value
-                          ? 'border-gray-900 bg-gray-900 text-white'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {activeSection.id === 'hopes' && (
               <div className="space-y-3">
                 <div className="flex flex-wrap gap-2">
@@ -622,7 +535,6 @@ export function ProgressiveForm() {
                       completeSection('work', workText.slice(0, 80) + (workText.length > 80 ? '…' : ''));
                       break;
                     }
-                    case 'creator-role': handleCreatorDone(); break;
                     case 'hopes': handleHopesDone(); break;
                     case 'domain': handleDomainDone(); break;
                     case 'worktype': handleWorkTypeDone(); break;
