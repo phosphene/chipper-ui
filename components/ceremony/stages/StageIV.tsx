@@ -1,9 +1,5 @@
 'use client';
-/**
- * Stage IV — Frame Agreement (simplified)
- * No epigraph. No checkbox. No WCI. No "Enter Judgment".
- * Shows what will be evaluated, Proceed button always enabled.
- */
+/** Beat IV — Frame Agreement. The maker sees what the frame recognises; consents or refuses. */
 import { useCeremonyStore } from '@/store/ceremony';
 
 export function StageIV({ onDecline }: { onDecline: () => void }) {

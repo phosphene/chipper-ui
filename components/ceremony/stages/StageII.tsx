@@ -1,9 +1,5 @@
 'use client';
-/**
- * Stage II — Your Work
- * Order: I am a → Domain (with sub-topic expansion) → Work type
- * Domain taxonomy loaded from /domain-taxonomy.json
- */
+/** Beat II — Work Classification. The work enters its inferential practice. */
 
 import { useState, useEffect } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';

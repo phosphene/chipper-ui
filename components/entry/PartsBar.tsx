@@ -1,11 +1,16 @@
 /**
- * PartsBar — T-266 extension
+ * PartsBar — work type icon strip (T-266).
  *
- * Horizontal icon strip of work types. Lives on the board panel side,
- * below the toolbar. Each icon pre-selects a work type and opens the
- * WCI Direct entry modal.
+ * Horizontal icon bar of work type shortcuts for the board panel.
+ * Currently dormant — not rendered in any app route.
  *
- * SoC: zero business logic. onSelect passes workType to parent.
+ * @remarks
+ * Originally designed to pre-select a work type and open a quick-entry
+ * shortcut. Architecture has since moved to the five-layer entry flow
+ * (Layers 1–5). This component is preserved for potential future use
+ * as a power-user shortcut. If reactivated, it must route through the
+ * Layer 3 route selection — not directly to the WCI ceremony.
+ * Bypassing the entry layers would violate the two-entity architecture.
  */
 'use client';
 import type { WorkType } from '@/store/ceremony.types';

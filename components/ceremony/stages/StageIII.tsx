@@ -1,9 +1,5 @@
 'use client';
-/**
- * Stage III — Context + Consent (merged from old III + IV)
- * No WCI, no judge identification, no universe limitation.
- * Shows what Woodchipper can help with, honest about limits, Proceed button.
- */
+/** Beat III — Judge Identification. Instrument, domain variant, and confidence named. */
 import { useCeremonyStore } from '@/store/ceremony';
 import { StageNav } from '../StageNav';
 

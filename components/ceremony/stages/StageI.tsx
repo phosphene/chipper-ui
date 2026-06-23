@@ -1,9 +1,5 @@
 'use client';
-/**
- * Stage I — About You
- * Just one question: I am the (creator role).
- * "I am a" and Domain live in Stage II.
- */
+/** Beat I — Maker Declaration. The maker identifies themselves in relation to their work. */
 
 import { useState } from 'react';
 import { useCeremonyStore } from '@/store/ceremony';

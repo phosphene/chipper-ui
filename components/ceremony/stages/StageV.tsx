@@ -1,8 +1,5 @@
 'use client';
-/**
- * Stage V — The Resting
- * Clean, no epigraph, light styling.
- */
+/** Beat V — The Resting. The maker closes their case: "I have said what I have to say." */
 import { useCeremonyStore } from '@/store/ceremony';
 
 export function StageV({ onRested }: { onRested: () => void }) {
