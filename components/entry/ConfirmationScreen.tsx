@@ -138,19 +138,19 @@ export function ConfirmationScreen({ data, onChangeField, onConfirm }: Confirmat
   );
 
   const descriptionDisplay =
-    data.description.length > 100
+    (data.description ?? '').length > 100
       ? data.description.slice(0, 100) + '...'
-      : data.description;
+      : (data.description ?? '');
 
   const uploadDisplay = data.uploadFilename ?? 'None';
 
-  const domainDisplay = data.domains.length > 0
+  const domainDisplay = (data.domains ?? []).length > 0
     ? data.domains.join(', ')
     : 'None selected';
 
-  const intentDisplay = data.intents.map(i => INTENT_LABELS[i]).join(', ');
+  const intentDisplay = (data.intents ?? []).map(i => INTENT_LABELS[i] ?? i).join(', ') || 'None selected';
 
-  const routeDisplay = data.routes.map(r => ROUTE_LABELS[r]).join(', ');
+  const routeDisplay = (data.routes ?? []).map(r => ROUTE_LABELS[r] ?? r).join(', ') || 'None selected';
 
   return (
     <div data-testid="layer-4-confirmation" className="space-y-6">
@@ -182,7 +182,7 @@ export function ConfirmationScreen({ data, onChangeField, onConfirm }: Confirmat
 
         <ConfirmRow
           label="Role"
-          value={ROLE_LABELS[data.role]}
+          value={ROLE_LABELS[data.role] ?? data.role ?? 'Not specified'}
           testId="confirm-role"
           changeTestId="confirm-role-change"
           onChangeClick={handleChange('role')}
@@ -190,7 +190,7 @@ export function ConfirmationScreen({ data, onChangeField, onConfirm }: Confirmat
 
         <ConfirmRow
           label="Creator"
-          value={CREATOR_LABELS[data.creatorType]}
+          value={CREATOR_LABELS[data.creatorType] ?? data.creatorType ?? 'Not specified'}
           testId="confirm-creator"
           changeTestId="confirm-creator-change"
           onChangeClick={handleChange('creatorType')}
@@ -198,7 +198,7 @@ export function ConfirmationScreen({ data, onChangeField, onConfirm }: Confirmat
 
         <ConfirmRow
           label="Work type"
-          value={WORK_TYPE_LABELS[data.workType]}
+          value={WORK_TYPE_LABELS[data.workType] ?? data.workType ?? 'Not specified'}
           testId="confirm-work-type"
           changeTestId="confirm-work-type-change"
           onChangeClick={handleChange('workType')}

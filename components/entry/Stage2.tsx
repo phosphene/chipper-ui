@@ -88,13 +88,15 @@ export interface Stage2Data {
 export function Stage2({ selectedDomains, onProceed, detectedWorkType, detectedStanding }: Stage2Props) {
   const [makerRole, setMakerRole] = useState<MakerRole | null>(() => {
     if (detectedStanding) {
+      // Normalise: lowercase + replace spaces with hyphens for uniform lookup
+      const key = detectedStanding.toLowerCase().replace(/\s+/g, '-');
       const map: Record<string, MakerRole> = {
         'student': 'student', 'graduate': 'student', 'graduate-researcher': 'student',
+        'postdoctoral-researcher': 'scholar',
         'professor': 'scholar', 'scholar': 'scholar', 'faculty': 'scholar',
         'practitioner': 'practitioner', 'independent-researcher': 'practitioner',
-        'independent researcher': 'practitioner',
       };
-      return map[detectedStanding.toLowerCase()] ?? null;
+      return map[key] ?? null;
     }
     return null;
   });
@@ -102,8 +104,17 @@ export function Stage2({ selectedDomains, onProceed, detectedWorkType, detectedS
   const [workType, setWorkType] = useState<WorkTypeValue | null>(() => {
     if (detectedWorkType) {
       const valid: WorkTypeValue[] = ['original-argument', 'null-result', 'replication', 'synthesis-review', 'methodological', 'evidentiary'];
-      const normalized = detectedWorkType.toLowerCase().replace(/\s+/g, '-') as WorkTypeValue;
-      return valid.includes(normalized) ? normalized : null;
+      const normalized = detectedWorkType.toLowerCase().replace(/\s+/g, '-');
+      // Direct match first
+      if (valid.includes(normalized as WorkTypeValue)) return normalized as WorkTypeValue;
+      // Alias map for detection values that don't match Stage2 slugs exactly
+      const aliasMap: Record<string, WorkTypeValue> = {
+        'methodological-contribution': 'methodological',
+        'evidentiary-finding': 'evidentiary',
+        'synthesis-or-review': 'synthesis-review',
+        'theoretical-framework': 'methodological',
+      };
+      return aliasMap[normalized] ?? null;
     }
     return null;
   });
