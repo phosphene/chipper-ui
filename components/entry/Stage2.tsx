@@ -70,6 +70,10 @@ export interface Stage2Props {
   selectedDomains: SelectedDomain[];
   /** Callback when Stage 2 Proceed is clicked */
   onProceed: (data: Stage2Data) => void;
+  /** Pre-fill from detection chips — work type (cascade from Layer 1 detection) */
+  detectedWorkType?: string;
+  /** Pre-fill from detection chips — standing mapped to maker role */
+  detectedStanding?: string;
 }
 
 export interface Stage2Data {
@@ -81,10 +85,28 @@ export interface Stage2Data {
 
 // ── Component ────────────────────────────────────────────────
 
-export function Stage2({ selectedDomains, onProceed }: Stage2Props) {
-  const [makerRole, setMakerRole] = useState<MakerRole | null>(null);
+export function Stage2({ selectedDomains, onProceed, detectedWorkType, detectedStanding }: Stage2Props) {
+  const [makerRole, setMakerRole] = useState<MakerRole | null>(() => {
+    if (detectedStanding) {
+      const map: Record<string, MakerRole> = {
+        'student': 'student', 'graduate': 'student', 'graduate-researcher': 'student',
+        'professor': 'scholar', 'scholar': 'scholar', 'faculty': 'scholar',
+        'practitioner': 'practitioner', 'independent-researcher': 'practitioner',
+        'independent researcher': 'practitioner',
+      };
+      return map[detectedStanding.toLowerCase()] ?? null;
+    }
+    return null;
+  });
   const [creatorType, setCreatorType] = useState<CreatorType | null>(null);
-  const [workType, setWorkType] = useState<WorkTypeValue | null>(null);
+  const [workType, setWorkType] = useState<WorkTypeValue | null>(() => {
+    if (detectedWorkType) {
+      const valid: WorkTypeValue[] = ['original-argument', 'null-result', 'replication', 'synthesis-review', 'methodological', 'evidentiary'];
+      const normalized = detectedWorkType.toLowerCase().replace(/\s+/g, '-') as WorkTypeValue;
+      return valid.includes(normalized) ? normalized : null;
+    }
+    return null;
+  });
 
   const canProceed = makerRole !== null && workType !== null;
 

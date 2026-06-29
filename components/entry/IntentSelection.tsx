@@ -151,7 +151,7 @@ export function IntentSelection({ onProceed }: IntentSelectionProps) {
             ? 'bg-gray-900 text-white hover:bg-gray-700 cursor-pointer'
             : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
       >
-        Proceed \u2192
+        Proceed →
       </button>
     </div>
   );

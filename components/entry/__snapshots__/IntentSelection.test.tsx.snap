@@ -150,7 +150,7 @@ exports[`IntentSelection > matches snapshot 1`] = `
       data-testid="intent-proceed"
       disabled=""
     >
-      Proceed \\u2192
+      Proceed →
     </button>
   </div>
 </div>

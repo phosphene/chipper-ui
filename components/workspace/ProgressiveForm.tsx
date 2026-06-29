@@ -243,15 +243,18 @@ export function ProgressiveForm() {
 
   // ── Detection complete handler (T-392) ─────────────────────
 
+  const [detectedValues, setDetectedValues] = useState<{ workType?: string; standing?: string } | null>(null);
+
   const handleDetectionComplete = useCallback((chipResult: DetectionChipsResult) => {
-    // Cascade: confirmed work_type pre-selects matching work-type in Stage 2
     // Cascade: confirmed domain pre-fills domain in Stage 1 if not already set
     if (chipResult.domain && pickerDomains.length === 0) {
-      // Domain cascade: update store tradition from detection
       store.updateMakerDeclaration({ tradition: { value: chipResult.domain, source: 'detected' } });
     }
 
-    // Advance to Stage 2 with detected values available in store
+    // Store detected values for Stage 2 pre-fill
+    setDetectedValues({ workType: chipResult.workType, standing: chipResult.standing });
+
+    // Advance to Stage 2 with detected values
     setCurrentStage('stage2');
     console.log('[ProgressiveForm] Detection confirmed, advancing to Stage 2', chipResult);
   }, [pickerDomains.length, store]);
@@ -413,6 +416,8 @@ export function ProgressiveForm() {
           <Stage2
             selectedDomains={pickerDomains}
             onProceed={handleStage2Proceed}
+            detectedWorkType={detectedValues?.workType}
+            detectedStanding={detectedValues?.standing}
           />
         </div>
       )}
