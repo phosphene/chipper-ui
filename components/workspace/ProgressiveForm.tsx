@@ -68,7 +68,12 @@ const ROLE_OPTIONS: { value: RoleValue; label: string; testId: string }[] = [
 
 // ── Component ────────────────────────────────────────────────
 
-export function ProgressiveForm() {
+interface ProgressiveFormProps {
+  onEvaluationStart?: () => void;
+  processingActive?: boolean;
+}
+
+export function ProgressiveForm({ onEvaluationStart, processingActive }: ProgressiveFormProps) {
   const store = useCeremonyStore();
 
   // ── Detection hook (T-392) — must be before callbacks that use detect ──
@@ -363,12 +368,16 @@ export function ProgressiveForm() {
 
   const handleBegin = useCallback(() => {
     // Trigger evaluation/ceremony flow
-    store.advanceStage();
+    if (onEvaluationStart) {
+      onEvaluationStart();
+    } else {
+      store.advanceStage();
+    }
     console.log('[ProgressiveForm] Layer 5 begin — launching evaluation');
-  }, [store]);
+  }, [store, onEvaluationStart]);
 
   return (
-    <div data-testid="progressive-form" className="h-full flex flex-col px-5 py-6 overflow-hidden">
+    <div data-testid="progressive-form" className="flex flex-col px-5 py-6">
 
       {/* ── Completed stack (above the line) — hidden in combined stage1 mode ── */}
       {currentStage !== 'stage1' && completedSections.length > 0 && (

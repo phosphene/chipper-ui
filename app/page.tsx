@@ -1,103 +1,99 @@
 'use client';
 /**
- * Woodchipper — single page, no mode swaps.
+ * Woodchipper — top-pinned input, output streams below.
  *
- * Everything lives here: entry text, progressive form sections, board.
- * No screen jumps. Content moves to the user — user stays put.
+ * Layout: input stays at top of viewport. Results (processing animation,
+ * pronouncement, etc.) render below the input, newest first.
+ * The user never leaves their position.
  */
 
-import { useRef, useCallback, useEffect, useState } from 'react';
-import { LiveBoard, type BoardTheme } from '@/components/boards/LiveBoard';
+import { useState, useCallback } from 'react';
 import { ProgressiveForm } from '@/components/workspace/ProgressiveForm';
+import { InlineProcessing } from '@/components/ceremony/InlineProcessing';
+import { Pronouncement } from '@/components/ceremony/Pronouncement';
 import { useCeremonyStore } from '@/store/ceremony';
 
-const BOARD_DEFAULT_PCT = 30;
-const BOARD_MIN_PCT     = 15;
-const BOARD_MAX_PCT     = 60;
+type OutputEntry =
+  | { kind: 'processing'; id: string }
+  | { kind: 'result'; id: string };
 
 export default function Home() {
-  const [boardTheme, setBoardTheme] = useState<BoardTheme>('circuit');
-  const [boardPct, setBoardPct]     = useState(BOARD_DEFAULT_PCT);
-  const [boardOpen, setBoardOpen]   = useState(true);
+  const [outputs, setOutputs] = useState<OutputEntry[]>([]);
+  const [processingActive, setProcessingActive] = useState(false);
+  const store = useCeremonyStore();
 
-  const workspaceRef = useRef<HTMLDivElement>(null);
-  const dragging     = useRef(false);
-
-  const onMouseMove = useCallback((e: MouseEvent) => {
-    if (!dragging.current || !workspaceRef.current) return;
-    const rect    = workspaceRef.current.getBoundingClientRect();
-    const fromRight = rect.right - e.clientX;
-    const pct     = Math.round((fromRight / rect.width) * 100);
-    setBoardPct(Math.min(BOARD_MAX_PCT, Math.max(BOARD_MIN_PCT, pct)));
+  const handleEvaluationStart = useCallback(() => {
+    const id = crypto.randomUUID();
+    setProcessingActive(true);
+    setOutputs(prev => [{ kind: 'processing', id }, ...prev.filter(o => o.kind !== 'processing')]);
   }, []);
 
-  const onMouseUp = useCallback(() => { dragging.current = false; }, []);
-
-  useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup',  onMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup',  onMouseUp);
-    };
-  }, [onMouseMove, onMouseUp]);
+  const handleEvaluationComplete = useCallback(() => {
+    setProcessingActive(false);
+    const id = crypto.randomUUID();
+    setOutputs(prev => [
+      { kind: 'result', id },
+      ...prev.filter(o => o.kind !== 'processing'),
+    ]);
+  }, []);
 
   return (
-    <main className="h-screen bg-white text-gray-900 flex flex-col overflow-hidden">
-      {/* Header */}
-      <header className="flex items-center justify-between px-5 py-2.5 border-b border-gray-200 flex-shrink-0">
-        <span className="font-mono text-xs tracking-[0.35em] uppercase text-gray-500">Woodchipper</span>
-        <div className="flex items-center gap-3">
-          {boardOpen && (
-            <div data-testid="board-theme-selector" className="flex gap-1">
-              {(['circuit', 'aqueduct', 'chipper'] as BoardTheme[]).map(t => (
-                <button key={t} data-testid={`board-theme-${t}`}
-                  onClick={() => setBoardTheme(t)}
-                  className={`px-2 py-0.5 rounded text-[0.55rem] font-mono uppercase tracking-wider transition-all
-                    ${boardTheme === t ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}>
-                  {t === 'circuit' ? '⚡' : t === 'aqueduct' ? '🏛' : '⚙'} {t}
-                </button>
-              ))}
-            </div>
-          )}
-          <button data-testid="board-toggle" onClick={() => setBoardOpen(v => !v)}
-            className="text-[0.6rem] font-mono text-gray-500 hover:text-gray-700 px-1.5 py-0.5 border border-gray-200 rounded">
-            {boardOpen ? 'hide board ×' : 'show board ◫'}
-          </button>
-          {/* Dev shortcut — jump past entry */}
-          <button data-testid="stage2-jump"
-            onClick={() => useCeremonyStore.getState().acknowledgeExpectations?.()}
-            className="px-2 py-0.5 border border-dashed border-gray-200 rounded text-[0.55rem] font-mono text-gray-400 hover:text-gray-600">
-            dev
-          </button>
-        </div>
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
+      {/* ── Header ── */}
+      <header className="flex items-center px-5 py-2.5 border-b border-black/5 flex-shrink-0">
+        <span className="font-mono text-xs tracking-[0.35em] uppercase text-black/40">
+          Woodchipper
+        </span>
       </header>
 
-      {/* Body — left form + right board */}
-      <div data-testid="workspace-panels" ref={workspaceRef}
-        className="flex-1 flex min-h-0 overflow-hidden">
+      {/* ── Pinned input area ── */}
+      <section
+        data-testid="input-area"
+        className="flex-shrink-0 border-b border-black/5"
+      >
+        <ProgressiveForm
+          onEvaluationStart={handleEvaluationStart}
+          processingActive={processingActive}
+        />
+      </section>
 
-        {/* LEFT — ProgressiveForm owns everything: entry + sections + reading */}
-        <div data-testid="workspace-forms"
-          className="flex-1 min-w-0 overflow-hidden"
-          style={{ width: boardOpen ? `${100 - boardPct}%` : '100%' }}>
-          <ProgressiveForm />
-        </div>
-
-        {boardOpen && (
-          <div data-testid="board-resizer"
-            className="w-[4px] cursor-col-resize flex-shrink-0 bg-gray-100 hover:bg-gray-300 transition-colors"
-            onMouseDown={() => { dragging.current = true; }} />
-        )}
-
-        {boardOpen && (
-          <div data-testid="workspace-board"
-            className="flex-shrink-0 overflow-hidden border-l border-gray-200"
-            style={{ width: `${boardPct}%` }}>
-            <LiveBoard theme={boardTheme} />
+      {/* ── Output feed — newest at top ── */}
+      <section
+        data-testid="output-feed"
+        className="flex-1 overflow-y-auto px-5 py-6"
+      >
+        {outputs.length === 0 && !processingActive && (
+          <div className="text-center py-16">
+            <p className="text-sm text-black/25 italic">
+              Results will appear here
+            </p>
           </div>
         )}
-      </div>
+
+        {outputs.map(entry => {
+          if (entry.kind === 'processing') {
+            return (
+              <div key={entry.id} className="mb-6 animate-rise">
+                <InlineProcessing
+                  onComplete={handleEvaluationComplete}
+                />
+              </div>
+            );
+          }
+          if (entry.kind === 'result') {
+            return (
+              <div key={entry.id} className="mb-6 animate-rise">
+                <Pronouncement
+                  onProceedToRecording={() => {}}
+                  onRequestImprovement={() => {}}
+                  onExport={() => {}}
+                />
+              </div>
+            );
+          }
+          return null;
+        })}
+      </section>
     </main>
   );
 }
