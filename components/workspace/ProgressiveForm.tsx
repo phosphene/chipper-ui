@@ -266,7 +266,24 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3' | 'layer4' | 'layer5'>('stage1');
+  const [currentStage, setCurrentStage] = useState<'work-stage' | 'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3' | 'layer4' | 'layer5'>('work-stage');
+
+  // ── Work stage selection ────────────────────────────────────
+  type WorkStageValue = 'ideas' | 'in-progress' | 'finished' | 'published';
+  const [selectedWorkStage, setSelectedWorkStage] = useState<WorkStageValue | null>(null);
+
+  const WORK_STAGES: { value: WorkStageValue; label: string; testId: string }[] = [
+    { value: 'ideas', label: 'Ideas stage', testId: 'work-stage-ideas' },
+    { value: 'in-progress', label: 'In the works', testId: 'work-stage-in-progress' },
+    { value: 'finished', label: 'Finished: Review', testId: 'work-stage-finished' },
+    { value: 'published', label: 'Published', testId: 'work-stage-published' },
+  ];
+
+  const handleWorkStageSelect = useCallback((stage: WorkStageValue) => {
+    setSelectedWorkStage(stage);
+    // All stages dissolve to the same form
+    setCurrentStage('stage1');
+  }, []);
 
   // ── Layer 2: selected intents (T-393) ──────────────────────
   const [selectedIntents, setSelectedIntents] = useState<IntentValue[]>([]);
@@ -481,14 +498,41 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
         </div>
       )}
 
+      {/* ── Work stage selection — first thing user sees ── */}
+      {currentStage === 'work-stage' && (
+      <div data-testid="work-stage-selection" className="flex-1 overflow-y-auto">
+        <div className="max-w-xl mx-auto py-8 text-center">
+          <h1 className="text-2xl font-light text-black leading-tight mb-2">
+            Where are you in your process?
+          </h1>
+          <p className="text-sm text-black/40 mb-8">
+            Pick the stage that best describes where your work is right now.
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            {WORK_STAGES.map(({ value, label, testId }) => (
+              <button
+                key={value}
+                data-testid={testId}
+                onClick={() => handleWorkStageSelect(value)}
+                className="px-6 py-5 rounded-xl border border-black/10 text-sm font-medium text-black/70
+                  hover:border-black/30 hover:bg-black/[0.02] transition-all cursor-pointer"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      )}
+
       {/* ── Combined Stage 1 form — all fields visible simultaneously ── */}
       {currentStage === 'stage1' && (
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto animate-rise">
 
         {/* ── 1. Description ── */}
         <div data-testid="section-description" className="space-y-3 mb-6">
           <h1 className="text-2xl font-light text-black leading-tight">
-            What are you working on?
+            Tell us about your work
           </h1>
           <textarea
             data-testid="entry-text-field"
@@ -511,13 +555,20 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
             onDragOver={e => e.preventDefault()}
             onDrop={handleFileDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="w-full border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-all"
+            className="w-full border-2 border-dashed border-black/20 rounded-2xl py-12 px-8 flex flex-col items-center justify-center gap-3 cursor-pointer
+              hover:border-black/40 hover:bg-black/[0.02] transition-all
+              bg-gradient-to-b from-black/[0.01] to-black/[0.03]"
           >
-            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-            </svg>
-            <span className="text-sm text-gray-500">
-              Upload — Documents / Audio / Images / Any format
+            <div className="w-14 h-14 rounded-full bg-black/5 flex items-center justify-center mb-1">
+              <svg className="w-7 h-7 text-black/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13" />
+              </svg>
+            </div>
+            <span className="text-base font-medium text-black/60">
+              Upload your content
+            </span>
+            <span className="text-xs text-black/30">
+              Documents · Audio · Images · Any format
             </span>
             <input
               ref={fileInputRef}

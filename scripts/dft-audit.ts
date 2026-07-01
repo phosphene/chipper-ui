@@ -37,6 +37,13 @@ const REQUIRED_TESTIDS: { id: string; note: string; required: boolean }[] = [
   { id: 'board-toggle',           note: 'Board show/hide toggle',           required: true },
   { id: 'live-board-canvas',      note: 'Board canvas element',             required: true },
 
+  // ── Live app: Work stage selection ──────────────────────────────────────
+  { id: 'work-stage-selection',   note: 'Work stage selection container',   required: true },
+  { id: 'work-stage-ideas',       note: 'Work stage: Ideas',               required: true },
+  { id: 'work-stage-in-progress', note: 'Work stage: In the works',        required: true },
+  { id: 'work-stage-finished',    note: 'Work stage: Finished',            required: true },
+  { id: 'work-stage-published',   note: 'Work stage: Published',           required: true },
+
   // ── Live app: ProgressiveForm — Stage 1 (T-389) ────────────────────────
   { id: 'progressive-form',       note: 'Progressive form container',       required: true },
   { id: 'entry-text-field',       note: 'Main entry textarea',              required: true },
