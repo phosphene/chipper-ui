@@ -41,7 +41,7 @@ describe('DetectionChips', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('renders all three detection chips', () => {
+  it('renders all three assessment rows with confirm button', () => {
     const { container, getByTestId } = render(
       <DetectionChips
         result={mockResult}
@@ -54,26 +54,11 @@ describe('DetectionChips', () => {
     expect(getByTestId('detection-chip-work-type')).toBeDefined();
     expect(getByTestId('detection-chip-domain')).toBeDefined();
     expect(getByTestId('detection-chip-standing')).toBeDefined();
+    expect(getByTestId('detection-confirm-btn')).toBeDefined();
     expect(container).toMatchSnapshot();
   });
 
-  it('confirms a chip on click', () => {
-    const { getByTestId } = render(
-      <DetectionChips
-        result={mockResult}
-        isLoading={false}
-        error={null}
-        onComplete={noop}
-      />
-    );
-    const workTypeChip = getByTestId('detection-chip-work-type');
-    expect(workTypeChip.getAttribute('data-state')).toBe('pending');
-
-    fireEvent.click(workTypeChip);
-    expect(workTypeChip.getAttribute('data-state')).toBe('confirmed');
-  });
-
-  it('fires onComplete when all chips confirmed', () => {
+  it('fires onComplete when confirm button clicked', () => {
     let captured: DetectionChipsResult | null = null;
     const onComplete = (r: DetectionChipsResult) => { captured = r; };
     const { getByTestId } = render(
@@ -85,9 +70,7 @@ describe('DetectionChips', () => {
       />
     );
 
-    fireEvent.click(getByTestId('detection-chip-work-type'));
-    fireEvent.click(getByTestId('detection-chip-domain'));
-    fireEvent.click(getByTestId('detection-chip-standing'));
+    fireEvent.click(getByTestId('detection-confirm-btn'));
 
     expect(captured).toEqual({
       workType: 'original-argument',
@@ -108,5 +91,30 @@ describe('DetectionChips', () => {
     const editBtn = getByTestId('detection-chip-work-type-edit');
     fireEvent.click(editBtn);
     expect(getByTestId('detection-chip-work-type-input')).toBeDefined();
+  });
+
+  it('shows "Please confirm our assessment:" heading', () => {
+    const { container } = render(
+      <DetectionChips
+        result={mockResult}
+        isLoading={false}
+        error={null}
+        onComplete={noop}
+      />
+    );
+    expect(container.textContent).toContain('Please confirm our assessment:');
+  });
+
+  it('shows direct labels without "We think this is:" prefix', () => {
+    const { container } = render(
+      <DetectionChips
+        result={mockResult}
+        isLoading={false}
+        error={null}
+        onComplete={noop}
+      />
+    );
+    expect(container.textContent).not.toContain('We think this is:');
+    expect(container.textContent).not.toContain('WE DETECTED');
   });
 });

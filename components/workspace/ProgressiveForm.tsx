@@ -266,7 +266,28 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
 
   // ── Stage navigation ───────────────────────────────────────
 
-  const [currentStage, setCurrentStage] = useState<'work-stage' | 'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3' | 'layer4' | 'layer5'>('work-stage');
+  const [currentStage, setCurrentStage] = useState<'work-stage' | 'stage1' | 'detecting' | 'stage2' | 'layer2' | 'layer3' | 'layer4' | 'layer5' | 'freeform-confirm'>('work-stage');
+
+  // ── Freeform request (experienced users) ─────────────────
+  const [freeformText, setFreeformText] = useState('');
+
+  const handleFreeformSubmit = useCallback(() => {
+    if (!freeformText.trim()) return;
+    setCurrentStage('freeform-confirm');
+  }, [freeformText]);
+
+  const handleFreeformConfirm = useCallback(() => {
+    // User confirmed their freeform requests — start evaluation
+    if (onEvaluationStart) {
+      onEvaluationStart();
+    } else {
+      store.advanceStage();
+    }
+  }, [onEvaluationStart, store]);
+
+  const handleFreeformEdit = useCallback(() => {
+    setCurrentStage('work-stage');
+  }, []);
 
   // ── Work stage selection ────────────────────────────────────
   type WorkStageValue = 'ideas' | 'in-progress' | 'finished' | 'published';
@@ -520,6 +541,60 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
                 {label}
               </button>
             ))}
+          </div>
+
+          {/* Freeform request box for experienced users */}
+          <div className="mt-10 pt-6 border-t border-black/5">
+            <p className="text-xs text-black/30 uppercase tracking-widest mb-3">
+              Or tell us what you need
+            </p>
+            <textarea
+              data-testid="freeform-request-input"
+              rows={3}
+              value={freeformText}
+              onChange={e => setFreeformText(e.target.value)}
+              placeholder="e.g. Run a credibility evaluation, check my citations, edit the abstract..."
+              className="w-full border border-black/10 rounded-xl px-4 py-3 text-sm text-black/80 placeholder-black/25 outline-none focus:border-black/30 resize-none bg-white/50"
+            />
+            {freeformText.trim() && (
+              <button
+                data-testid="freeform-request-submit"
+                onClick={handleFreeformSubmit}
+                className="mt-3 w-full py-3 rounded-xl text-sm font-medium bg-black/90 text-white hover:bg-black/70 cursor-pointer transition-all"
+              >
+                Proceed →
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+      )}
+
+      {/* ── Freeform confirmation ── */}
+      {currentStage === 'freeform-confirm' && (
+      <div data-testid="freeform-confirm-screen" className="flex-1 overflow-y-auto animate-rise">
+        <div className="max-w-xl mx-auto py-8">
+          <h2 className="text-lg font-light text-black leading-tight mb-4">
+            You’ve requested:
+          </h2>
+          <div className="px-4 py-3 rounded-xl border border-black/10 bg-white/60 text-sm text-black/70 whitespace-pre-wrap mb-6">
+            {freeformText}
+          </div>
+          <div className="space-y-2">
+            <button
+              data-testid="freeform-confirm-btn"
+              onClick={handleFreeformConfirm}
+              className="w-full py-3.5 rounded-xl text-sm font-medium bg-black/90 text-white hover:bg-black/70 cursor-pointer transition-all"
+            >
+              Confirm — begin
+            </button>
+            <button
+              data-testid="freeform-edit-btn"
+              onClick={handleFreeformEdit}
+              className="w-full py-3 rounded-xl text-sm text-black/50 hover:text-black/70 border border-black/10 hover:border-black/20 transition-all"
+            >
+              Edit request
+            </button>
           </div>
         </div>
       </div>

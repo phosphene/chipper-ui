@@ -44,7 +44,7 @@ exports[`RouteSelection > matches snapshot with all intents 1`] = `
           <p
             class="text-xs mt-0.5 text-gray-500"
           >
-            Plain-language account, no score
+            Plain-language summary of strengths and areas for development
           </p>
         </button>
         <button

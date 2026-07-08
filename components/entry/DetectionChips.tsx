@@ -1,33 +1,16 @@
 'use client';
 /**
- * DetectionChips — detection-first confirmation flow (T-392).
+ * DetectionChips — inline assessment confirmation (T-392).
  *
- * After Stage 1 Proceed is clicked, /api/detect is called. Results arrive
- * as chips the maker confirms or edits before Stage 2 appears.
+ * After Stage 1 Proceed, /api/detect runs. Results appear inline
+ * on the same page as chips the maker confirms or edits.
  *
- * Each chip has three states: pending → confirmed (click) → edited (inline correction).
- * Confidence badge (High/Medium/Low) on each chip.
- * Label format: "We think this is: [value]"
- *
- * When all chips are confirmed/edited → onComplete fires with final values.
- *
- * Academic marker highlight: if academic markers are detected, briefly
- * flashes the domain chip (0.5s animation, never forced).
- *
- * @invariants
- * - `onComplete` fires only when every chip has reached `confirmed` or `edited` state —
- *   never while any chip remains `pending`.
- * - Correcting the work-type chip cascades to Stage 2 pre-fill — detection flows
- *   forward into classification; it cannot be undone by returning to Stage 1.
- * - The academic marker highlight is $\leq 0.5\ \text{s}$ — a suggestion,
- *   never a forced mode change. Per INTERFACE-ALIGNMENT.md §11.
- *
- * @remarks
- * The creation-first failure mode: presenting an empty form to the maker
- * puts the cognitive burden of classification on them before the system has
- * even tried. Per INTERFACE-ALIGNMENT.md §3: "An empty accordion is a worse
- * multi-step form." The chip flow inverts this — the system commits to a guess
- * first, the maker confirms or corrects. The blank page is never the starting point.
+ * Redesigned (batch-9):
+ * - "Please confirm our assessment:" header
+ * - Direct labels: "You're a [Standing]", domain, work type
+ * - Real Edit buttons (not hidden pencils)
+ * - Explicit Confirm button
+ * - No page jump — renders inline in ProgressiveForm
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
@@ -40,6 +23,7 @@ type ChipState = 'pending' | 'confirmed' | 'edited';
 interface ChipData {
   field: 'work-type' | 'domain' | 'standing';
   label: string;
+  displayPrefix: string;
   value: string;
   originalValue: string;
   state: ChipState;
@@ -54,29 +38,34 @@ export interface DetectionChipsResult {
 }
 
 export interface DetectionChipsProps {
-  /** Detection result from /api/detect */
   result: DetectionResult;
-  /** Whether the detection call is still loading */
   isLoading: boolean;
-  /** Error from detection call, if any */
   error: string | null;
-  /** Called when all chips are confirmed/edited */
   onComplete: (result: DetectionChipsResult) => void;
-  /** Whether academic markers were detected (triggers domain highlight) */
   hasAcademicMarkers?: boolean;
 }
 
 // ── Helpers ──────────────────────────────────────────────────
 
-function formatValue(field: string, value: string): string {
-  // Convert kebab-case to title case for display
+function formatValue(value: string): string {
+  if (!value || value === 'unknown' || value === 'general') return '';
   return value
     .replace(/-/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase());
 }
 
-function confidenceLabel(conf: 'high' | 'medium' | 'low'): string {
-  return conf.charAt(0).toUpperCase() + conf.slice(1);
+function fallbackLabel(field: string, value: string): string {
+  const formatted = formatValue(value);
+  if (formatted && formatted.toLowerCase() !== 'general' && formatted.toLowerCase() !== 'unknown') {
+    return formatted;
+  }
+  // Field-specific fallbacks when detection returns generic values
+  switch (field) {
+    case 'domain': return 'Not yet determined';
+    case 'standing': return 'Independent Researcher';
+    case 'work-type': return 'Original Argument';
+    default: return formatted || 'Not specified';
+  }
 }
 
 // ── Component ────────────────────────────────────────────────
@@ -98,10 +87,11 @@ export function DetectionChips({
 
     const initial: ChipData[] = [
       {
-        field: 'work-type',
-        label: 'Work type',
-        value: result.workType ?? 'unknown',
-        originalValue: result.workType ?? 'unknown',
+        field: 'standing',
+        label: 'Standing',
+        displayPrefix: "You're a",
+        value: result.standing ?? 'unknown',
+        originalValue: result.standing ?? 'unknown',
         state: 'pending',
         confidence: result.confidence,
         editing: false,
@@ -109,6 +99,7 @@ export function DetectionChips({
       {
         field: 'domain',
         label: 'Domain',
+        displayPrefix: 'Domain:',
         value: result.domain ?? 'unknown',
         originalValue: result.domain ?? 'unknown',
         state: 'pending',
@@ -116,10 +107,11 @@ export function DetectionChips({
         editing: false,
       },
       {
-        field: 'standing',
-        label: 'Standing',
-        value: result.standing ?? 'unknown',
-        originalValue: result.standing ?? 'unknown',
+        field: 'work-type',
+        label: 'Work type',
+        displayPrefix: 'Work type:',
+        value: result.workType ?? 'unknown',
+        originalValue: result.workType ?? 'unknown',
         state: 'pending',
         confidence: result.confidence,
         editing: false,
@@ -130,7 +122,7 @@ export function DetectionChips({
     completeRef.current = false;
   }, [result]);
 
-  // Academic marker highlight — 0.5s flash on domain chip
+  // Academic marker highlight
   useEffect(() => {
     if (hasAcademicMarkers && chips.length > 0) {
       setDomainHighlight(true);
@@ -139,34 +131,7 @@ export function DetectionChips({
     }
   }, [hasAcademicMarkers, chips.length]);
 
-  // Check if all chips confirmed/edited → fire onComplete
-  useEffect(() => {
-    if (chips.length === 0 || completeRef.current) return;
-    const allResolved = chips.every(c => c.state === 'confirmed' || c.state === 'edited');
-    if (allResolved) {
-      completeRef.current = true;
-      const workTypeChip = chips.find(c => c.field === 'work-type');
-      const domainChip = chips.find(c => c.field === 'domain');
-      const standingChip = chips.find(c => c.field === 'standing');
-      onComplete({
-        workType: workTypeChip?.value ?? '',
-        domain: domainChip?.value ?? '',
-        standing: standingChip?.value ?? '',
-      });
-    }
-  }, [chips, onComplete]);
-
   // ── Chip actions ─────────────────────────────────────────
-
-  const confirmChip = useCallback((field: string) => {
-    setChips(prev =>
-      prev.map(c =>
-        c.field === field && c.state === 'pending'
-          ? { ...c, state: 'confirmed' as const }
-          : c
-      )
-    );
-  }, []);
 
   const startEditing = useCallback((field: string) => {
     setChips(prev =>
@@ -182,11 +147,10 @@ export function DetectionChips({
         if (c.field !== field) return c;
         const trimmed = newValue.trim();
         if (!trimmed) return { ...c, editing: false };
-        const isEdited = trimmed !== c.originalValue;
         return {
           ...c,
           value: trimmed,
-          state: isEdited ? 'edited' as const : 'confirmed' as const,
+          state: 'edited' as const,
           editing: false,
         };
       })
@@ -201,6 +165,28 @@ export function DetectionChips({
     );
   }, []);
 
+  // ── Confirm all ──────────────────────────────────────────
+
+  const handleConfirmAll = useCallback(() => {
+    if (completeRef.current) return;
+    completeRef.current = true;
+
+    const finalChips = chips.map(c => ({
+      ...c,
+      state: (c.state === 'edited' ? 'edited' : 'confirmed') as ChipState,
+    }));
+    setChips(finalChips);
+
+    const workTypeChip = finalChips.find(c => c.field === 'work-type');
+    const domainChip = finalChips.find(c => c.field === 'domain');
+    const standingChip = finalChips.find(c => c.field === 'standing');
+    onComplete({
+      workType: workTypeChip?.value ?? '',
+      domain: domainChip?.value ?? '',
+      standing: standingChip?.value ?? '',
+    });
+  }, [chips, onComplete]);
+
   // ── Loading state ────────────────────────────────────────
 
   if (isLoading) {
@@ -209,8 +195,8 @@ export function DetectionChips({
         data-testid="detection-chips-container"
         className="flex flex-col items-center justify-center py-12 space-y-3"
       >
-        <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
-        <p className="text-sm text-gray-500 font-light">Reading your work…</p>
+        <div className="w-6 h-6 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
+        <p className="text-sm text-black/40 font-light">Reading your work…</p>
       </div>
     );
   }
@@ -223,7 +209,7 @@ export function DetectionChips({
         data-testid="detection-chips-container"
         className="py-8 text-center"
       >
-        <p className="text-sm text-red-500">{error}</p>
+        <p className="text-sm text-red-600">{error}</p>
       </div>
     );
   }
@@ -232,24 +218,25 @@ export function DetectionChips({
 
   if (chips.length === 0) return null;
 
-  // ── Render chips ─────────────────────────────────────────
+  // ── Render ───────────────────────────────────────────────
+
+  const anyEditing = chips.some(c => c.editing);
 
   return (
     <div
       data-testid="detection-chips-container"
-      className="py-6 space-y-4"
+      className="py-6 space-y-5"
     >
-      <p className="text-xs font-mono tracking-widest uppercase text-gray-500 mb-3">
-        We detected:
-      </p>
+      <h2 className="text-lg font-light text-black leading-tight">
+        Please confirm our assessment:
+      </h2>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="space-y-3">
         {chips.map(chip => (
-          <SingleChip
+          <AssessmentRow
             key={chip.field}
             chip={chip}
             highlight={chip.field === 'domain' && domainHighlight}
-            onConfirm={() => confirmChip(chip.field)}
             onStartEdit={() => startEditing(chip.field)}
             onCommitEdit={(val) => commitEdit(chip.field, val)}
             onCancelEdit={() => cancelEdit(chip.field)}
@@ -257,39 +244,40 @@ export function DetectionChips({
         ))}
       </div>
 
-      {/* Hint text */}
-      {chips.some(c => c.state === 'pending') && (
-        <p className="text-xs text-gray-400 mt-2">
-          Click to confirm, or click the edit icon to correct.
-        </p>
+      {/* Confirm button */}
+      {!anyEditing && (
+        <button
+          data-testid="detection-confirm-btn"
+          onClick={handleConfirmAll}
+          className="w-full py-3.5 rounded-xl text-sm font-medium bg-black/90 text-white hover:bg-black/70 cursor-pointer transition-all"
+        >
+          Confirm
+        </button>
       )}
     </div>
   );
 }
 
-// ── SingleChip sub-component ─────────────────────────────────
+// ── AssessmentRow sub-component ──────────────────────────────
 
-interface SingleChipProps {
+interface AssessmentRowProps {
   chip: ChipData;
   highlight: boolean;
-  onConfirm: () => void;
   onStartEdit: () => void;
   onCommitEdit: (value: string) => void;
   onCancelEdit: () => void;
 }
 
-function SingleChip({
+function AssessmentRow({
   chip,
   highlight,
-  onConfirm,
   onStartEdit,
   onCommitEdit,
   onCancelEdit,
-}: SingleChipProps) {
+}: AssessmentRowProps) {
   const [editValue, setEditValue] = useState(chip.value);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Focus input when editing starts
   useEffect(() => {
     if (chip.editing && inputRef.current) {
       inputRef.current.focus();
@@ -297,7 +285,6 @@ function SingleChip({
     }
   }, [chip.editing]);
 
-  // Sync editValue when chip value changes externally
   useEffect(() => {
     if (!chip.editing) {
       setEditValue(chip.value);
@@ -305,30 +292,12 @@ function SingleChip({
   }, [chip.value, chip.editing]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      onCommitEdit(editValue);
-    } else if (e.key === 'Escape') {
-      onCancelEdit();
-    }
+    if (e.key === 'Enter') onCommitEdit(editValue);
+    else if (e.key === 'Escape') onCancelEdit();
   };
 
-  // ── Style by state ──────────────────────────────────────
-
-  const stateStyles: Record<ChipState, string> = {
-    pending: 'border-gray-300 bg-white text-gray-700',
-    confirmed: 'border-gray-900 bg-gray-900 text-white',
-    edited: 'border-amber-500 bg-amber-500 text-white',
-  };
-
-  const confidenceBadgeStyles: Record<ChipState, string> = {
-    pending: 'bg-gray-200 text-gray-600',
-    confirmed: 'bg-gray-700 text-gray-300',
-    edited: 'bg-amber-600 text-amber-100',
-  };
-
-  const highlightClass = highlight
-    ? 'ring-2 ring-blue-400 ring-offset-1 animate-pulse'
-    : '';
+  const displayValue = fallbackLabel(chip.field, chip.value);
+  const highlightClass = highlight ? 'ring-2 ring-blue-400/30 ring-offset-1' : '';
 
   // ── Editing mode ────────────────────────────────────────
 
@@ -337,9 +306,9 @@ function SingleChip({
       <div
         data-testid={`detection-chip-${chip.field}`}
         data-state={chip.state}
-        className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border-2 border-blue-400 bg-white ${highlightClass}`}
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-black/20 bg-white ${highlightClass}`}
       >
-        <span className="text-xs text-gray-500 whitespace-nowrap">{chip.label}:</span>
+        <span className="text-sm text-black/50 whitespace-nowrap">{chip.displayPrefix}</span>
         <input
           ref={inputRef}
           data-testid={`detection-chip-${chip.field}-input`}
@@ -347,60 +316,44 @@ function SingleChip({
           value={editValue}
           onChange={e => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          onBlur={() => onCommitEdit(editValue)}
-          className="text-sm text-gray-900 bg-transparent outline-none min-w-[80px] max-w-[200px]"
+          className="flex-1 text-sm text-black bg-transparent outline-none"
         />
-        <span className={`text-[0.6rem] px-1.5 py-0.5 rounded-full ${confidenceBadgeStyles.pending}`}>
-          {confidenceLabel(chip.confidence)}
-        </span>
+        <button
+          onClick={() => onCommitEdit(editValue)}
+          className="text-xs font-medium text-black/60 hover:text-black px-2 py-1 rounded border border-black/10 hover:border-black/30 transition-all"
+        >
+          Save
+        </button>
+        <button
+          onClick={onCancelEdit}
+          className="text-xs text-black/40 hover:text-black/60 transition-colors"
+        >
+          Cancel
+        </button>
       </div>
     );
   }
 
   // ── Display mode ────────────────────────────────────────
 
+  const editedBorder = chip.state === 'edited' ? 'border-amber-400/40' : 'border-black/8';
+
   return (
     <div
       data-testid={`detection-chip-${chip.field}`}
       data-state={chip.state}
-      className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none ${stateStyles[chip.state]} ${highlightClass}`}
-      onClick={chip.state === 'pending' ? onConfirm : undefined}
-      role="button"
-      tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter' && chip.state === 'pending') onConfirm();
-      }}
+      className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${editedBorder} bg-white/60 ${highlightClass}`}
     >
-      {/* Label + value */}
-      <span className={chip.state === 'pending' ? 'text-gray-500' : ''}>
-        {chip.state === 'pending' ? 'We think this is: ' : ''}
-        {formatValue(chip.field, chip.value)}
+      <span className="text-sm text-black/50 whitespace-nowrap">{chip.displayPrefix}</span>
+      <span className="flex-1 text-sm font-medium text-black/80">
+        {displayValue}
       </span>
-
-      {/* Confidence badge */}
-      <span
-        className={`text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium ${confidenceBadgeStyles[chip.state]}`}
-      >
-        {confidenceLabel(chip.confidence)}
-      </span>
-
-      {/* Edit trigger */}
       <button
         data-testid={`detection-chip-${chip.field}-edit`}
-        onClick={e => {
-          e.stopPropagation();
-          onStartEdit();
-        }}
-        className={`ml-1 text-xs transition-opacity ${
-          chip.state === 'pending'
-            ? 'text-gray-400 hover:text-gray-600'
-            : chip.state === 'confirmed'
-            ? 'text-gray-400 hover:text-white'
-            : 'text-amber-200 hover:text-white'
-        }`}
-        aria-label={`Edit ${chip.label}`}
+        onClick={onStartEdit}
+        className="text-xs font-medium text-black/40 hover:text-black/70 px-2.5 py-1 rounded border border-black/10 hover:border-black/25 transition-all"
       >
-        ✎
+        Edit
       </button>
     </div>
   );

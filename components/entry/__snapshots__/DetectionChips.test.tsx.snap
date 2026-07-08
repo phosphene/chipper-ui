@@ -1,103 +1,92 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DetectionChips > renders all three detection chips 1`] = `
+exports[`DetectionChips > renders all three assessment rows with confirm button 1`] = `
 <div>
   <div
-    class="py-6 space-y-4"
+    class="py-6 space-y-5"
     data-testid="detection-chips-container"
   >
-    <p
-      class="text-xs font-mono tracking-widest uppercase text-gray-500 mb-3"
+    <h2
+      class="text-lg font-light text-black leading-tight"
     >
-      We detected:
-    </p>
+      Please confirm our assessment:
+    </h2>
     <div
-      class="flex flex-wrap gap-3"
+      class="space-y-3"
     >
       <div
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
-        data-state="pending"
-        data-testid="detection-chip-work-type"
-        role="button"
-        tabindex="0"
-      >
-        <span
-          class="text-gray-500"
-        >
-          We think this is: 
-          Original Argument
-        </span>
-        <span
-          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
-        >
-          High
-        </span>
-        <button
-          aria-label="Edit Work type"
-          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
-          data-testid="detection-chip-work-type-edit"
-        >
-          ✎
-        </button>
-      </div>
-      <div
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
-        data-state="pending"
-        data-testid="detection-chip-domain"
-        role="button"
-        tabindex="0"
-      >
-        <span
-          class="text-gray-500"
-        >
-          We think this is: 
-          Evolutionary Biology
-        </span>
-        <span
-          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
-        >
-          High
-        </span>
-        <button
-          aria-label="Edit Domain"
-          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
-          data-testid="detection-chip-domain-edit"
-        >
-          ✎
-        </button>
-      </div>
-      <div
-        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-200 cursor-pointer select-none border-gray-300 bg-white text-gray-700 "
+        class="flex items-center gap-3 px-4 py-3 rounded-xl border border-black/8 bg-white/60 "
         data-state="pending"
         data-testid="detection-chip-standing"
-        role="button"
-        tabindex="0"
       >
         <span
-          class="text-gray-500"
+          class="text-sm text-black/50 whitespace-nowrap"
         >
-          We think this is: 
-          Professor
+          You're a
         </span>
         <span
-          class="text-[0.6rem] px-1.5 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600"
+          class="flex-1 text-sm font-medium text-black/80"
         >
-          High
+          Professor
         </span>
         <button
-          aria-label="Edit Standing"
-          class="ml-1 text-xs transition-opacity text-gray-400 hover:text-gray-600"
+          class="text-xs font-medium text-black/40 hover:text-black/70 px-2.5 py-1 rounded border border-black/10 hover:border-black/25 transition-all"
           data-testid="detection-chip-standing-edit"
         >
-          ✎
+          Edit
+        </button>
+      </div>
+      <div
+        class="flex items-center gap-3 px-4 py-3 rounded-xl border border-black/8 bg-white/60 "
+        data-state="pending"
+        data-testid="detection-chip-domain"
+      >
+        <span
+          class="text-sm text-black/50 whitespace-nowrap"
+        >
+          Domain:
+        </span>
+        <span
+          class="flex-1 text-sm font-medium text-black/80"
+        >
+          Evolutionary Biology
+        </span>
+        <button
+          class="text-xs font-medium text-black/40 hover:text-black/70 px-2.5 py-1 rounded border border-black/10 hover:border-black/25 transition-all"
+          data-testid="detection-chip-domain-edit"
+        >
+          Edit
+        </button>
+      </div>
+      <div
+        class="flex items-center gap-3 px-4 py-3 rounded-xl border border-black/8 bg-white/60 "
+        data-state="pending"
+        data-testid="detection-chip-work-type"
+      >
+        <span
+          class="text-sm text-black/50 whitespace-nowrap"
+        >
+          Work type:
+        </span>
+        <span
+          class="flex-1 text-sm font-medium text-black/80"
+        >
+          Original Argument
+        </span>
+        <button
+          class="text-xs font-medium text-black/40 hover:text-black/70 px-2.5 py-1 rounded border border-black/10 hover:border-black/25 transition-all"
+          data-testid="detection-chip-work-type-edit"
+        >
+          Edit
         </button>
       </div>
     </div>
-    <p
-      class="text-xs text-gray-400 mt-2"
+    <button
+      class="w-full py-3.5 rounded-xl text-sm font-medium bg-black/90 text-white hover:bg-black/70 cursor-pointer transition-all"
+      data-testid="detection-confirm-btn"
     >
-      Click to confirm, or click the edit icon to correct.
-    </p>
+      Confirm
+    </button>
   </div>
 </div>
 `;
@@ -109,7 +98,7 @@ exports[`DetectionChips > renders error state 1`] = `
     data-testid="detection-chips-container"
   >
     <p
-      class="text-sm text-red-500"
+      class="text-sm text-red-600"
     >
       Detection failed
     </p>
@@ -124,10 +113,10 @@ exports[`DetectionChips > renders loading state 1`] = `
     data-testid="detection-chips-container"
   >
     <div
-      class="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin"
+      class="w-6 h-6 border-2 border-black/20 border-t-black/60 rounded-full animate-spin"
     />
     <p
-      class="text-sm text-gray-500 font-light"
+      class="text-sm text-black/40 font-light"
     >
       Reading your work…
     </p>

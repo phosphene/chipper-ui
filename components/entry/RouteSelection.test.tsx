@@ -134,7 +134,7 @@ describe('RouteSelection', () => {
       <RouteSelection selectedIntents={allIntents} onProceed={vi.fn()} />
     );
     expect(getByText('Quick summary review')).toBeDefined();
-    expect(getByText(/Plain-language account/)).toBeDefined();
+    expect(getByText(/Plain-language summary/)).toBeDefined();
     expect(getByText('Credibility evaluation')).toBeDefined();
     expect(getByText(/nine dimensions of intellectual contribution/)).toBeDefined();
     expect(getByText('Impact assessment')).toBeDefined();

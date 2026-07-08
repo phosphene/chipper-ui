@@ -53,7 +53,6 @@ const ROUTE_DESCRIPTIONS: Record<RouteValue, string> = {
 
 const SCOPE_LIMITATIONS: string[] = [
   'This is not peer review. It does not certify publication readiness.',
-  'Scores reflect the instrument\u2019s criteria \u2014 they are not the field\u2019s verdict.',
   'Automated evaluation cannot replace human expert judgment in all cases.',
 ];
 
@@ -122,8 +121,12 @@ export function ReviewScreen({ selectedRoutes, onBegin }: ReviewScreenProps) {
         onClick={handleBegin}
         className="w-full py-4 rounded-xl text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 cursor-pointer transition-all"
       >
-        Begin
+        Begin evaluation
       </button>
+
+      <p className="text-xs text-center text-gray-400 mt-3">
+        Export and scoring options are available after the evaluation and editing process is complete.
+      </p>
     </div>
   );
 }

@@ -76,7 +76,7 @@ const TRACKS: TrackDefinition[] = [
       {
         value: 'quick-review',
         label: 'Quick summary review',
-        description: 'Plain-language account, no score',
+        description: 'Plain-language summary of strengths and areas for development',
         testId: 'route-quick-review',
       },
       {

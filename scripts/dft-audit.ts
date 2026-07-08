@@ -43,6 +43,12 @@ const REQUIRED_TESTIDS: { id: string; note: string; required: boolean }[] = [
   { id: 'work-stage-in-progress', note: 'Work stage: In the works',        required: true },
   { id: 'work-stage-finished',    note: 'Work stage: Finished',            required: true },
   { id: 'work-stage-published',   note: 'Work stage: Published',           required: true },
+  { id: 'freeform-request-input',  note: 'Freeform request textarea',       required: true },
+  { id: 'freeform-request-submit', note: 'Freeform request submit',         required: true },
+  { id: 'freeform-confirm-screen', note: 'Freeform confirmation screen',    required: true },
+  { id: 'freeform-confirm-btn',    note: 'Freeform confirm button',         required: true },
+  { id: 'freeform-edit-btn',       note: 'Freeform edit button',            required: true },
+  { id: 'detection-confirm-btn',   note: 'Detection confirm button',        required: true },
 
   // ── Live app: ProgressiveForm — Stage 1 (T-389) ────────────────────────
   { id: 'progressive-form',       note: 'Progressive form container',       required: true },

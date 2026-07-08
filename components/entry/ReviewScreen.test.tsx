@@ -80,8 +80,7 @@ describe('ReviewScreen', () => {
       <ReviewScreen selectedRoutes={routes} onBegin={vi.fn()} />
     );
     expect(getByTestId('review-limitation-0').textContent).toContain('not peer review');
-    expect(getByTestId('review-limitation-1').textContent).toContain('instrument');
-    expect(getByTestId('review-limitation-2').textContent).toContain('human expert judgment');
+    expect(getByTestId('review-limitation-1').textContent).toContain('human expert judgment');
   });
 
   it('shows "What this does not cover" heading', () => {
@@ -97,7 +96,7 @@ describe('ReviewScreen', () => {
     const { getByTestId } = render(
       <ReviewScreen selectedRoutes={routes} onBegin={vi.fn()} />
     );
-    expect(getByTestId('layer-5-begin').textContent).toBe('Begin');
+    expect(getByTestId('layer-5-begin').textContent).toBe('Begin evaluation');
   });
 
   it('fires onBegin when begin button clicked', () => {

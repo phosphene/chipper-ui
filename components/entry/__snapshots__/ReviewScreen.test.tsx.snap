@@ -61,12 +61,6 @@ exports[`ReviewScreen > matches snapshot 1`] = `
           class="text-sm text-gray-500 leading-relaxed"
           data-testid="review-limitation-1"
         >
-          Scores reflect the instrument’s criteria — they are not the field’s verdict.
-        </p>
-        <p
-          class="text-sm text-gray-500 leading-relaxed"
-          data-testid="review-limitation-2"
-        >
           Automated evaluation cannot replace human expert judgment in all cases.
         </p>
       </div>
@@ -75,8 +69,13 @@ exports[`ReviewScreen > matches snapshot 1`] = `
       class="w-full py-4 rounded-xl text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 cursor-pointer transition-all"
       data-testid="layer-5-begin"
     >
-      Begin
+      Begin evaluation
     </button>
+    <p
+      class="text-xs text-center text-gray-400 mt-3"
+    >
+      Export and scoring options are available after the evaluation and editing process is complete.
+    </p>
   </div>
 </div>
 `;
