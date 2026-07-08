@@ -275,8 +275,8 @@ export function ProgressiveForm({ onEvaluationStart, processingActive }: Progres
   const WORK_STAGES: { value: WorkStageValue; label: string; testId: string }[] = [
     { value: 'ideas', label: 'Ideas stage', testId: 'work-stage-ideas' },
     { value: 'in-progress', label: 'In the works', testId: 'work-stage-in-progress' },
-    { value: 'finished', label: 'Finished: Review', testId: 'work-stage-finished' },
-    { value: 'published', label: 'Published', testId: 'work-stage-published' },
+    { value: 'finished', label: 'Final Review', testId: 'work-stage-finished' },
+    { value: 'published', label: 'Evaluate published work', testId: 'work-stage-published' },
   ];
 
   const handleWorkStageSelect = useCallback((stage: WorkStageValue) => {
