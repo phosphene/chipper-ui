@@ -15,6 +15,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Woodchipper",
   description: "What are you working on?",
+  icons: {
+    icon: '/app-icon.jpg',
+    apple: '/app-icon.jpg',
+  },
+  openGraph: {
+    title: 'Woodchipper',
+    description: 'What are you working on?',
+    images: ['/brand/hero.jpg'],
+  },
 };
 
 export default function RootLayout({

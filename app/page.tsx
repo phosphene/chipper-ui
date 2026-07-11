@@ -8,6 +8,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import { ProgressiveForm } from '@/components/workspace/ProgressiveForm';
 import { InlineProcessing } from '@/components/ceremony/InlineProcessing';
 import { Pronouncement } from '@/components/ceremony/Pronouncement';
@@ -71,8 +72,19 @@ export default function Home() {
         className="flex-1 overflow-y-auto px-5 py-6"
       >
         {outputs.length === 0 && !processingActive && (
-          <div className="text-center py-16">
-            <p className="text-sm text-black/25 italic">
+          <div className="max-w-3xl mx-auto py-10">
+            {/* Hero illustration */}
+            <div className="rounded-2xl overflow-hidden mb-6">
+              <Image
+                src="/brand/hero.jpg"
+                alt="Woodchipper — raw work transforms into structured, evaluated output"
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+            <p className="text-center text-sm text-black/25 italic">
               Results will appear here
             </p>
           </div>
