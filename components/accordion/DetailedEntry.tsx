@@ -205,7 +205,7 @@ export function DetailedEntry({ onCeremonyStart }: Props) {
       >
         <p className="text-[0.78rem] text-[#888] italic mb-3">What do you want to happen to this work?</p>
         <div className="flex flex-wrap gap-2 mb-4">
-          {['Understand where it stands','Improve before submission','Get a credibility score','Publish to Observatory','Register a DOI','Submit to a journal','Push to ORCID','Just exploring'].map(h => (
+          {['Understand where it stands','Improve before submission','Get feedback and develop','Publish to Observatory','Register a DOI','Submit to a journal','Push to ORCID','Just exploring'].map(h => (
             <button key={h}
               onClick={() => toggleTag(h, setHopes)}
               className={`px-3 py-1.5 border rounded-full text-[0.72rem] transition-all

@@ -104,7 +104,7 @@ export interface CeremonyState {
   rest: () => void;           // Stage V: close case
   crossThreshold: () => void; // Stage VI → VII
   completeDimension: (dimension: string, score: number) => void;
-  revealScore: () => void;    // VII → VIII
+  revealScore: () => void;    // VII → VIII (WCI ceremony only)
 
   // Actions — recording
   setRecordingChoice: (choice: RecordingChoice) => void;

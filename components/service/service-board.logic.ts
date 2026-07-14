@@ -113,7 +113,7 @@ function delay(ms: number): Promise<void> {
  * Execute a single service request and return the result after tier-appropriate pacing.
  *
  * @param request - Service request carrying `service` type, `workText`, `evaluation`
- *   (WCIResult), and maker `context` (standing, workType, domain).
+ *   (WoodchipperReading), and maker `context` (standing, workType, domain).
  * @param httpClient - Injectable HTTP client. Defaults to `MockHttpClient` for tests;
  *   replaced by the real woodchipper-services client (T-371) in production.
  * @returns `ServiceResult` containing the output text, output type, and optional

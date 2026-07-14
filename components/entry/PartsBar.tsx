@@ -9,7 +9,7 @@
  * shortcut. Architecture has since moved to the five-layer entry flow
  * (Layers 1–5). This component is preserved for potential future use
  * as a power-user shortcut. If reactivated, it must route through the
- * Layer 3 route selection — not directly to the WCI ceremony.
+ * Layer 3 route selection — not directly to any ceremony.
  * Bypassing the entry layers would violate the two-entity architecture.
  */
 'use client';

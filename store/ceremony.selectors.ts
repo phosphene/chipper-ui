@@ -49,7 +49,7 @@ export const getStageSummaryChips = (state: CeremonyState, stage: string): strin
     case 'III':
       return [
         state.judgeIdentity?.domain?.value ?? '',
-        state.judgeIdentity?.variantAvailable ? state.judgeIdentity.variantName ?? 'variant' : 'general WCI',
+        state.judgeIdentity?.variantAvailable ? state.judgeIdentity.variantName ?? 'variant' : 'general',
       ].filter(Boolean);
     case 'IV':
       return ['Frame accepted'];
