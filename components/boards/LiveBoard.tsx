@@ -76,14 +76,12 @@ function buildNodes(store: ReturnType<typeof useCeremonyStore.getState>): Node[]
     nodes.push({ id: 'tx', role: 'Work', label: txt.slice(0, 24) + (txt.length > 24 ? '…' : ''), x: 20, y: 180 });
   }
 
-  // Operation result nodes — show completed evaluations
-  if (store.wciResult) {
-    const score = store.wciResult.compositeScore;
-    const band = store.wciResult.band;
+  // Operation result nodes — show completed readings
+  if (store.woodchipperReading) {
     nodes.push({
       id: 'eval',
-      role: 'Evaluate',
-      label: `${score.toFixed(1)} — ${band}`,
+      role: 'Reading',
+      label: `${store.woodchipperReading.workStage} — ${store.woodchipperReading.categorization}`,
       x: 160,
       y: 200,
       isOp: true,
@@ -202,7 +200,7 @@ export function LiveBoard({ theme }: Props) {
       ctx.fillText(node.label, nx + 8, ny + 28);
     });
 
-  }, [theme, store.currentStage, store.workClassification, store.makerDeclaration, store.judgeIdentity, store.wciResult]);
+  }, [theme, store.currentStage, store.workClassification, store.makerDeclaration, store.judgeIdentity, store.woodchipperReading]);
 
   return (
     <canvas

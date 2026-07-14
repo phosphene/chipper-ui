@@ -2,33 +2,32 @@ import { render } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Pronouncement } from './Pronouncement';
 
-// Mock the ceremony store with a WCI result for rich rendering
+// Mock the ceremony store with a Woodchipper reading (no WCI)
 vi.mock('@/store/ceremony', () => ({
   useCeremonyStore: (selector: (s: Record<string, unknown>) => unknown) => {
     const state = {
-      wciResult: {
-        compositeScore: 62,
-        band: 'promising',
-        dimensionScores: [
-          { dimension: 'N', rawScore: 4.0, weight: 1.0, weightedScore: 4.0, justification: 'Structurally expected.', keyPassage: null },
-          { dimension: 'E', rawScore: 8.0, weight: 1.5, weightedScore: 12.0, justification: 'Three independent sites.', keyPassage: null },
-          { dimension: 'M', rawScore: 8.5, weight: 1.5, weightedScore: 12.75, justification: 'Excellent calibration.', keyPassage: null },
-        ],
-        epistemicLabel: 'corpus-level — test',
-        relativeContext: 'Null-result papers typically score 55–68.',
-        rubricVersion: '1.0',
-        evaluationDate: '2026-01-01T00:00:00Z',
-        provenance: 'warm',
+      woodchipperReading: {
+        workStage: 'draft',
+        categorization: 'original argument',
+        strengths: ['Academic structure detected', 'Substantial content provided'],
+        developmentAreas: ['Categorization uncertain — adding domain context would help'],
+        claimsGap: 'Claims detected but supporting evidence not yet visible',
+        titleAlignment: null,
+        bearings: ['This work sits within behavioral ecology'],
+        futureDirections: [],
+        unintendedDiscoveries: [],
+        basis: 'medium confidence — moderate submission',
+        relativeContext: 'Within behavioral ecology',
       },
-      workClassification: { workType: { value: 'null-result', source: 'user' } },
-      judgeIdentity: { domain: { value: 'Behavioral Ecology', source: 'detected' } },
+      workClassification: { workType: { value: 'original-argument', source: 'user' } },
+      judgeIdentity: { domain: { value: 'behavioral-ecology', source: 'detected' } },
     };
     return selector(state);
   },
 }));
 
 describe('Pronouncement', () => {
-  it('renders correctly with WCI result', () => {
+  it('renders correctly with Woodchipper reading', () => {
     const { container } = render(
       <Pronouncement
         onProceedToRecording={vi.fn()}
@@ -48,5 +47,31 @@ describe('Pronouncement', () => {
       />
     );
     expect(getByTestId('pronouncement-proceed')).toBeDefined();
+  });
+
+  it('shows Woodchipper reading header, not WCI', () => {
+    const { container } = render(
+      <Pronouncement
+        onProceedToRecording={vi.fn()}
+        onRequestImprovement={vi.fn()}
+        onExport={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('Woodchipper');
+    expect(container.textContent).toContain('reading');
+    expect(container.textContent).not.toContain('WCI');
+    expect(container.textContent).not.toContain('score');
+  });
+
+  it('shows claims-content gap when present', () => {
+    const { container } = render(
+      <Pronouncement
+        onProceedToRecording={vi.fn()}
+        onRequestImprovement={vi.fn()}
+        onExport={vi.fn()}
+      />
+    );
+    expect(container.textContent).toContain('Claims');
+    expect(container.textContent).toContain('evidence not yet visible');
   });
 });

@@ -37,6 +37,7 @@ import type {
   JudgeIdentity,
   FrameAgreement,
   WCIResult,
+  WoodchipperReading,
   RecordingChoice,
   Property,
   DetectionResult,
@@ -75,7 +76,10 @@ export interface CeremonyState {
   processingComplete: boolean;
   processingDimensions: Set<string>;
 
-  // Score
+  // Woodchipper reading (native — no WCI dependency)
+  woodchipperReading: WoodchipperReading | null;
+
+  // Score — only populated if user explicitly selects WCI route
   wciResult: WCIResult | null;
 
   // Fit Assessment
@@ -112,7 +116,10 @@ export interface CeremonyState {
   // Actions — expectations
   acknowledgeExpectations: () => void;
 
-  // Actions — score
+  // Actions — Woodchipper reading
+  setWoodchipperReading: (reading: WoodchipperReading) => void;
+
+  // Actions — score (WCI only — requires explicit user selection)
   setWCIResult: (result: WCIResult) => void;
 
   // Actions — fit assessment
@@ -136,6 +143,7 @@ const initialState = {
   completedStages: new Set<Stage>(),
   processingComplete: false,
   processingDimensions: new Set<string>(),
+  woodchipperReading: null,
   wciResult: null,
   fitAssessment: null,
   fitAssessmentChoice: null,
@@ -341,9 +349,13 @@ export const useCeremonyStore = create<CeremonyState>()((set, get) => ({
    * @param result - The complete WCI scoring result with composite score
    * $s \in [0, 100]$, band, dimension scores, and provenance.
    */
+  setWoodchipperReading: (reading) => set({
+    woodchipperReading: reading,
+    processingComplete: true,
+  }),
+
   setWCIResult: (result) => set({
     wciResult: result,
-    processingComplete: true,
   }),
 
   setFitAssessment: (result) => set({ fitAssessment: result }),

@@ -29,7 +29,7 @@ const PALETTE = {
 // ── Props ─────────────────────────────────────────────────────
 
 interface ServiceBoardViewProps {
-  wciResult: unknown;
+  woodchipperReading: unknown;
   workText: string;
   workType: string;
   standing: string;
@@ -38,7 +38,7 @@ interface ServiceBoardViewProps {
 // ── Component ─────────────────────────────────────────────────
 
 export function ServiceBoardView({
-  wciResult,
+  woodchipperReading,
   workText,
   workType,
   standing,
@@ -76,7 +76,7 @@ export function ServiceBoardView({
       selectedServices,
       {
         workText: paperText || workText,
-        evaluation: wciResult,
+        evaluation: woodchipperReading,
         context: { standing, workType, domain: '' },
       },
       {
@@ -88,16 +88,16 @@ export function ServiceBoardView({
         },
       },
     );
-  }, [selectedServices, paperText, workText, wciResult, standing, workType, send]);
+  }, [selectedServices, paperText, workText, woodchipperReading, standing, workType, send]);
 
   const handleAcknowledge = useCallback(() => {
     send({ type: 'ACKNOWLEDGE' });
   }, [send]);
 
-  // ── Evaluation band (extract from WCI result if available) ──
+  // ── Work stage (from Woodchipper reading if available) ──
 
   const evaluationBand =
-    (wciResult as { band?: string } | null)?.band ?? 'unclassified';
+    (woodchipperReading as { workStage?: string } | null)?.workStage ?? 'unclassified';
 
   // ── Render by state ───────────────────────────────────────
 

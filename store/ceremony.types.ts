@@ -164,6 +164,42 @@ export interface WCIResult {
   provenance: 'cold' | 'warm' | 'iterative';
 }
 
+// ── Woodchipper reading (native — no WCI) ──────────────────────
+
+/**
+ * Woodchipper's reading of the work. This is NOT a score.
+ * It situates the user, identifies what the work is, where it stands,
+ * and what could help it move forward.
+ *
+ * WCI scoring is a separate, optional service that only runs when
+ * the user explicitly selects the credibility evaluation route.
+ * Woodchipper's reading has no dependency on WCI.
+ */
+export interface WoodchipperReading {
+  /** What stage the work is at: ideas, draft, near-final, complete */
+  workStage: string;
+  /** What Woodchipper thinks the work is — categorization */
+  categorization: string;
+  /** What reads well — strengths identified */
+  strengths: string[];
+  /** Where development could help */
+  developmentAreas: string[];
+  /** Gap between claims and content */
+  claimsGap: string | null;
+  /** Title-scope alignment — does the title match the claims? */
+  titleAlignment: string | null;
+  /** What the work bears on — implications beyond stated scope */
+  bearings: string[];
+  /** Future directions the work opens */
+  futureDirections: string[];
+  /** Unintended discoveries — outputs outside original pursuit */
+  unintendedDiscoveries: string[];
+  /** Basis of the reading — what Woodchipper saw and how much it had to work with */
+  basis: string;
+  /** Relative context — how this work sits among comparable efforts */
+  relativeContext: string | null;
+}
+
 // ── Recording types ───────────────────────────────────────────
 
 export type RecordingChoice = 'view-only' | 'private' | 'public' | null;

@@ -72,7 +72,7 @@ describe('ServiceBoardView', () => {
     const { ServiceBoardView } = await import('./service-board.view');
     return render(
       <ServiceBoardView
-        wciResult={{ band: 'strong' }}
+        woodchipperReading={{ band: 'strong' }}
         workText="Test paper content."
         workType="journal-article"
         standing="postdoctoral"

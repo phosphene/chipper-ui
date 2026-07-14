@@ -1,9 +1,16 @@
 'use client';
 /**
- * Pronouncement — Beat VIII.
- * Qualitative reading only. No score. No band. No dimensions.
- * Woodchipper tells the maker what it found in plain language.
- * Score/WCI indexing available only at export stage.
+ * Pronouncement — Woodchipper's reading of the work.
+ *
+ * NO WCI. NO SCORES. NO BANDS. NO DIMENSIONS.
+ *
+ * Woodchipper tells the user what it found: where they are,
+ * what their work is, what reads well, where development could
+ * help, gaps between claims and content, what the work bears on,
+ * future directions, and unintended discoveries.
+ *
+ * WCI scoring is a completely separate path that only runs if
+ * the user explicitly selects the credibility evaluation route.
  */
 
 import { useCeremonyStore } from '@/store/ceremony';
@@ -15,58 +22,42 @@ interface Props {
 }
 
 export function Pronouncement({ onProceedToRecording, onRequestImprovement, onExport }: Props) {
-  const wciResult = useCeremonyStore((s) => s.wciResult);
+  const reading = useCeremonyStore((s) => s.woodchipperReading);
   const workType = useCeremonyStore((s) => s.workClassification?.workType?.value);
   const domain = useCeremonyStore((s) => s.judgeIdentity?.domain?.value);
-
-  // Build a qualitative reading from available data
-  const epistemicLabel = wciResult?.epistemicLabel;
-  const relativeContext = wciResult?.relativeContext;
-
-  // Extract the strongest and weakest dimensions for qualitative feedback
-  const dimScores = wciResult?.dimensionScores ?? [];
-  const strong = dimScores
-    .filter(d => d.rawScore >= 7.0)
-    .map(d => d.justification)
-    .filter(Boolean)
-    .slice(0, 2);
-  const weak = dimScores
-    .filter(d => d.rawScore < 5.0)
-    .map(d => d.justification)
-    .filter(Boolean)
-    .slice(0, 2);
 
   return (
     <div data-testid="pronouncement" className="max-w-2xl mx-auto py-6">
 
       {/* Header */}
       <div className="mb-6">
-        <p className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">
-          Woodchipper's reading
+        <p className="text-xs font-mono text-black/40 uppercase tracking-widest mb-2">
+          Woodchipper&rsquo;s reading
         </p>
-        {workType && (
-          <p className="text-sm text-gray-500">
-            {workType.replace(/-/g, ' ')}{domain ? ` · ${domain}` : ''}
+        {reading?.categorization && (
+          <p className="text-sm text-black/50">
+            {reading.categorization}{domain ? ` · ${domain}` : ''}
+            {reading.workStage ? ` · ${reading.workStage} stage` : ''}
           </p>
         )}
       </div>
 
-      {/* Epistemic basis */}
-      {epistemicLabel && (
-        <div className="mb-5 p-4 rounded-xl border border-gray-200 bg-gray-50">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-1">Basis of this reading</p>
-          <p className="text-sm text-gray-700 italic">{epistemicLabel}</p>
+      {/* Basis */}
+      {reading?.basis && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10 bg-black/[0.02]">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-1">Basis of this reading</p>
+          <p className="text-sm text-black/60 italic">{reading.basis}</p>
         </div>
       )}
 
-      {/* Qualitative reading — what Woodchipper found */}
-      {strong.length > 0 && (
-        <div className="mb-5 p-4 rounded-xl border border-gray-200">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3">What reads well</p>
+      {/* What reads well */}
+      {reading && reading.strengths.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">What reads well</p>
           <ul className="space-y-2">
-            {strong.map((s, i) => (
-              <li key={i} className="flex gap-2 text-sm text-gray-700">
-                <span className="text-gray-300 flex-shrink-0">&bull;</span>
+            {reading.strengths.map((s, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-black/20 flex-shrink-0">&bull;</span>
                 {s}
               </li>
             ))}
@@ -74,13 +65,14 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         </div>
       )}
 
-      {weak.length > 0 && (
-        <div className="mb-5 p-4 rounded-xl border border-gray-200">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-3">Where development could help</p>
+      {/* Where development could help */}
+      {reading && reading.developmentAreas.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">Where development could help</p>
           <ul className="space-y-2">
-            {weak.map((w, i) => (
-              <li key={i} className="flex gap-2 text-sm text-gray-700">
-                <span className="text-gray-300 flex-shrink-0">&bull;</span>
+            {reading.developmentAreas.map((w, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-black/20 flex-shrink-0">&bull;</span>
                 {w}
               </li>
             ))}
@@ -88,37 +80,98 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         </div>
       )}
 
-      {/* Relative context — no score, just context */}
-      {relativeContext && (
-        <div className="mb-5 p-4 rounded-xl bg-gray-50 border border-gray-200">
-          <p className="text-sm text-gray-600">{relativeContext}</p>
+      {/* Claims-content gap */}
+      {reading?.claimsGap && (
+        <div className="mb-5 p-4 rounded-xl border border-amber-200/50 bg-amber-50/30">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-2">Claims–content gap</p>
+          <p className="text-sm text-black/60">{reading.claimsGap}</p>
         </div>
       )}
 
-      {/* Fallback if no result yet */}
-      {!wciResult && (
-        <div className="mb-5 p-4 rounded-xl border border-gray-200 bg-gray-50">
-          <p className="text-sm text-gray-600 italic">
-            Woodchipper has reviewed your work. Proceed to export to record this evaluation or explore further options.
+      {/* Title alignment */}
+      {reading?.titleAlignment && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-2">Title–scope alignment</p>
+          <p className="text-sm text-black/60">{reading.titleAlignment}</p>
+        </div>
+      )}
+
+      {/* What the work bears on */}
+      {reading && reading.bearings.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">What this work bears on</p>
+          <ul className="space-y-2">
+            {reading.bearings.map((b, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-black/20 flex-shrink-0">&bull;</span>
+                {b}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Future directions */}
+      {reading && reading.futureDirections.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">Future directions</p>
+          <ul className="space-y-2">
+            {reading.futureDirections.map((f, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-black/20 flex-shrink-0">&bull;</span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Unintended discoveries */}
+      {reading && reading.unintendedDiscoveries.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">Outside your original pursuit</p>
+          <ul className="space-y-2">
+            {reading.unintendedDiscoveries.map((u, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-black/20 flex-shrink-0">&bull;</span>
+                {u}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Relative context */}
+      {reading?.relativeContext && (
+        <div className="mb-5 p-4 rounded-xl bg-black/[0.02] border border-black/10">
+          <p className="text-sm text-black/50">{reading.relativeContext}</p>
+        </div>
+      )}
+
+      {/* Fallback if no reading yet */}
+      {!reading && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10 bg-black/[0.02]">
+          <p className="text-sm text-black/50 italic">
+            Woodchipper is preparing your reading.
           </p>
         </div>
       )}
 
       {/* Actions */}
-      <div className="pt-5 border-t border-gray-100 space-y-2">
+      <div className="pt-5 border-t border-black/5 space-y-2">
         <button
           data-testid="pronouncement-proceed"
-          onClick={onProceedToRecording}
-          className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-gray-900 text-white hover:bg-gray-700 transition-colors"
+          onClick={onRequestImprovement}
+          className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl bg-black/90 text-white hover:bg-black/70 transition-colors"
         >
-          <span className="text-sm font-medium">Proceed to export</span>
+          <span className="text-sm font-medium">Work on this — improve and iterate</span>
           <span className="text-white/60">→</span>
         </button>
         <button
-          onClick={onRequestImprovement}
-          className="w-full px-5 py-3 rounded-xl border border-gray-200 text-sm text-gray-600 hover:border-gray-400 transition-colors text-left"
+          onClick={onExport}
+          className="w-full px-5 py-3 rounded-xl border border-black/10 text-sm text-black/50 hover:border-black/25 transition-colors text-left"
         >
-          Run another evaluation
+          Export or continue to other services
         </button>
       </div>
     </div>
