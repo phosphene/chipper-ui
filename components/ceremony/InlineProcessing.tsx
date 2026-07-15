@@ -40,11 +40,12 @@ export function InlineProcessing({ onComplete }: Props) {
     // Build a Woodchipper reading from the detect endpoint (not /api/score)
     const FALLBACK_READING: WoodchipperReading = {
       workStage: 'draft',
+      stageReasoning: 'Unable to determine stage — insufficient signal from the submission.',
       categorization: state.workClassification?.workType?.value?.replace(/-/g, ' ') ?? 'unclassified',
       strengths: ['Work submitted for review'],
       developmentAreas: ['Woodchipper needs more content to provide specific feedback'],
       claimsGap: null,
-      titleAlignment: null,
+      titleAlignment: 'No title provided — consider what title would best frame what this work actually does.',
       bearings: [],
       futureDirections: [],
       unintendedDiscoveries: [],
@@ -64,17 +65,19 @@ export function InlineProcessing({ onComplete }: Props) {
       if (res.ok) {
         const data = await res.json();
         // Build Woodchipper reading from detection data
+        const freeText = state.makerDeclaration?.freeText ?? '';
         const reading: WoodchipperReading = {
-          workStage: inferWorkStage(state.makerDeclaration?.freeText ?? ''),
+          workStage: inferWorkStage(freeText),
+          stageReasoning: inferStageReasoning(freeText),
           categorization: data.work_type?.replace(/-/g, ' ') ?? 'unclassified',
-          strengths: buildStrengths(data, state.makerDeclaration?.freeText ?? ''),
-          developmentAreas: buildDevelopmentAreas(data, state.makerDeclaration?.freeText ?? ''),
-          claimsGap: assessClaimsGap(state.makerDeclaration?.freeText ?? ''),
-          titleAlignment: null,
+          strengths: buildStrengths(data, freeText),
+          developmentAreas: buildDevelopmentAreas(data, freeText),
+          claimsGap: assessClaimsGap(freeText),
+          titleAlignment: 'No title provided — consider framing this work with a title that captures its actual scope and claims.',
           bearings: identifyBearings(data),
           futureDirections: identifyFutureDirections(data),
           unintendedDiscoveries: [],
-          basis: `${data.confidence ?? 'low'} confidence — ${assessBasis(state.makerDeclaration?.freeText ?? '')}`,
+          basis: `${data.confidence ?? 'low'} confidence — ${assessBasis(freeText)}`,
           relativeContext: data.domain ? `Within ${data.domain.replace(/-/g, ' ')}` : null,
         };
         store.setWoodchipperReading(reading);
@@ -156,10 +159,22 @@ function InlineDot({ dim, state }: { dim: string; state: DotState }) {
 function inferWorkStage(text: string): string {
   const lower = text.toLowerCase();
   if (lower.includes('idea') || lower.includes('concept') || lower.includes('wondering') || lower.includes('thinking about')) return 'ideas';
-  if (lower.includes('draft') || lower.includes('working on') || lower.includes('in progress')) return 'draft';
+  if (lower.includes('rough') || text.length < 300) return 'early-draft';
+  if (lower.includes('draft') || lower.includes('working on') || lower.includes('in progress')) return 'working-draft';
   if (lower.includes('final') || lower.includes('finished') || lower.includes('complete') || lower.includes('ready')) return 'near-final';
   if (lower.includes('published') || lower.includes('accepted') || lower.includes('peer review')) return 'published';
-  return 'draft';
+  return 'working-draft';
+}
+
+function inferStageReasoning(text: string): string {
+  const stage = inferWorkStage(text);
+  const len = text.length;
+  if (stage === 'ideas') return 'The submission reads as a concept or proposal — no continuous argument or evidence structure yet.';
+  if (stage === 'early-draft') return `Brief submission (${len} characters) with fragmentary structure — early-stage work.`;
+  if (stage === 'working-draft') return 'Has structure and developing argument but gaps are visible — active draft.';
+  if (stage === 'near-final') return 'Reads as a complete piece with polished structure — near submission-ready.';
+  if (stage === 'published') return 'References publication or acceptance — already in the world.';
+  return 'Stage unclear from submission.';
 }
 
 function buildStrengths(data: any, text: string): string[] {

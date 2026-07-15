@@ -176,19 +176,21 @@ export interface WCIResult {
  * Woodchipper's reading has no dependency on WCI.
  */
 export interface WoodchipperReading {
-  /** What stage the work is at: ideas, draft, near-final, complete */
+  /** What stage the work is at: ideas, early-draft, working-draft, near-final, published */
   workStage: string;
-  /** What Woodchipper thinks the work is — categorization */
+  /** Why Woodchipper placed the work at this stage — cites textual evidence */
+  stageReasoning: string;
+  /** What Woodchipper thinks the work is — specific categorization */
   categorization: string;
-  /** What reads well — strengths identified */
+  /** What reads well — strengths identified, citing actual content */
   strengths: string[];
-  /** Where development could help */
+  /** Where development could help — citing what's missing */
   developmentAreas: string[];
-  /** Gap between claims and content */
+  /** Gap between claims and content — always assessed */
   claimsGap: string | null;
-  /** Title-scope alignment — does the title match the claims? */
-  titleAlignment: string | null;
-  /** What the work bears on — implications beyond stated scope */
+  /** Title-scope alignment — always filled. Infers title if none provided. */
+  titleAlignment: string;
+  /** What the work bears on — cross-disciplinary implications */
   bearings: string[];
   /** Future directions the work opens */
   futureDirections: string[];
@@ -198,6 +200,8 @@ export interface WoodchipperReading {
   basis: string;
   /** Relative context — how this work sits among comparable efforts */
   relativeContext: string | null;
+  /** Revision notes — only present on re-evaluations after revision */
+  revisionNotes?: string[];
 }
 
 // ── Recording types ───────────────────────────────────────────

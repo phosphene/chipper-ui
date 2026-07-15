@@ -24,6 +24,7 @@ describe('Woodchipper without WCI', () => {
   it('setWoodchipperReading populates reading and sets processingComplete', () => {
     const reading: WoodchipperReading = {
       workStage: 'draft',
+      stageReasoning: "Test stage reasoning",
       categorization: 'original argument',
       strengths: ['Clear methodology described'],
       developmentAreas: ['Claims outrun evidence in section 3'],
@@ -48,11 +49,12 @@ describe('Woodchipper without WCI', () => {
   it('setWoodchipperReading does not touch wciResult', () => {
     const reading: WoodchipperReading = {
       workStage: 'ideas',
+      stageReasoning: "Test stage reasoning",
       categorization: 'synthesis review',
       strengths: ['Work submitted'],
       developmentAreas: ['More content needed'],
       claimsGap: null,
-      titleAlignment: null,
+      titleAlignment: 'No title provided',
       bearings: [],
       futureDirections: [],
       unintendedDiscoveries: [],
@@ -67,6 +69,7 @@ describe('Woodchipper without WCI', () => {
   it('WoodchipperReading has no score, band, or dimension fields', () => {
     const reading: WoodchipperReading = {
       workStage: 'near-final',
+      stageReasoning: "Test stage reasoning",
       categorization: 'evidentiary finding',
       strengths: ['Strong evidential markers'],
       developmentAreas: [],
@@ -91,11 +94,12 @@ describe('Woodchipper without WCI', () => {
   it('reset clears woodchipperReading without affecting WCI types', () => {
     const reading: WoodchipperReading = {
       workStage: 'draft',
+      stageReasoning: "Test stage reasoning",
       categorization: 'methodological contribution',
       strengths: ['Novel metric introduced'],
       developmentAreas: [],
       claimsGap: null,
-      titleAlignment: null,
+      titleAlignment: 'No title provided',
       bearings: [],
       futureDirections: [],
       unintendedDiscoveries: [],

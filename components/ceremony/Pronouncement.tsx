@@ -42,6 +42,14 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         )}
       </div>
 
+      {/* Stage + reasoning */}
+      {reading?.stageReasoning && (
+        <div className="mb-5 p-4 rounded-xl border border-black/10 bg-black/[0.02]">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-1">Where you are</p>
+          <p className="text-sm text-black/60">{reading.stageReasoning}</p>
+        </div>
+      )}
+
       {/* Basis */}
       {reading?.basis && (
         <div className="mb-5 p-4 rounded-xl border border-black/10 bg-black/[0.02]">
@@ -88,10 +96,10 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
         </div>
       )}
 
-      {/* Title alignment */}
+      {/* Title alignment — always shown */}
       {reading?.titleAlignment && (
         <div className="mb-5 p-4 rounded-xl border border-black/10">
-          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-2">Title–scope alignment</p>
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-2">Title &amp; framing</p>
           <p className="text-sm text-black/60">{reading.titleAlignment}</p>
         </div>
       )}
@@ -145,6 +153,21 @@ export function Pronouncement({ onProceedToRecording, onRequestImprovement, onEx
       {reading?.relativeContext && (
         <div className="mb-5 p-4 rounded-xl bg-black/[0.02] border border-black/10">
           <p className="text-sm text-black/50">{reading.relativeContext}</p>
+        </div>
+      )}
+
+      {/* Revision notes — only on re-evaluations */}
+      {reading?.revisionNotes && reading.revisionNotes.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl border border-green-200/50 bg-green-50/30">
+          <p className="text-xs font-medium text-black/40 uppercase tracking-widest mb-3">What changed</p>
+          <ul className="space-y-2">
+            {reading.revisionNotes.map((n, i) => (
+              <li key={i} className="flex gap-2 text-sm text-black/70">
+                <span className="text-green-400 flex-shrink-0">&bull;</span>
+                {n}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
